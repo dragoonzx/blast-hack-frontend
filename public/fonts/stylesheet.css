@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Cyberway Riders';
+    src: url('CyberwayRiders.woff2') format('woff2'),
+        url('CyberwayRiders.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
