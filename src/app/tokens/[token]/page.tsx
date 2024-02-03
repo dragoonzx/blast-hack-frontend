@@ -22,7 +22,16 @@ const TokenPage = () => {
   return (
     <div className="flex items-start justify-between w-full">
       <div className="w-1/2 flex justify-center">
-        <VaultInfo />
+        <VaultInfo 
+          name="BRUHcoin" 
+          APR={9000.95} 
+          TVL={59067057} 
+          tokensSupply={21_000_000} 
+          tokensLeft={4_589_050} 
+          endDate={new Date(new Date().getTime() + 10*24*60*60*1000)}
+          ownerShare={10}
+          liqudity={70721}
+        />
       </div>
       <Card className="w-1/3 min-w-[360px]">
         <CardHeader>
