@@ -273,6 +273,35 @@ export const mineblastFactoryConfig = {
 } as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// mineblastLibrary
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const mineblastLibraryAbi = [
+  {
+    type: 'function',
+    inputs: [
+      { name: 'factory', internalType: 'address', type: 'address' },
+      { name: 'tokenA', internalType: 'address', type: 'address' },
+      { name: 'tokenB', internalType: 'address', type: 'address' },
+    ],
+    name: 'getReserves',
+    outputs: [
+      { name: 'reserveA', internalType: 'uint256', type: 'uint256' },
+      { name: 'reserveB', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+  },
+] as const
+
+export const mineblastLibraryAddress =
+  '0x0B947290432940D2A31027F1dE47C80b66EF134D' as const
+
+export const mineblastLibraryConfig = {
+  address: mineblastLibraryAddress,
+  abi: mineblastLibraryAbi,
+} as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // mineblastPair
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1662,6 +1691,24 @@ export const useWatchMineblastFactoryVaultCreatedEvent =
     abi: mineblastFactoryAbi,
     address: mineblastFactoryAddress,
     eventName: 'VaultCreated',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link mineblastLibraryAbi}__
+ */
+export const useReadMineblastLibrary = /*#__PURE__*/ createUseReadContract({
+  abi: mineblastLibraryAbi,
+  address: mineblastLibraryAddress,
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link mineblastLibraryAbi}__ and `functionName` set to `"getReserves"`
+ */
+export const useReadMineblastLibraryGetReserves =
+  /*#__PURE__*/ createUseReadContract({
+    abi: mineblastLibraryAbi,
+    address: mineblastLibraryAddress,
+    functionName: 'getReserves',
   })
 
 /**
