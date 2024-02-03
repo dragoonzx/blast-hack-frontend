@@ -213,7 +213,7 @@ export default function RootLayout({
               </nav>
             </div>
           </header>
-          <main className="min-h-screen items-center justify-between px-24 py-12">
+          <main className="min-h-screen items-center justify-between px-24 py-4">
             {children}
           </main>
         </Web3Provider>
