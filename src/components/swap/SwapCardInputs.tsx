@@ -39,7 +39,7 @@ const SwapCardInputs = () => {
           <span className="text-xs right-0 -bottom-6 absolute font-light">
             {2}
           </span>
-          <SwapInput />
+          <SwapInput maxValue={400} onChange={(a:number) => {console.log(a)}}/>
         </div>
       </div>
     </div>
