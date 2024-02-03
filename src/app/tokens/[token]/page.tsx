@@ -12,6 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import SwapCard from '@/components/swap/SwapCard';
 import SwapCardHeader from '@/components/swap/SwapCardHeader';
+import VaultInfo from '@/components/vault/VaultInfo';
 
 const TokenPage = () => {
   useEffect(() => {
@@ -21,29 +22,16 @@ const TokenPage = () => {
   return (
     <div className="flex items-start justify-between w-full">
       <div className="w-1/2 flex justify-center">
-        <Card className="min-w-[450px]">
-          <CardHeader>
-            <CardTitle>BlastCockInu</CardTitle>
-            <CardDescription>Token for brave cryptoids</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <p>APR: 9000%</p>
-              <p>TVL:</p>
-              <p>tokens left:</p>
-              <div className="space-x-2">
-                <Button variant="outline">Deposit</Button>
-                <Button variant="outline">Withdraw</Button>
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter>
-            <div className="flex items-center w-full justify-between">
-              <p>9000.. BCI</p>
-              <Button>Claim</Button>
-            </div>
-          </CardFooter>
-        </Card>
+        <VaultInfo 
+          name="BRUHcoin" 
+          APR={9000.95} 
+          TVL={59067057} 
+          tokensSupply={21_000_000} 
+          tokensLeft={4_589_050} 
+          endDate={new Date(new Date().getTime() + 10*24*60*60*1000)}
+          ownerShare={10}
+          liqudity={70721}
+        />
       </div>
       <Card className="w-1/3 min-w-[360px]">
         <CardHeader>
