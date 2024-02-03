@@ -10,6 +10,10 @@ const NAV_MENU = [
     href: '/docs',
   },
   {
+    title: 'Team',
+    href: '/team',
+  },
+  {
     title: 'Github',
     href: '/github',
   },
@@ -45,7 +49,7 @@ export default function RootLayout({
                 {NAV_MENU.map((menu) => (
                   <li
                     key={menu.title}
-                    className="mr-8 hover:text-[#F85150] text-md"
+                    className="mr-8 hover:text-[#e96828] text-md"
                   >
                     <Link href={menu.href}>{menu.title}</Link>
                   </li>
@@ -91,17 +95,9 @@ export default function RootLayout({
             </nav>
           </div>
         </header>
-        <main className="flex min-h-screen flex-col items-center justify-between px-24 py-12">
+        <main className="min-h-screen items-center justify-between px-24 py-12">
           {children}
         </main>
-        <footer>
-          <div className=" fixed bottom-0 left-auto right-12">
-            <p className="font-digital flex justify-center">
-              {'>'} GIVE ME YOUR WETH
-            </p>
-            <Image src="/mine-footer.png" alt="" width={256} height={256} />
-          </div>
-        </footer>
       </body>
     </html>
   );
