@@ -18,7 +18,7 @@ export default function Home() {
         <label className="text-[#e96828]">in one step</label>
       </h1>
       <div className="px-4 py-2 border w-[320px] mt-4">
-        <p>
+        <div>
           WETH x{' '}
           <span>
             <Typewriter
@@ -31,7 +31,7 @@ export default function Home() {
               delaySpeed={1000}
             />
           </span>
-        </p>
+        </div>
       </div>
       <div className="mt-16">
         <h2 className="font-sora text-6xl font-bold">
