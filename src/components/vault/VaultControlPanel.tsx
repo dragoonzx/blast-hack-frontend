@@ -57,7 +57,7 @@ const VaultControlPanel = (props: {
           <div>
             {props.symbol} available: <CountUp decimals={2} start={props.claimableAmount} end={projectedBalanceInMonth} useEasing={false} duration={secondsInMonth}/>
           </div>
-          <Button className="w-full">Claim</Button>
+          <Button className="w-1/2">Claim</Button>
         </CardFooter>
     </Card>
   );
