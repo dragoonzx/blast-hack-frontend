@@ -34,9 +34,7 @@ const VaultControlPanel = (props: {
         <CardHeader>
         <CardTitle className=''>Control panel</CardTitle>
         <CardDescription>
-        <div className="flex items-center justify-between">
-          <p>heyy</p>
-        </div>
+          heyy
         </CardDescription>
         </CardHeader>
         <CardContent>

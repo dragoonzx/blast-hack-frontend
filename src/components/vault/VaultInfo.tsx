@@ -56,13 +56,13 @@ const VaultInfo = (props: {
         <CardHeader>
         <CardTitle className='text-3xl'>{props.name}</CardTitle>
         <Progress value={tokensFreed/props.tokensSupply*100} />
-        <CardDescription>
-        <div className="flex items-center justify-between">
-        <p>minted: <CountUp start={tokensFreed} end={props.tokensSupply} useEasing={false} duration={timeLeft}/></p>
-        <p>supply: {new Intl.NumberFormat().format(props.tokensSupply)}</p>
+        <div className="flex items-center justify-between text-gray-400">
+        <div suppressHydrationWarning>
+          minted: <CountUp start={tokensFreed} end={props.tokensSupply} useEasing={false} duration={timeLeft}/>
+        </div >
+        <p suppressHydrationWarning>supply: {new Intl.NumberFormat().format(props.tokensSupply)}</p>
         </div>
 
-        </CardDescription>
         </CardHeader>
         <CardContent>
         <div className="flex items-center justify-between">
