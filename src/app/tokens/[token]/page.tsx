@@ -14,10 +14,20 @@ import SwapCard from '@/components/swap/SwapCard';
 import SwapCardHeader from '@/components/swap/SwapCardHeader';
 import VaultInfo from '@/components/vault/VaultInfo';
 import VaultControlPanel from '@/components/vault/VaultControlPanel';
+import {getAllVaults} from '../../../lib/onchain';
 
 const TokenPage = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  
+  useEffect(() => {
+    const fetchVaults = async () => {
+      const allVaults = await getAllVaults();
+      console.log("Vaults: " + JSON.stringify(allVaults));
+    }
+    fetchVaults();
   }, []);
 
   return (
