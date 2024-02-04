@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -14,18 +14,43 @@ import SwapCard from '@/components/swap/SwapCard';
 import SwapCardHeader from '@/components/swap/SwapCardHeader';
 import VaultInfo from '@/components/vault/VaultInfo';
 import VaultControlPanel from '@/components/vault/VaultControlPanel';
-import {getAllVaults} from '../../../lib/onchain';
+import {getAllVaults, getVaultData, MineblastProjectData} from '../../../lib/onchain';
 
 const TokenPage = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  
+  const [vaultData, setVaultData] = useState<MineblastProjectData>({
+    tokenName: "...",
+    tokenSymbol: "...",
+    tokenTotalSupply: 0,
+    tokenPriceInUSD: 0,
+    projectOutputPerSecond: 0,
+    projectEndDate: new Date(Number(10000000000)),
+    TVLInUSD: 0,
+    liqudityInUSD: 0,
+  });
+
+  const getAPR = (TVL: number, outputPerSecond: number, tokenPriceUSD: number): number => {
+    if(TVL > 1) {
+      return (outputPerSecond * 31536000 / TVL * 100 * tokenPriceUSD);
+    }
+    else{
+      return 0;
+    }
+  }
+
+  const getTokensLeft = (tokensSupply: number, outputPerSecond: number, endDate: Date): number => {
+    const timeLeft = Math.floor((endDate.getTime() - new Date().getTime()) / 1000);
+    return tokensSupply - outputPerSecond * timeLeft;
+  }
+
   useEffect(() => {
     const fetchVaults = async () => {
       const allVaults = await getAllVaults();
-      console.log("Vaults: " + JSON.stringify(allVaults));
+      const vaultData = await getVaultData(allVaults[0], 2300);
+      setVaultData(vaultData);
     }
     fetchVaults();
   }, []);
@@ -34,14 +59,14 @@ const TokenPage = () => {
     <div className="flex items-start justify-between w-full">
       <div className="w-1/2 flex flex-col">
         <VaultInfo 
-          name="BRUHcoin" 
-          APR={9000.95} 
-          TVL={59067057} 
-          tokensSupply={21_000_000} 
-          tokensLeft={4_589_050} 
-          endDate={new Date(new Date().getTime() + 10*24*60*60*1000)}
+          name={vaultData.tokenName}
+          APR={getAPR(vaultData.TVLInUSD, vaultData.projectOutputPerSecond, vaultData.tokenPriceInUSD)} 
+          TVL={vaultData.TVLInUSD} 
+          tokensSupply={vaultData.tokenTotalSupply} 
+          tokensLeft={getTokensLeft(vaultData.tokenTotalSupply, vaultData.projectOutputPerSecond, vaultData.projectEndDate)} 
+          endDate={vaultData.projectEndDate}
           ownerShare={10}
-          liqudity={70721}
+          liqudity={vaultData.liqudityInUSD}
         />
         <VaultControlPanel
           symbol="BRUH"
