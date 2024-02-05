@@ -56,6 +56,8 @@ const TokenPage = () => {
     fetchVaults();
   }, [address]);
 
+  const ETHPrice = 2300;
+
   const getAPR = (
     TVL: number,
     outputPerSecond: number,
@@ -77,6 +79,15 @@ const TokenPage = () => {
       (endDate.getTime() - new Date().getTime()) / 1000
     );
     return tokensSupply - outputPerSecond * timeLeft;
+  };
+  const getTokensPerETHPerDay = (
+    TVLnETH: number,
+    outputPerSecond: number
+  ): number => {
+    if (TVLnETH === 0) {
+      return outputPerSecond * 86400;
+    }
+    return (outputPerSecond * 86400) / TVLnETH;
   };
 
   const getUserTokensPerSecond = (
@@ -123,6 +134,10 @@ const TokenPage = () => {
             vaultData.projectOutputPerSecond
           )}
           ethLocked={userVaultData.staked}
+          tokensPerETHPerDay={getTokensPerETHPerDay(
+            vaultData.TVLInUSD * ETHPrice,
+            vaultData.projectOutputPerSecond
+          )}
           onClaim={onClaim}
           onDeposit={onDeposit}
           onWithdraw={onWithdraw}
