@@ -122,7 +122,7 @@ export async function getVaultData(
   return result;
 }
 
-export async function getUserVaultData(vaultAddress: `0x${string}`, userAddress: `0x${string}`):Promise<{staked: number, pending: number}>{
+export async function getUserVaultData(vaultAddress: `0x${string}`, userAddress: `0x${string}`):Promise<{stakedETH: number, pending: number}>{
 
     const vaultContract = {
         address: vaultAddress,
@@ -140,7 +140,7 @@ export async function getUserVaultData(vaultAddress: `0x${string}`, userAddress:
     const pending = response[1].result as bigint
 
     const result = {
-        staked: truncate18To3Decimals(staked),
+        stakedETH: truncate18To3Decimals(staked),
         pending: truncate18To3Decimals(pending)
     }
 

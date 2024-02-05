@@ -37,9 +37,9 @@ const TokenPage = () => {
   });
 
   const [userVaultData, setUserVaultData] = useState<{
-    staked: number;
+    stakedETH: number;
     pending: number;
-  }>({ staked: 0, pending: 0 });
+  }>({ stakedETH: 0, pending: 0 });
 
   useEffect(() => {
     const fetchVaults = async () => {
@@ -71,11 +71,11 @@ const TokenPage = () => {
   };
 
   const getUserTokensPerSecond = (
-    staked: number,
-    TVL: number,
+    stakedETH: number,
+    TVLETH: number,
     outputPerSecond: number
   ): number => {
-    return (staked / TVL) * outputPerSecond;
+    return (stakedETH / TVLETH) * outputPerSecond;
   };
 
   const onClaim = () => {};
@@ -92,11 +92,11 @@ const TokenPage = () => {
           symbol={vaultData.tokenSymbol}
           claimableAmount={userVaultData.pending}
           claimableIncreasePerSecond={getUserTokensPerSecond(
-            userVaultData.staked,
-            vaultData.TVLInUSD,
+            userVaultData.stakedETH,
+            vaultData.TVLInUSD/ETHPrice,
             vaultData.projectOutputPerSecond
           )}
-          ethLocked={userVaultData.staked}
+          ethLocked={userVaultData.stakedETH}
           tokensPerETHPerDay={getTokensPerETHPerDay(
             vaultData.TVLInUSD * ETHPrice,
             vaultData.projectOutputPerSecond
