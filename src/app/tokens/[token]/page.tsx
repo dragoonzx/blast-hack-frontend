@@ -47,10 +47,10 @@ const TokenPage = () => {
   }, [address]);
 
   useEffect(() => {
-    if(address) {
+    if(address && vaultData.vaultAddress !== '0x0') {
       fetchUserVaultData(address);
     }
-  }, [address]);
+  }, [address, vaultData]);
 
   async function fetchVaultData() {
     const allVaults = await getAllVaults(); //temp, will be in props in the future
@@ -68,18 +68,20 @@ const TokenPage = () => {
 
   const ETHPrice = 2300;
 
-  const onClaim = () => {};
-
-  const onDeposit = () => {
-    fetchVaultData() 
+  const onClaim = () => {
+    //vault data not chainging, no need to refetch
     if(address)
       fetchUserVaultData(address);
   };
 
+  const onDeposit = () => {
+    fetchVaultData() 
+    //user data will be refetched in the useEffect
+  };
+
   const onWithdraw = () => {
     fetchVaultData()
-    if(address)
-      fetchUserVaultData(address);
+    //user data will be refetched in the useEffect
   };
 
   return (

@@ -20,7 +20,11 @@ import {
   useWriteContract,
 } from 'wagmi';
 import { MineblastProjectData } from '@/lib/onchain';
-import { useWriteMineblastVaultWrapAndDeposit, useWriteMineblastVaultWithdrawAndUnwrap} from '../../generated'
+import { 
+  useWriteMineblastVaultWrapAndDeposit, 
+  useWriteMineblastVaultWithdrawAndUnwrap,
+  useWriteMineblastVaultHarvest
+} from '../../generated'
 
 
 const VaultControlPanel = (props: {
@@ -33,6 +37,7 @@ const VaultControlPanel = (props: {
   const [withdrawAmount, setWithdrawAmount] = useState(0);
   const ETHbalance = useBalance({address});
 
+  
   const {
     data: depositHash,
     writeContract: depositWriteContract,
@@ -68,11 +73,7 @@ const VaultControlPanel = (props: {
     });
 
   const withdrawEth = async () => {
-    if (!withdrawAmount) {
-      return;
-    }
-
-    if(address === undefined) {
+    if (!withdrawAmount || !address) {
       return;
     }
 
@@ -84,6 +85,28 @@ const VaultControlPanel = (props: {
     });
   };
 
+  const {
+    data: claimHash,
+    writeContract: claimWriteContract,
+    isPending: isPendingClaim,
+  } = useWriteMineblastVaultHarvest();
+
+  const claimTx =
+    useWaitForTransactionReceipt({
+      hash: claimHash,
+    });
+
+  const claimToken = async () => {
+    if (!address) {
+      return;
+    }
+
+    claimWriteContract({
+      address: props.projectData.vaultAddress,
+      args: [0n, address]
+    });
+  };
+
   useEffect(() => {
     if (depositTx.isSuccess) {
       props.afterDeposit();
@@ -91,10 +114,16 @@ const VaultControlPanel = (props: {
   }, [depositTx.isSuccess]);
 
   useEffect(() => {
-    if (depositTx.isSuccess) {
+    if (withdrawTx.isSuccess) {
       props.afterWithdraw();
     }
   }, [withdrawTx.isSuccess]);
+
+  useEffect(() => {
+    if (claimTx.isSuccess) {
+      props.afterClaim();
+    }
+  }, [claimTx.isSuccess]);
 
   const getTokensPerETHPerDay = (): number => {
     if (props.ethLocked === 0) {
@@ -142,7 +171,7 @@ const VaultControlPanel = (props: {
             <div>
               {props.projectData.tokenSymbol} available: <CountUp decimals={2} start={props.claimableAmount} end={projectedBalanceInMonth} useEasing={false} duration={secondsInMonth}/>
             </div>
-            <Button className="w-1/2">Claim</Button>
+            <Button className="w-1/2" onClick={claimToken}>Claim</Button>
           </CardFooter>
         }
     </Card>
