@@ -39,7 +39,7 @@ export const contracts: Record<string, Contract> =  {
   erc20: { abi: erc20Abi },
   mineblastPair: { abi: mineblastPairAbi as any },
   mineblastVault: { abi: mineblastVaultAbi as any },
-  mineblastFactory: { abi: mineblastFactoryAbi as any, address: '0xb5787bfD3eAB099A55A308Bf148F8d3972E787A3'},
-  mineblastRouter: { abi: mineblastRouterAbi as any, address: '0x2758CFfD8f7FEB64Ac2E977Cc40440Aecd5fb681'},
-  mineblastLibrary: { abi: mineblastLibraryAbi as any, address: '0x0B947290432940D2A31027F1dE47C80b66EF134D'}
+  mineblastFactory: { abi: mineblastFactoryAbi as any, address: '0xC7E62A952AF4A0bCCc8A73446e6243B454F6835D'},
+  mineblastRouter: { abi: mineblastRouterAbi as any, address: '0x6f9FcE8f4AE3EF73a887570A1b4544AD52ecb6e7'},
+  mineblastLibrary: { abi: mineblastLibraryAbi as any, address: '0x079BF1922a2C849d3edd84396074C9936CA03587'}
 }
