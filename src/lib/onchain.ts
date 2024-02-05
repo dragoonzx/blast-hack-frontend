@@ -11,14 +11,16 @@ interface Vault {
 }
 
 export interface MineblastProjectData {
-  tokenName: string;
-  tokenSymbol: string;
-  tokenTotalSupply: number;
-  tokenPriceInUSD: number;
-  projectOutputPerSecond: number;
-  projectEndDate: Date;
-  TVLInUSD: number;
-  liqudityInUSD: number;
+    vaultAddress: `0x${string}`;
+    tokenName: string;
+    tokenSymbol: string;
+    tokenTotalSupply: number;
+    tokenPriceInUSD: number;
+    projectOutputPerSecond: number;
+    projectEndDate: Date;
+    //projectDurationInSeconds: number;
+    TVLInUSD: number;
+    liqudityInUSD: number;
 }
 
 const convertToUSD = (eth: bigint, ethPrice: number): number => {
@@ -82,13 +84,14 @@ export async function getVaultData(
         functionName: 'getAveragePrice',
         args: [BigInt('1000000000000000000'), 50],
       },
-      { ...pairContract, functionName: 'getReserves' },
-      { ...vaultContract, functionName: 'outputPerSecond' },
-      { ...vaultContract, functionName: 'endDate' },
+      { ...pairContract, functionName: 'getReserves', args: []},
+      { ...vaultContract, functionName: 'outputPerSecond', args: [] },
+      { ...vaultContract, functionName: 'endDate', args: [] },
       { ...tokenContract, functionName: 'totalSupply' },
       { ...tokenContract, functionName: 'symbol' },
       { ...tokenContract, functionName: 'name' },
       { ...wethContract, functionName: 'balanceOf', args: [vault.vault] },
+      { ...vaultContract, functionName: 'duration', args: [] },
     ],
   });
 
@@ -98,16 +101,19 @@ export async function getVaultData(
   const tokenPriceInETH = response[0].result as bigint;
   const projectOutputPerSecond = response[2].result as bigint;
   const projectEndDate = response[3].result as bigint;
+  //const projectDuration = response[8].result as bigint;
   const TVLInETH = response[7].result as bigint;
   const liqudityInETH = (response[1].result as bigint[])[0] * 2n;
 
   const result = {
+    vaultAddress: vault.vault,
     tokenName,
     tokenSymbol,
     tokenTotalSupply: truncate18To3Decimals(tokenTotalSupply),
     tokenPriceInUSD: convertToUSD(tokenPriceInETH, ethPrice),
     projectOutputPerSecond: truncate18To3Decimals(projectOutputPerSecond),
     projectEndDate: new Date(Number(projectEndDate) * 1000),
+    //projectDurationInSeconds: Number(projectDuration),
     TVLInUSD: convertToUSD(TVLInETH, ethPrice),
     liqudityInUSD: convertToUSD(liqudityInETH, ethPrice),
   };
@@ -137,6 +143,6 @@ export async function getUserVaultData(vaultAddress: `0x${string}`, userAddress:
         staked: truncate18To3Decimals(staked),
         pending: truncate18To3Decimals(pending)
     }
-    
+
     return result;
 }

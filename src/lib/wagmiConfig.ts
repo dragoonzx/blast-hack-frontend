@@ -42,14 +42,14 @@ export const contracts = {
   mineblastVault: { abi: mineblastVaultAbi.abi as any },
   mineblastFactory: {
     abi: mineblastFactoryAbi.abi as any,
-    address: '0xC7E62A952AF4A0bCCc8A73446e6243B454F6835D',
+    address: '0xC7E62A952AF4A0bCCc8A73446e6243B454F6835D' as `0x${string}`,
   },
   mineblastRouter: {
     abi: mineblastRouterAbi.abi as any,
-    address: '0x6f9FcE8f4AE3EF73a887570A1b4544AD52ecb6e7',
+    address: '0x6f9FcE8f4AE3EF73a887570A1b4544AD52ecb6e7' as `0x${string}`,
   },
   mineblastLibrary: {
     abi: mineblastLibraryAbi.abi as any,
-    address: '0x079BF1922a2C849d3edd84396074C9936CA03587',
+    address: '0x079BF1922a2C849d3edd84396074C9936CA03587' as `0x${string}`,
   },
 };
