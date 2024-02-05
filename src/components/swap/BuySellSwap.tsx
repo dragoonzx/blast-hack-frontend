@@ -30,13 +30,7 @@ const BuySellSwap = () => {
         address: '0xf75b2FC80bEBF328Ce4e1766A9C68d2055f76273',
         functionName: 'balanceOf',
         args: [address!],
-      },
-      {
-        abi: contracts.erc20.abi,
-        // test mbti token
-        address: '0xf75b2FC80bEBF328Ce4e1766A9C68d2055f76273',
-        functionName: 'decimals',
-      },
+      }
     ],
     query: {
       enabled: !!address,
@@ -45,7 +39,7 @@ const BuySellSwap = () => {
   const toBalanceData = erc20BalanceWithDecimalsData
     ? {
         value: erc20BalanceWithDecimalsData[0].result,
-        decimals: erc20BalanceWithDecimalsData[1].result,
+        decimals: 18,
       }
     : null;
 
