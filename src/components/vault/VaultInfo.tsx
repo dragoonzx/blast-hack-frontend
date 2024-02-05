@@ -10,25 +10,27 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import {
+  MineblastProjectData,
+} from '@/lib/onchain';
+import { formatNumberCompact } from '@/lib/utils';
 import { Progress } from "@/components/ui/progress"
 
-const VaultInfo = (props: {
-  name: string, APR: number, TVL: number, 
-  tokensSupply: number, tokensLeft: number, 
-  endDate: Date, ownerShare: number, liqudity: number}) => {
+const VaultInfo = (props: {projectData: MineblastProjectData}) => {
 
-  const timeLeft = Math.floor((props.endDate.getTime() - new Date().getTime()) / 1000);
-  const tokensPerSecond = props.tokensLeft / timeLeft;
-  const tokensFreed = props.tokensSupply - props.tokensLeft
+  const timeLeft = Math.floor((props.projectData.projectEndDate.getTime() - new Date().getTime()) / 1000);
+  const tokensLeft = props.projectData.projectOutputPerSecond * timeLeft;
+  const tokensFreed = props.projectData.tokenTotalSupply - tokensLeft;
 
-  const formatLargeSum = function(value: number) {
-    return Intl.NumberFormat('en-US', {
-      notation: "compact",
-      maximumFractionDigits: 1
-    }).format(value);
-  }
+  const getAndFormatAPR = (): string => {
+    let value = 0;
+    const tvl = props.projectData.TVLInUSD;
+    if (tvl > 1) {
+      value =  ((props.projectData.projectOutputPerSecond * 31536000) / tvl) * 100 * props.projectData.tokenPriceInUSD;
+    } else {
+      value = 0;
+    }
 
-  const formatAPR = function(value: number) {
     if(value > 1000) {
       return Math.floor(value).toString();
     } else {
@@ -36,12 +38,12 @@ const VaultInfo = (props: {
         maximumFractionDigits: 2
       }).format(value);
     }
-  }
+  };
 
-  const formatTimeLeft = function(value: number) {
-    const days = Math.floor(value / 86400);
-    const hours = Math.floor((value - days * 86400) / 3600);
-    const minutes = Math.floor((value - days * 86400 - hours * 3600) / 60);
+  const getTimeLeftFormatted = function() {
+    const days = Math.floor(timeLeft / 86400);
+    const hours = Math.floor((timeLeft - days * 86400) / 3600);
+    const minutes = Math.floor((timeLeft - days * 86400 - hours * 3600) / 60);
     if(days == 0){
       if(hours == 0){
         return `${minutes}m`;
@@ -54,24 +56,24 @@ const VaultInfo = (props: {
   return (
     <Card className="min-w-[450px]">
         <CardHeader>
-        <CardTitle className='text-3xl'>{props.name}</CardTitle>
-        <Progress value={tokensFreed/props.tokensSupply*100} />
+        <CardTitle className='text-3xl'>{props.projectData.tokenName}</CardTitle>
+        <Progress value={tokensFreed/props.projectData.tokenTotalSupply*100} />
         <div className="flex items-center justify-between text-gray-400">
         <div suppressHydrationWarning>
-          minted: <CountUp start={tokensFreed} end={props.tokensSupply} useEasing={false} duration={timeLeft}/>
+          minted: <CountUp start={tokensFreed} end={props.projectData.tokenTotalSupply} useEasing={false} duration={timeLeft}/>
         </div >
-        <p suppressHydrationWarning>supply: {new Intl.NumberFormat().format(props.tokensSupply)}</p>
+        <p suppressHydrationWarning>supply: {new Intl.NumberFormat().format(props.projectData.tokenTotalSupply)}</p>
         </div>
 
         </CardHeader>
         <CardContent>
         <div className="flex items-center justify-between">
             <div className='flex flex-col items-center justify-center flex-grow'>
-              <p className='text-3xl'>${formatLargeSum(props.TVL)}</p>
+              <p className='text-3xl'>${formatNumberCompact(props.projectData.TVLInUSD)}</p>
               <p className='text-xl'>TVL</p>
             </div>
             <div className='flex flex-col items-center justify-center flex-grow'>
-              <p className='text-3xl'>{formatAPR(props.APR)}%</p>
+              <p className='text-3xl'>{getAndFormatAPR()}%</p>
               <p className='text-xl'>APR</p>
             </div>
             <div className="space-x-2">
@@ -80,9 +82,9 @@ const VaultInfo = (props: {
         </CardContent>
         <CardFooter >
         <div className="flex items-center w-full justify-between">
-            <p className='text-sm'>liqudity <br />${formatLargeSum(props.liqudity)}</p>
-            <p className='text-sm'>creator share <br />{props.ownerShare}%</p>
-            <p className='text-sm'>time left <br /> {formatTimeLeft(timeLeft)}</p>
+            <p className='text-sm'>liqudity <br />${formatNumberCompact(props.projectData.liqudityInUSD)}</p>
+            <p className='text-sm'>creator share <br />{10}%</p>
+            <p className='text-sm'>time left <br /> {getTimeLeftFormatted()}</p>
         </div>
         </CardFooter>
     </Card>
