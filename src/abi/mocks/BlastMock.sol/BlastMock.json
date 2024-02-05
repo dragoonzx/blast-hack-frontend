@@ -1,0 +1,429 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "BlastMock",
+  "sourceName": "src/mocks/BlastMock.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "claimAllGas",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "claimAllYield",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "claimGas",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "claimGasAtMinClaimRate",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "claimMaxGas",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "claimYield",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "enum YieldMode",
+          "name": "",
+          "type": "uint8"
+        },
+        {
+          "internalType": "enum GasMode",
+          "name": "",
+          "type": "uint8"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "configure",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "configureAutomaticYield",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "configureAutomaticYieldOnBehalf",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "configureClaimableGas",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "configureClaimableGasOnBehalf",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "configureClaimableYield",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "configureClaimableYieldOnBehalf",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "enum YieldMode",
+          "name": "",
+          "type": "uint8"
+        },
+        {
+          "internalType": "enum GasMode",
+          "name": "",
+          "type": "uint8"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "configureContract",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "configureGovernor",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "configureGovernorOnBehalf",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "configureVoidGas",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "configureVoidGasOnBehalf",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "configureVoidYield",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "configureVoidYieldOnBehalf",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "readClaimableYield",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "readGasParams",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "enum GasMode",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "readYieldConfiguration",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x6080806040523461001657610506908161001c8239f35b600080fdfe604060808152600436101561001357600080fd5b600090813560e01c80630951888f146101a75780630ca12c4b146103275780632210dfb1146101ac57806337ebe3a8146101ed5780633ba5713e146101ed5780634c802f38146102b65780634e606c47146101ac578063662aa11d146102b15780637114177a146101ac578063860043b6146102b1578063908c8502146101ed578063954fa5ee146102b1578063aa857d98146101ac578063b71d6dd4146101ed578063c8992e6114610246578063dde798a4146101f2578063eb59acdc146101ed578063eb864698146101ed578063ec3278e8146101b1578063f098767a146101ac578063f9719662146101a7578063fafce39e146101625763fd8c4b9d1461011c57600080fd5b3461015e5760207ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261015e579060209161015761036a565b5051908152f35b5080fd5b503461015e5760807ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261015e579060209161019e61036a565b50610157610392565b6103b5565b61041a565b503461015e5760207ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261015e579060209161015761036a565b61044b565b503461015e5760207ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261015e5760809161022d61036a565b5081519181835281602084015282015260016060820152f35b82346102ae5760607ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc3601126102ae57600360043510156102ae57600260243510156102ae5760443573ffffffffffffffffffffffffffffffffffffffff8116036102ae5780f35b80fd5b610484565b82346102ae5760807ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc3601126102ae576102ee61036a565b50600360243510156102ae57600260443510156102ae5760643573ffffffffffffffffffffffffffffffffffffffff8116036102ae5780f35b503461015e577ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc3601126102ae5761035d61036a565b50610366610392565b5080f35b6004359073ffffffffffffffffffffffffffffffffffffffff8216820361038d57565b600080fd5b6024359073ffffffffffffffffffffffffffffffffffffffff8216820361038d57565b3461038d5760607ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261038d5773ffffffffffffffffffffffffffffffffffffffff6004358181160361038d576024359081160361038d57602060405160008152f35b3461038d5760007ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261038d57005b3461038d5760207ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261038d5761048261036a565b005b3461038d5760407ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261038d576104bb61036a565b506104c4610392565b50602060405160008152f3fea2646970667358221220cb96b5bf7dbac87c545c063ff604dd499766b6124dca5a326bf0649dc5d4d5e564736f6c63430008170033",
+  "deployedBytecode": "0x604060808152600436101561001357600080fd5b600090813560e01c80630951888f146101a75780630ca12c4b146103275780632210dfb1146101ac57806337ebe3a8146101ed5780633ba5713e146101ed5780634c802f38146102b65780634e606c47146101ac578063662aa11d146102b15780637114177a146101ac578063860043b6146102b1578063908c8502146101ed578063954fa5ee146102b1578063aa857d98146101ac578063b71d6dd4146101ed578063c8992e6114610246578063dde798a4146101f2578063eb59acdc146101ed578063eb864698146101ed578063ec3278e8146101b1578063f098767a146101ac578063f9719662146101a7578063fafce39e146101625763fd8c4b9d1461011c57600080fd5b3461015e5760207ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261015e579060209161015761036a565b5051908152f35b5080fd5b503461015e5760807ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261015e579060209161019e61036a565b50610157610392565b6103b5565b61041a565b503461015e5760207ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261015e579060209161015761036a565b61044b565b503461015e5760207ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261015e5760809161022d61036a565b5081519181835281602084015282015260016060820152f35b82346102ae5760607ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc3601126102ae57600360043510156102ae57600260243510156102ae5760443573ffffffffffffffffffffffffffffffffffffffff8116036102ae5780f35b80fd5b610484565b82346102ae5760807ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc3601126102ae576102ee61036a565b50600360243510156102ae57600260443510156102ae5760643573ffffffffffffffffffffffffffffffffffffffff8116036102ae5780f35b503461015e577ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc3601126102ae5761035d61036a565b50610366610392565b5080f35b6004359073ffffffffffffffffffffffffffffffffffffffff8216820361038d57565b600080fd5b6024359073ffffffffffffffffffffffffffffffffffffffff8216820361038d57565b3461038d5760607ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261038d5773ffffffffffffffffffffffffffffffffffffffff6004358181160361038d576024359081160361038d57602060405160008152f35b3461038d5760007ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261038d57005b3461038d5760207ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261038d5761048261036a565b005b3461038d5760407ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261038d576104bb61036a565b506104c4610392565b50602060405160008152f3fea2646970667358221220cb96b5bf7dbac87c545c063ff604dd499766b6124dca5a326bf0649dc5d4d5e564736f6c63430008170033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
