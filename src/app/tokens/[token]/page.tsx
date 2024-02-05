@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import SwapCard from '@/components/swap/SwapCard';
 import SwapCardHeader from '@/components/swap/SwapCardHeader';
@@ -15,7 +15,7 @@ import {
   getUserVaultData,
   MineblastProjectData,
 } from '@/lib/onchain';
-import { useAccount } from 'wagmi';
+import { useAccount, useBalance } from 'wagmi';
 
 const TokenPage = () => {
   useEffect(() => {
@@ -23,6 +23,7 @@ const TokenPage = () => {
   }, []);
 
   const { address, isConnecting, isDisconnected } = useAccount();
+  const ETHbalance = useBalance({ address });
 
   const [vaultData, setVaultData] = useState<MineblastProjectData>({
     vaultAddress: '0x0',
@@ -42,69 +43,57 @@ const TokenPage = () => {
   }>({ stakedETH: 0, pending: 0 });
 
   useEffect(() => {
-    const fetchVaults = async () => {
-      const allVaults = await getAllVaults();
-      const vaultData = await getVaultData(allVaults[0], 2300);
-      setVaultData(vaultData);
-
-      if (address) {
-        const userVaultData = await getUserVaultData(
-          allVaults[0].vault,
-          address
-        );
-        setUserVaultData(userVaultData);
-      }
-    };
-    fetchVaults();
+    fetchVaultData();
   }, [address]);
+
+  useEffect(() => {
+    if(address) {
+      fetchUserVaultData(address);
+    }
+  }, [address]);
+
+  async function fetchVaultData() {
+    const allVaults = await getAllVaults(); //temp, will be in props in the future
+    const vaultData = await getVaultData(allVaults[0], 2300);
+    setVaultData(vaultData);
+  }
+
+  async function fetchUserVaultData(address: `0x${string}`) {
+    const userVaultData = await getUserVaultData(
+      vaultData.vaultAddress,
+      address
+    );
+    setUserVaultData(userVaultData);
+  }
 
   const ETHPrice = 2300;
 
-  const getTokensPerETHPerDay = (
-    TVLnETH: number,
-    outputPerSecond: number
-  ): number => {
-    if (TVLnETH === 0) {
-      return outputPerSecond * 86400;
-    }
-    return (outputPerSecond * 86400) / TVLnETH;
-  };
-
-  const getUserTokensPerSecond = (
-    stakedETH: number,
-    TVLETH: number,
-    outputPerSecond: number
-  ): number => {
-    return (stakedETH / TVLETH) * outputPerSecond;
-  };
-
   const onClaim = () => {};
 
-  const onDeposit = (amount: number) => {};
+  const onDeposit = () => {
+    fetchVaultData() 
+    if(address)
+      fetchUserVaultData(address);
+  };
 
-  const onWithdraw = (amount: number) => {};
+  const onWithdraw = () => {
+    fetchVaultData()
+    if(address)
+      fetchUserVaultData(address);
+  };
 
   return (
     <div className="flex items-start justify-center w-full space-x-8">
       <div className="w-1/2 flex flex-col">
         <VaultInfo projectData={vaultData} />
         <VaultControlPanel
-          symbol={vaultData.tokenSymbol}
+          projectData={vaultData}
           claimableAmount={userVaultData.pending}
-          claimableIncreasePerSecond={getUserTokensPerSecond(
-            userVaultData.stakedETH,
-            vaultData.TVLInUSD/ETHPrice,
-            vaultData.projectOutputPerSecond
-          )}
           ethLocked={userVaultData.stakedETH}
-          tokensPerETHPerDay={getTokensPerETHPerDay(
-            vaultData.TVLInUSD * ETHPrice,
-            vaultData.projectOutputPerSecond
-          )}
-          vaultAddress={vaultData.vaultAddress}
-          onClaim={onClaim}
-          onDeposit={onDeposit}
-          onWithdraw={onWithdraw}
+          ethPrice={ETHPrice}
+          afterClaim={onClaim}
+          afterDeposit={onDeposit}
+          afterWithdraw={onWithdraw}
         />
       </div>
       <div className="min-w-[360px] space-y-4">
