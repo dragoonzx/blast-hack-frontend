@@ -9,6 +9,7 @@ import { Web3Provider } from '@/components/web3/Web3Provider';
 import { ConnectKitButton } from 'connectkit';
 import useScroll from '@/lib/hooks/useScroll';
 import classNames from 'classnames';
+import { Toaster } from '@/components/ui/toaster';
 
 const NAV_MENU = [
   {
@@ -216,6 +217,7 @@ export default function RootLayout({
           <main className="min-h-screen items-center justify-between px-24 py-4">
             {children}
           </main>
+          <Toaster />
         </Web3Provider>
       </body>
     </html>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -12,15 +12,17 @@ import {
   useAccount,
   useBalance,
   useReadContracts,
+  useWaitForTransactionReceipt,
   useWriteContract,
 } from 'wagmi';
 import { formatUnits, parseEther } from 'viem';
 import { contracts } from '@/lib/wagmiConfig';
 import { WETH_ADDR } from '@/lib/onchain';
+import { useToast } from '../ui/use-toast';
 
 const GetWETH = () => {
   const { address } = useAccount();
-  const { data: ethBalanceData } = useBalance({
+  const { data: ethBalanceData, refetch } = useBalance({
     address,
     query: {
       enabled: !!address,
@@ -36,17 +38,23 @@ const GetWETH = () => {
     formattedBalance && setAmount(formattedBalance);
   };
 
-  const { writeContract, isPending } = useWriteContract();
+  const {
+    data: depositHash,
+    writeContract: depositWriteContract,
+    isPending: isPendingDeposit,
+  } = useWriteContract();
+
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash: depositHash,
+    });
 
   const depositEth = async () => {
-    console.log({
-      abi: contracts.weth.abi,
-      address: WETH_ADDR,
-      functionName: 'deposit',
-      value: parseEther(amount),
-      args: [],
-    });
-    writeContract({
+    if (!amount) {
+      return;
+    }
+
+    depositWriteContract({
       abi: contracts.weth.abi,
       address: WETH_ADDR,
       functionName: 'deposit',
@@ -54,6 +62,18 @@ const GetWETH = () => {
       args: [],
     });
   };
+
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (isConfirmed) {
+      toast({
+        title: 'Successfully get WETH',
+      });
+      refetch();
+      setAmount('');
+    }
+  }, [isConfirmed, toast, refetch]);
 
   return (
     <Card>
@@ -72,7 +92,7 @@ const GetWETH = () => {
                   {address ? (
                     <p className="text-xs">
                       <span className="text-muted-foreground">Balance: </span>
-                      {formattedBalance}
+                      {formattedBalance} ETH
                     </p>
                   ) : null}
                 </div>
@@ -81,7 +101,10 @@ const GetWETH = () => {
                 <input
                   className="h-12 flex items-center text-xl outline-none w-full pr-2 overflow-ellipsis"
                   value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
+                  onChange={(e) =>
+                    e.target.value.match(/^[0-9]*[.,]?[0-9]*$/) &&
+                    setAmount(e.target.value)
+                  }
                   inputMode="decimal"
                   minLength={1}
                   maxLength={79}
@@ -97,23 +120,35 @@ const GetWETH = () => {
                 </button>
                 <div className="space-x-2 flex">
                   <button
-                    className="border rounded-md p-2"
+                    disabled={isPendingDeposit}
+                    className="border rounded-md p-2 flex items-center"
                     onClick={depositEth}
                   >
-                    Deposit
-                  </button>
-                  <button
-                    className="border rounded-md p-2"
-                    onClick={() => {
-                      writeContract({
-                        abi: contracts.weth.abi,
-                        address: WETH_ADDR,
-                        functionName: 'withdraw',
-                        args: [parseEther(amount)],
-                      });
-                    }}
-                  >
-                    Withdraw
+                    {isPendingDeposit || isConfirming ? (
+                      <svg
+                        className="animate-spin h-5 w-5 mr-2"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          stroke-width="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                    ) : null}
+                    {isPendingDeposit || isConfirming
+                      ? 'Depositing...'
+                      : 'Deposit'}
                   </button>
                 </div>
               </div>
