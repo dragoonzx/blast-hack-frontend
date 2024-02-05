@@ -25,6 +25,7 @@ const TokenPage = () => {
   const { address, isConnecting, isDisconnected } = useAccount();
 
   const [vaultData, setVaultData] = useState<MineblastProjectData>({
+    vaultAddress: '0x0',
     tokenName: '...',
     tokenSymbol: '...',
     tokenTotalSupply: 0,
@@ -100,6 +101,7 @@ const TokenPage = () => {
             vaultData.TVLInUSD * ETHPrice,
             vaultData.projectOutputPerSecond
           )}
+          vaultAddress={vaultData.vaultAddress}
           onClaim={onClaim}
           onDeposit={onDeposit}
           onWithdraw={onWithdraw}
