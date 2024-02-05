@@ -1,9 +1,10 @@
-import {abi as mineblastPairAbi} from '../../src/abi/swap/MineblastSwapPair.sol/MineblastSwapPair.json'
-import {abi as mineblastVaultAbi} from '../../src/abi/MineblastVault.sol/MineblastVault.json'
-import {abi as mineblastFactoryAbi} from '../../src/abi/MineblastFactory.sol/MineblastFactory.json'
-import {abi as mineblastRouterAbi} from '../../src/abi/swap/MineblastRouter.sol/MineblastRouter.json'
-import {abi as mineblastLibraryAbi} from '../../src/abi/swap/libraries/MineblastLibrary.sol/MineblastLibrary.json'
-import { Abi, erc20Abi } from 'viem'
+import { default as mineblastPairAbi } from '../../src/abi/swap/MineblastSwapPair.sol/MineblastSwapPair.json';
+import { default as mineblastVaultAbi } from '../../src/abi/MineblastVault.sol/MineblastVault.json';
+import { default as mineblastFactoryAbi } from '../../src/abi/MineblastFactory.sol/MineblastFactory.json';
+import { default as mineblastRouterAbi } from '../../src/abi/swap/MineblastRouter.sol/MineblastRouter.json';
+import { default as mineblastLibraryAbi } from '../../src/abi/swap/libraries/MineblastLibrary.sol/MineblastLibrary.json';
+import { default as wethAbi } from '../../src/abi/mocks/RebasingWETHMock.sol/RebasingWETHMock.json';
+import { Abi, erc20Abi } from 'viem';
 import { createConfig, http } from 'wagmi';
 import { blastSepolia } from 'wagmi/chains';
 import { getDefaultConfig } from 'connectkit';
@@ -29,17 +30,26 @@ export const config = createConfig(
   })
 );
 
-
 type Contract = {
   abi: Abi; // Use the appropriate type for abi
   address?: `0x${string}`; // Make address optional
 };
 
-export const contracts: Record<string, Contract> =  {
+export const contracts = {
   erc20: { abi: erc20Abi },
+  weth: { abi: wethAbi.abi as any },
   mineblastPair: { abi: mineblastPairAbi as any },
   mineblastVault: { abi: mineblastVaultAbi as any },
-  mineblastFactory: { abi: mineblastFactoryAbi as any, address: '0xb5787bfD3eAB099A55A308Bf148F8d3972E787A3'},
-  mineblastRouter: { abi: mineblastRouterAbi as any, address: '0x2758CFfD8f7FEB64Ac2E977Cc40440Aecd5fb681'},
-  mineblastLibrary: { abi: mineblastLibraryAbi as any, address: '0x0B947290432940D2A31027F1dE47C80b66EF134D'}
-}
+  mineblastFactory: {
+    abi: mineblastFactoryAbi as any,
+    address: '0xb5787bfD3eAB099A55A308Bf148F8d3972E787A3',
+  },
+  mineblastRouter: {
+    abi: mineblastRouterAbi as any,
+    address: '0x2758CFfD8f7FEB64Ac2E977Cc40440Aecd5fb681',
+  },
+  mineblastLibrary: {
+    abi: mineblastLibraryAbi as any,
+    address: '0x0B947290432940D2A31027F1dE47C80b66EF134D',
+  },
+};
