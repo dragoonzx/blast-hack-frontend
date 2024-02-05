@@ -12,12 +12,13 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import SwapInput from '@/components/swap/SwapInput';
+import { formatNumberCompact } from '@/lib/utils';
 import { useAccount } from "wagmi";
 import { useBalance } from 'wagmi'
 
 
 const VaultControlPanel = (props: {
-  symbol: string, claimableAmount: number, claimableIncreasePerSecond: number, ethLocked: number
+  symbol: string, claimableAmount: number, claimableIncreasePerSecond: number, ethLocked: number, tokensPerETHPerDay: number,
   onClaim: () => void, onDeposit: (amount: number) => void, onWithdraw: (amount: number) => void
 }) => {
 
@@ -42,7 +43,7 @@ const VaultControlPanel = (props: {
         <CardHeader>
         <CardTitle className=''>Control panel</CardTitle>
         <CardDescription>
-          heyy
+          {formatNumberCompact(props.tokensPerETHPerDay)} {props.symbol} per ETH per day estimated
         </CardDescription>
         </CardHeader>
         <CardContent>
