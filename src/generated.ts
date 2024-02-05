@@ -265,7 +265,7 @@ export const mineblastFactoryAbi = [
 ] as const
 
 export const mineblastFactoryAddress =
-  '0xb5787bfD3eAB099A55A308Bf148F8d3972E787A3' as const
+  '0xC7E62A952AF4A0bCCc8A73446e6243B454F6835D' as const
 
 export const mineblastFactoryConfig = {
   address: mineblastFactoryAddress,
@@ -294,7 +294,7 @@ export const mineblastLibraryAbi = [
 ] as const
 
 export const mineblastLibraryAddress =
-  '0x0B947290432940D2A31027F1dE47C80b66EF134D' as const
+  '0x079BF1922a2C849d3edd84396074C9936CA03587' as const
 
 export const mineblastLibraryConfig = {
   address: mineblastLibraryAddress,
@@ -948,7 +948,7 @@ export const mineblastRouterAbi = [
 ] as const
 
 export const mineblastRouterAddress =
-  '0x2758CFfD8f7FEB64Ac2E977Cc40440Aecd5fb681' as const
+  '0x6f9FcE8f4AE3EF73a887570A1b4544AD52ecb6e7' as const
 
 export const mineblastRouterConfig = {
   address: mineblastRouterAddress,
@@ -1355,11 +1355,29 @@ export const mineblastVaultAbi = [
   },
   {
     type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'to', internalType: 'address', type: 'address' },
+    ],
+    name: 'withdrawAndUnwrap',
+    outputs: [],
+    stateMutability: 'payable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'wrapAndDeposit',
+    outputs: [],
+    stateMutability: 'payable',
+  },
+  {
+    type: 'function',
     inputs: [],
     name: 'yieldToLiquidity',
     outputs: [],
     stateMutability: 'nonpayable',
   },
+  { type: 'receive', stateMutability: 'payable' },
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2649,6 +2667,24 @@ export const useWriteMineblastVaultWithdrawAndHarvest =
   })
 
 /**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link mineblastVaultAbi}__ and `functionName` set to `"withdrawAndUnwrap"`
+ */
+export const useWriteMineblastVaultWithdrawAndUnwrap =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: mineblastVaultAbi,
+    functionName: 'withdrawAndUnwrap',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link mineblastVaultAbi}__ and `functionName` set to `"wrapAndDeposit"`
+ */
+export const useWriteMineblastVaultWrapAndDeposit =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: mineblastVaultAbi,
+    functionName: 'wrapAndDeposit',
+  })
+
+/**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link mineblastVaultAbi}__ and `functionName` set to `"yieldToLiquidity"`
  */
 export const useWriteMineblastVaultYieldToLiquidity =
@@ -2751,6 +2787,24 @@ export const useSimulateMineblastVaultWithdrawAndHarvest =
   /*#__PURE__*/ createUseSimulateContract({
     abi: mineblastVaultAbi,
     functionName: 'withdrawAndHarvest',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link mineblastVaultAbi}__ and `functionName` set to `"withdrawAndUnwrap"`
+ */
+export const useSimulateMineblastVaultWithdrawAndUnwrap =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: mineblastVaultAbi,
+    functionName: 'withdrawAndUnwrap',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link mineblastVaultAbi}__ and `functionName` set to `"wrapAndDeposit"`
+ */
+export const useSimulateMineblastVaultWrapAndDeposit =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: mineblastVaultAbi,
+    functionName: 'wrapAndDeposit',
   })
 
 /**
