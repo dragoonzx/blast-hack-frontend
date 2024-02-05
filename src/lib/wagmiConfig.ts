@@ -38,18 +38,18 @@ type Contract = {
 export const contracts = {
   erc20: { abi: erc20Abi },
   weth: { abi: wethAbi.abi as any },
-  mineblastPair: { abi: mineblastPairAbi as any },
-  mineblastVault: { abi: mineblastVaultAbi as any },
+  mineblastPair: { abi: mineblastPairAbi.abi as any },
+  mineblastVault: { abi: mineblastVaultAbi.abi as any },
   mineblastFactory: {
-    abi: mineblastFactoryAbi as any,
+    abi: mineblastFactoryAbi.abi as any,
     address: '0xC7E62A952AF4A0bCCc8A73446e6243B454F6835D',
   },
   mineblastRouter: {
-    abi: mineblastRouterAbi as any,
+    abi: mineblastRouterAbi.abi as any,
     address: '0x6f9FcE8f4AE3EF73a887570A1b4544AD52ecb6e7',
   },
   mineblastLibrary: {
-    abi: mineblastLibraryAbi as any,
+    abi: mineblastLibraryAbi.abi as any,
     address: '0x079BF1922a2C849d3edd84396074C9936CA03587',
   },
 };
