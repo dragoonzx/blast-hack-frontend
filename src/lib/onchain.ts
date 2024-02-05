@@ -110,3 +110,28 @@ export async function getVaultData(vault: Vault, ethPrice: number): Promise<Mine
     return result;
 
 }
+
+export async function getUserVaultData(vaultAddress: `0x${string}`, userAddress: `0x${string}`):Promise<{staked: number, pending: number}>{
+
+    const vaultContract = {
+        address: vaultAddress,
+        abi: contracts.mineblastVault.abi
+    }
+
+    const response = await readContracts(config, {
+        contracts:[
+            { ...vaultContract, functionName: 'userInfo', args: [0,userAddress] },
+            { ...vaultContract, functionName: 'getPending', args: [0,userAddress]},
+        ]
+    })
+
+    const staked = (response[0].result as bigint[])[0]
+    const pending = response[1].result as bigint
+
+    const result = {
+        staked: truncate18To3Decimals(staked),
+        pending: truncate18To3Decimals(pending)
+    }
+    
+    return result;
+}
