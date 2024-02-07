@@ -1,4 +1,5 @@
 import { default as mineblastPairAbi } from '../../src/abi/swap/MineblastSwapPair.sol/MineblastSwapPair.json';
+import { default as mineblastPairFactoryAbi } from '../../src/abi/swap/MineblastSwapPairFactory.sol/MineblastSwapPairFactory.json';
 import { default as mineblastVaultAbi } from '../../src/abi/MineblastVault.sol/MineblastVault.json';
 import { default as mineblastFactoryAbi } from '../../src/abi/MineblastFactory.sol/MineblastFactory.json';
 import { default as mineblastRouterAbi } from '../../src/abi/swap/MineblastRouter.sol/MineblastRouter.json';
@@ -42,14 +43,18 @@ export const contracts = {
   mineblastVault: { abi: mineblastVaultAbi.abi as any },
   mineblastFactory: {
     abi: mineblastFactoryAbi.abi as any,
-    address: '0xC7E62A952AF4A0bCCc8A73446e6243B454F6835D' as `0x${string}`,
+    address: '0xDDC21B84Be02E76eF6A541A209CD9a40E02702cA' as `0x${string}`,
   },
   mineblastRouter: {
     abi: mineblastRouterAbi.abi as any,
-    address: '0x6f9FcE8f4AE3EF73a887570A1b4544AD52ecb6e7' as `0x${string}`,
+    address: '0x1ea46f363456655D02b542b70741B1E785e1AB86' as `0x${string}`,
   },
   mineblastLibrary: {
     abi: mineblastLibraryAbi.abi as any,
-    address: '0x079BF1922a2C849d3edd84396074C9936CA03587' as `0x${string}`,
+    address: '0x75c622ddA2E8eEc20724Be2A0A36Cc114Ef3FDeA' as `0x${string}`,
+  },
+  mineblastPairFactory: {
+    abi: mineblastPairFactoryAbi.abi as any,
+    address: '0x40530936598eEb8a37EF7EC5fe8aA9e915c511bD' as `0x${string}`,
   },
 };
