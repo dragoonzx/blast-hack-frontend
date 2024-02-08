@@ -31,7 +31,10 @@ const VaultInfo = (props: {projectData: MineblastProjectData}) => {
       value = 0;
     }
 
-    if(value > 1000) {
+    if(value > 9000){
+      return ">9000"
+    }
+    else if(value > 100) {
       return Math.floor(value).toString();
     } else {
       return Intl.NumberFormat('en-US', {
