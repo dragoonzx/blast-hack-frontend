@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -8,9 +8,40 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { ConnectKitButton } from 'connectkit';
-import { useAccount, useBalance, useReadContracts } from 'wagmi';
+import {
+  useAccount,
+  useBalance,
+  useReadContracts,
+  useWaitForTransactionReceipt,
+} from 'wagmi';
 import { formatUnits } from 'viem';
 import { contracts } from '@/lib/wagmiConfig';
+import {
+  useReadMineblastRouterGetAmountOut,
+  useWriteMineblastRouterSwapEthForExactTokens,
+  useWriteMineblastRouterSwapExactTokensForEth,
+} from '@/generated';
+
+enum SWAP_STATE {
+  'from_native',
+  'to_native',
+}
+
+type SwapState = {
+  state: SWAP_STATE;
+  from: {
+    amount: string;
+    address: string;
+    symbol: string;
+    balance: bigint;
+  };
+  to: {
+    amount: string;
+    address: string;
+    symbol: string;
+    balance: bigint;
+  };
+};
 
 const BuySellSwap = () => {
   const { address } = useAccount();
@@ -21,7 +52,67 @@ const BuySellSwap = () => {
     },
   });
 
-  const fromBalanceData = ethBalanceData;
+  const [swapState, setSwapState] = useState<SwapState>({
+    state: SWAP_STATE.from_native,
+    from: {
+      amount: '',
+      address: '',
+      symbol: 'ETH',
+      balance: BigInt(0),
+    },
+    to: {
+      amount: '',
+      address: '',
+      symbol: 'MIB',
+      balance: BigInt(0),
+    },
+  });
+
+  const handleFromToAmount = (value: string, type: 'from' | 'to') => {
+    setSwapState({
+      ...swapState,
+      [type]: {
+        ...swapState[type],
+        amount: value,
+      },
+    });
+  };
+
+  const swapFromToState = () => {
+    const { state, from, to } = swapState;
+
+    const newState: SwapState = {
+      state:
+        state === SWAP_STATE.from_native
+          ? SWAP_STATE.to_native
+          : SWAP_STATE.from_native,
+      from: to,
+      to: from,
+    };
+    setSwapState(newState);
+  };
+
+  // const { data: amountOutData } =  useReadMineblastRouterGetAmountOut({
+  //   args: [
+  //     amountIn,
+  //     reserveIn,
+  //     reserveOut
+  //   ]
+  // })
+
+  const {
+    data: swapEthForExactTokensHash,
+    writeContract: writeSwapEthForExactTokens,
+    isPending: isWriteSwapEthPending,
+  } = useWriteMineblastRouterSwapEthForExactTokens();
+
+  const { isSuccess: isSwapEthSuccess, isPending: isSwapEthPending } =
+    useWaitForTransactionReceipt({
+      hash: swapEthForExactTokensHash,
+    });
+
+  // useWriteMineblastRouterSwapExactTokensForEth();
+
   const { data: erc20BalanceWithDecimalsData } = useReadContracts({
     contracts: [
       {
@@ -36,12 +127,31 @@ const BuySellSwap = () => {
       enabled: !!address,
     },
   });
-  const toBalanceData = erc20BalanceWithDecimalsData
-    ? {
-        value: erc20BalanceWithDecimalsData[0].result as bigint,
-        decimals: 18,
-      }
-    : null;
+  const fromBalanceData =
+    swapState.state === SWAP_STATE.from_native
+      ? ethBalanceData
+      : {
+          value: erc20BalanceWithDecimalsData
+            ? (erc20BalanceWithDecimalsData[0].result as bigint)
+            : BigInt(0),
+          decimals: 18,
+        };
+
+  const toBalanceData =
+    swapState.state === SWAP_STATE.to_native
+      ? ethBalanceData
+      : {
+          value: erc20BalanceWithDecimalsData
+            ? (erc20BalanceWithDecimalsData[0].result as bigint)
+            : BigInt(0),
+          decimals: 18,
+        };
+  const handleSwap = () => {
+    // get amount out
+    // writeSwapEthForExactTokens({
+    //   args: []
+    // })
+  };
 
   return (
     <Card>
@@ -69,25 +179,35 @@ const BuySellSwap = () => {
             </div>
             <div className="flex items-center justify-between">
               <input
-                className="h-12 flex items-center text-xl outline-none"
+                className="h-12 flex items-center text-xl outline-none w-full"
                 inputMode="decimal"
                 minLength={1}
                 maxLength={79}
                 type="text"
                 pattern="^[0-9]*[.,]?[0-9]*$"
                 placeholder="0.0"
+                value={swapState.from.amount}
+                onChange={(e) =>
+                  e.target.value.match(/^[0-9]*[.,]?[0-9]*$/) &&
+                  handleFromToAmount(e.target.value, 'from')
+                }
               />
-              <button className="bg-[#ececfe] rounded-md px-2 py-1 text-xs mr-2">
-                MAX
-              </button>
-              <div className="border rounded-md px-4 py-2 min-w-[100px] h-12 flex items-center justify-center">
-                WETH
+              <div className="flex items-center">
+                <button className="bg-[#ececfe] rounded-md px-2 py-1 text-xs mr-2">
+                  MAX
+                </button>
+                <div className="border rounded-md px-4 py-2 min-w-[100px] h-12 flex items-center justify-center">
+                  {swapState.from.symbol}
+                </div>
               </div>
             </div>
           </div>
           <div className="flex items-center w-full space-x-2">
             <div className="w-full bg-[#ececfe] h-0.5" />
-            <button className="p-3 hover:bg-[#ececfe] rounded-md transition-colors">
+            <button
+              onClick={swapFromToState}
+              className="p-3 hover:bg-[#ececfe] rounded-md transition-colors"
+            >
               <svg
                 width="16"
                 height="18"
@@ -129,9 +249,14 @@ const BuySellSwap = () => {
                 type="text"
                 pattern="^[0-9]*[.,]?[0-9]*$"
                 placeholder="0.0"
+                value={swapState.to.amount}
+                onChange={(e) =>
+                  e.target.value.match(/^[0-9]*[.,]?[0-9]*$/) &&
+                  handleFromToAmount(e.target.value, 'to')
+                }
               />
               <div className="border rounded-md px-4 py-2 min-w-[100px] h-12 flex items-center justify-center">
-                MIB
+                {swapState.to.symbol}
               </div>
             </div>
           </div>
@@ -149,15 +274,11 @@ const BuySellSwap = () => {
               }) => {
                 return (
                   <button
-                    onClick={show}
-                    className="flex w-full items-center justify-center border rounded-md px-4 py-2 border-[#e96828] space-x-2 cta"
+                    onClick={isConnected ? handleSwap : show}
+                    className="flex w-full items-center justify-center border rounded-md px-4 py-2 border-[#e96828] space-x-2"
                   >
                     {isConnected ? (
-                      address ? (
-                        `${address.slice(0, 6)}...${address.slice(-4)}`
-                      ) : (
-                        'Something wrong'
-                      )
+                      'Swap'
                     ) : (
                       <>
                         <span className="">Connect wallet_</span>
