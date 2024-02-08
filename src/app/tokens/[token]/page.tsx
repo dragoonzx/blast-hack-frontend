@@ -1,9 +1,6 @@
 'use client';
 
 import React, { use, useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import SwapCard from '@/components/swap/SwapCard';
-import SwapCardHeader from '@/components/swap/SwapCardHeader';
 import VaultInfo from '@/components/vault/VaultInfo';
 import VaultControlPanel from '@/components/vault/VaultControlPanel';
 
@@ -11,8 +8,7 @@ import BuySellSwap from '@/components/swap/BuySellSwap';
 import GetWETH from '@/components/swap/GetWETH';
 import {
   getAllVaults,
-  getVaultData,
-  getUserVaultData,
+  getProjectData,
   MineblastProjectData,
 } from '@/lib/onchain';
 import { useAccount, useBalance } from 'wagmi';
@@ -43,64 +39,53 @@ const TokenPage = () => {
   }>({ stakedETH: 0, pending: 0 });
 
   useEffect(() => {
-    fetchVaultData();
+    fetchProjectData();
   }, [address]);
 
-  useEffect(() => {
-    if(address && vaultData.vaultAddress !== '0x0') {
-      fetchUserVaultData(address);
-    }
-  }, [address, vaultData]);
+  async function fetchProjectData() {
+    const userAddress = address ?? "0x0000000000000000000000000000000000000000"
 
-  async function fetchVaultData() {
     const allVaults = await getAllVaults(); //temp, will be in props in the future
-    const vaultData = await getVaultData(allVaults[0], 2300);
-    setVaultData(vaultData);
-  }
-
-  async function fetchUserVaultData(address: `0x${string}`) {
-    const userVaultData = await getUserVaultData(
-      vaultData.vaultAddress,
-      address
-    );
-    setUserVaultData(userVaultData);
+    const projectData = await getProjectData(userAddress, allVaults[0], ETHPrice);
+    setVaultData(projectData.projectData);
+    setUserVaultData(projectData.userData);
   }
 
   const ETHPrice = 2300;
 
   const onClaim = () => {
-    //vault data not chainging, no need to refetch
-    if(address)
-      fetchUserVaultData(address);
+    fetchProjectData();
   };
 
   const onDeposit = () => {
-    fetchVaultData() 
-    //user data will be refetched in the useEffect
+    fetchProjectData();
   };
 
   const onWithdraw = () => {
-    fetchVaultData()
-    //user data will be refetched in the useEffect
+    fetchProjectData();
   };
 
   return (
     <div className="flex items-start justify-center w-full space-x-8">
       <div className="w-1/2 flex flex-col">
         <VaultInfo projectData={vaultData} />
-        <VaultControlPanel
-          projectData={vaultData}
-          claimableAmount={userVaultData.pending}
-          ethLocked={userVaultData.stakedETH}
-          ethPrice={ETHPrice}
-          afterClaim={onClaim}
-          afterDeposit={onDeposit}
-          afterWithdraw={onWithdraw}
-        />
+        {address && 
+          <VaultControlPanel
+            projectData={vaultData}
+            claimableAmount={userVaultData.pending}
+            ethLocked={userVaultData.stakedETH}
+            ethPrice={ETHPrice}
+            afterClaim={onClaim}
+            afterDeposit={onDeposit}
+            afterWithdraw={onWithdraw}
+          />
+        }
       </div>
       <div className="min-w-[360px] space-y-4">
         <BuySellSwap />
-        <GetWETH />
+        {address &&
+          <GetWETH />
+        }
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import { formatUnits, formatEther } from 'viem';
 
 export const WETH_ADDR = '0x4200000000000000000000000000000000000023';
 
-interface Vault {
+interface Project {
   vault: `0x${string}`;
   pair: `0x${string}`;
   token: `0x${string}`;
@@ -23,6 +23,11 @@ export interface MineblastProjectData {
     liqudityInUSD: number;
 }
 
+export interface MineblastUserVaultData {
+    stakedETH: number;
+    pending: number;
+}
+
 const convertToUSD = (eth: bigint, ethPrice: number): number => {
   return Number((eth * BigInt(ethPrice)) / 10n ** 12n) / 1000000;
 };
@@ -31,14 +36,14 @@ const truncate18To3Decimals = (number: bigint): number => {
   return Number(number / 10n ** 15n) / 1000;
 };
 
-export async function getAllVaults(): Promise<Vault[]> {
+export async function getAllVaults(): Promise<Project[]> {
   const a = contracts.mineblastFactory.abi;
 
   if (contracts.mineblastFactory.address === undefined) {
     return [];
   }
 
-  const result: Vault[] = [];
+  const result: Project[] = [];
 
   const response = (await readContract(config, {
     abi: contracts.mineblastFactory.abi,
@@ -56,8 +61,41 @@ export async function getAllVaults(): Promise<Vault[]> {
   return result;
 }
 
+export async function getProjectData(user: `0x${string}`, project: Project, ethPrice: number): Promise<{projectData: MineblastProjectData, userData: MineblastUserVaultData}>{
+  const pairFactoryContract = {
+    address: contracts.mineblastPairFactory.address,
+    abi: contracts.mineblastPairFactory.abi,
+  };
+
+  const response = await readContract(config, {
+    ...pairFactoryContract,
+    functionName: 'getProjectInfo',
+    args: [user, project.vault, project.pair, project.token]
+  }) as any[];
+
+ const projectData: MineblastProjectData = {
+      vaultAddress: project.vault,
+      tokenName: response[0],
+      tokenSymbol: response[1],
+      tokenTotalSupply: truncate18To3Decimals(response[2]),
+      tokenPriceInUSD: convertToUSD(response[3], ethPrice),
+      projectOutputPerSecond: truncate18To3Decimals(response[5]),
+      projectEndDate: new Date(Number(response[6]) * 1000),
+      TVLInUSD: convertToUSD(response[11], ethPrice),
+      liqudityInUSD: convertToUSD(response[4]*2n, ethPrice)
+  }
+
+  const userData: MineblastUserVaultData = {
+      stakedETH: truncate18To3Decimals(response[12]),
+      pending: truncate18To3Decimals(response[13])
+  }
+
+  return {projectData, userData};
+
+}
+
 export async function getVaultData(
-  vault: Vault,
+  vault: Project,
   ethPrice: number
 ): Promise<MineblastProjectData> {
   const pairContract = {
