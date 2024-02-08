@@ -11,13 +11,13 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Loader2 } from "lucide-react"
 import SwapInput from '@/components/swap/SwapInput';
 import { formatNumberCompact } from '@/lib/utils';
 import {
   useAccount,
   useBalance,
   useWaitForTransactionReceipt,
-  useWriteContract,
 } from 'wagmi';
 import { MineblastProjectData } from '@/lib/onchain';
 import { 
@@ -142,6 +142,10 @@ const VaultControlPanel = (props: {
   const displayWithdraw = props.ethLocked > 0;
   const displayClaim = props.claimableAmount > 0;
 
+  const depositLoading = depositTx.isLoading || isPendingDeposit;
+  const withdrawLoading = withdrawTx.isLoading || isPendingWithdraw;
+  const claimLoading = claimTx.isLoading || isPendingClaim;
+
   return (
     <Card className="min-w-[450px] mt-4">
         <CardHeader>
@@ -154,13 +158,19 @@ const VaultControlPanel = (props: {
         <div className="flex flex-col items-center mb-4">
           <div className='mb-3'>ETH balance: {ethBalanceFormatted}</div>
           <div className='flex h-12'>
-            <Button className="drop-shadow-xl w-1/3 h-full" onClick={depositEth}>Deposit</Button>
+            <Button className="drop-shadow-xl w-1/3 h-full" disabled={depositLoading} onClick={depositEth}>
+              {depositLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Deposit
+            </Button>
             <SwapInput maxValue={ethBalanceFormatted} onChange={(n:number) => {setDepositAmount(n)}}/>
           </div>
           {displayWithdraw && <div className='mb-3 mt-6'>ETH locked: {props.ethLocked}</div>}
           {displayWithdraw &&
             <div className='flex h-12'>
-              <Button className="drop-shadow-xl w-1/3 h-full" onClick={withdrawEth}>Withdraw</Button>
+              <Button className="drop-shadow-xl w-1/3 h-full" disabled={withdrawLoading} onClick={withdrawEth}>
+                {withdrawLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Withdraw
+              </Button>
               <SwapInput maxValue={props.ethLocked} onChange={(n:number) => {setWithdrawAmount(n)}}/>
             </div>
           }
@@ -171,7 +181,10 @@ const VaultControlPanel = (props: {
             <div>
               {props.projectData.tokenSymbol} available: <CountUp decimals={2} start={props.claimableAmount} end={projectedBalanceInMonth} useEasing={false} duration={secondsInMonth}/>
             </div>
-            <Button className="w-1/2" onClick={claimToken}>Claim</Button>
+            <Button className="w-1/3 select-none" disabled={claimLoading} onClick={claimToken}>
+              {claimLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Claim
+            </Button>
           </CardFooter>
         }
     </Card>
