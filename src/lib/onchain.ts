@@ -11,21 +11,21 @@ interface Project {
 }
 
 export interface MineblastProjectData {
-    vaultAddress: `0x${string}`;
-    tokenName: string;
-    tokenSymbol: string;
-    tokenTotalSupply: number;
-    tokenPriceInUSD: number;
-    projectOutputPerSecond: number;
-    projectEndDate: Date;
-    //projectDurationInSeconds: number;
-    TVLInUSD: number;
-    liqudityInUSD: number;
+  vaultAddress: `0x${string}`;
+  tokenName: string;
+  tokenSymbol: string;
+  tokenTotalSupply: number;
+  tokenPriceInUSD: number;
+  projectOutputPerSecond: number;
+  projectEndDate: Date;
+  //projectDurationInSeconds: number;
+  TVLInUSD: number;
+  liqudityInUSD: number;
 }
 
 export interface MineblastUserVaultData {
-    stakedETH: number;
-    pending: number;
+  stakedETH: number;
+  pending: number;
 }
 
 const convertToUSD = (eth: bigint, ethPrice: number): number => {
@@ -61,37 +61,43 @@ export async function getAllVaults(): Promise<Project[]> {
   return result;
 }
 
-export async function getProjectData(user: `0x${string}`, project: Project, ethPrice: number): Promise<{projectData: MineblastProjectData, userData: MineblastUserVaultData}>{
+export async function getProjectData(
+  user: `0x${string}`,
+  project: Project,
+  ethPrice: number
+): Promise<{
+  projectData: MineblastProjectData;
+  userData: MineblastUserVaultData;
+}> {
   const pairFactoryContract = {
-    address: contracts.mineblastPairFactory.address,
+    address: contracts.mineblastPairFactory.address!,
     abi: contracts.mineblastPairFactory.abi,
   };
 
-  const response = await readContract(config, {
+  const response = (await readContract(config, {
     ...pairFactoryContract,
     functionName: 'getProjectInfo',
-    args: [user, project.vault, project.pair, project.token]
-  }) as any[];
+    args: [user, project.vault, project.pair, project.token],
+  })) as any[];
 
- const projectData: MineblastProjectData = {
-      vaultAddress: project.vault,
-      tokenName: response[0],
-      tokenSymbol: response[1],
-      tokenTotalSupply: truncate18To3Decimals(response[2]),
-      tokenPriceInUSD: convertToUSD(response[3], ethPrice),
-      projectOutputPerSecond: truncate18To3Decimals(response[5]),
-      projectEndDate: new Date(Number(response[6]) * 1000),
-      TVLInUSD: convertToUSD(response[11], ethPrice),
-      liqudityInUSD: convertToUSD(response[4]*2n, ethPrice)
-  }
+  const projectData: MineblastProjectData = {
+    vaultAddress: project.vault,
+    tokenName: response[0],
+    tokenSymbol: response[1],
+    tokenTotalSupply: truncate18To3Decimals(response[2]),
+    tokenPriceInUSD: convertToUSD(response[3], ethPrice),
+    projectOutputPerSecond: truncate18To3Decimals(response[5]),
+    projectEndDate: new Date(Number(response[6]) * 1000),
+    TVLInUSD: convertToUSD(response[11], ethPrice),
+    liqudityInUSD: convertToUSD(response[4] * 2n, ethPrice),
+  };
 
   const userData: MineblastUserVaultData = {
-      stakedETH: truncate18To3Decimals(response[12]),
-      pending: truncate18To3Decimals(response[13])
-  }
+    stakedETH: truncate18To3Decimals(response[12]),
+    pending: truncate18To3Decimals(response[13]),
+  };
 
-  return {projectData, userData};
-
+  return { projectData, userData };
 }
 
 export async function getVaultData(
@@ -122,7 +128,7 @@ export async function getVaultData(
         functionName: 'getAveragePrice',
         args: [BigInt('1000000000000000000'), 50],
       },
-      { ...pairContract, functionName: 'getReserves', args: []},
+      { ...pairContract, functionName: 'getReserves', args: [] },
       { ...vaultContract, functionName: 'outputPerSecond', args: [] },
       { ...vaultContract, functionName: 'endDate', args: [] },
       { ...tokenContract, functionName: 'totalSupply' },
@@ -160,27 +166,29 @@ export async function getVaultData(
   return result;
 }
 
-export async function getUserVaultData(vaultAddress: `0x${string}`, userAddress: `0x${string}`):Promise<{stakedETH: number, pending: number}>{
+export async function getUserVaultData(
+  vaultAddress: `0x${string}`,
+  userAddress: `0x${string}`
+): Promise<{ stakedETH: number; pending: number }> {
+  const vaultContract = {
+    address: vaultAddress,
+    abi: contracts.mineblastVault.abi,
+  };
 
-    const vaultContract = {
-        address: vaultAddress,
-        abi: contracts.mineblastVault.abi
-    }
+  const response = await readContracts(config, {
+    contracts: [
+      { ...vaultContract, functionName: 'userInfo', args: [0, userAddress] },
+      { ...vaultContract, functionName: 'getPending', args: [0, userAddress] },
+    ],
+  });
 
-    const response = await readContracts(config, {
-        contracts:[
-            { ...vaultContract, functionName: 'userInfo', args: [0,userAddress] },
-            { ...vaultContract, functionName: 'getPending', args: [0,userAddress]},
-        ]
-    })
+  const staked = (response[0].result as bigint[])[0];
+  const pending = response[1].result as bigint;
 
-    const staked = (response[0].result as bigint[])[0]
-    const pending = response[1].result as bigint
+  const result = {
+    stakedETH: truncate18To3Decimals(staked),
+    pending: truncate18To3Decimals(pending),
+  };
 
-    const result = {
-        stakedETH: truncate18To3Decimals(staked),
-        pending: truncate18To3Decimals(pending)
-    }
-
-    return result;
+  return result;
 }

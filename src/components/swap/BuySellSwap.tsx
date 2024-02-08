@@ -30,7 +30,7 @@ const BuySellSwap = () => {
         address: '0xf75b2FC80bEBF328Ce4e1766A9C68d2055f76273',
         functionName: 'balanceOf',
         args: [address!],
-      }
+      },
     ],
     query: {
       enabled: !!address,
@@ -38,7 +38,7 @@ const BuySellSwap = () => {
   });
   const toBalanceData = erc20BalanceWithDecimalsData
     ? {
-        value: erc20BalanceWithDecimalsData[0].result,
+        value: erc20BalanceWithDecimalsData[0].result as bigint,
         decimals: 18,
       }
     : null;

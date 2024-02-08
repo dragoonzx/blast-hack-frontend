@@ -9,6 +9,7 @@ import { Abi, erc20Abi } from 'viem';
 import { createConfig, http } from 'wagmi';
 import { blastSepolia } from 'wagmi/chains';
 import { getDefaultConfig } from 'connectkit';
+import { type } from 'os';
 
 export const config = createConfig(
   getDefaultConfig({
@@ -31,30 +32,36 @@ export const config = createConfig(
   })
 );
 
-type Contract = {
-  abi: Abi; // Use the appropriate type for abi
-  address?: `0x${string}`; // Make address optional
-};
+export type AddrString = `0x${string}`;
 
-export const contracts = {
+const typelessContracts = {
   erc20: { abi: erc20Abi },
   weth: { abi: wethAbi.abi as any },
   mineblastPair: { abi: mineblastPairAbi.abi as any },
   mineblastVault: { abi: mineblastVaultAbi.abi as any },
   mineblastFactory: {
     abi: mineblastFactoryAbi.abi as any,
-    address: '0xDDC21B84Be02E76eF6A541A209CD9a40E02702cA' as `0x${string}`,
+    address: '0xDDC21B84Be02E76eF6A541A209CD9a40E02702cA' as AddrString,
   },
   mineblastRouter: {
     abi: mineblastRouterAbi.abi as any,
-    address: '0x1ea46f363456655D02b542b70741B1E785e1AB86' as `0x${string}`,
+    address: '0x1ea46f363456655D02b542b70741B1E785e1AB86' as AddrString,
   },
   mineblastLibrary: {
     abi: mineblastLibraryAbi.abi as any,
-    address: '0x75c622ddA2E8eEc20724Be2A0A36Cc114Ef3FDeA' as `0x${string}`,
+    address: '0x75c622ddA2E8eEc20724Be2A0A36Cc114Ef3FDeA' as AddrString,
   },
   mineblastPairFactory: {
     abi: mineblastPairFactoryAbi.abi as any,
-    address: '0x40530936598eEb8a37EF7EC5fe8aA9e915c511bD' as `0x${string}`,
+    address: '0x40530936598eEb8a37EF7EC5fe8aA9e915c511bD' as AddrString,
   },
 };
+
+type ContractsRecord = {
+  [P in keyof typeof typelessContracts]: {
+    abi: Abi;
+    address?: AddrString;
+  };
+};
+
+export const contracts: ContractsRecord = typelessContracts;
