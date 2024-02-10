@@ -11,6 +11,8 @@ const SwapInput = (props: {maxValue: number, onChange: (value:number)=>void}) =>
 
   const onMaxClick = () => {
     setValue(props.maxValue);
+
+    props.onChange(props.maxValue);
   }
 
   const onValueChange = (value: number|undefined) => {
