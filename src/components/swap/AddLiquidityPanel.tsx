@@ -2,79 +2,86 @@ import React, { useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
-  CardTitle,
 } from '@/components/ui/card';
-import { ConnectKitButton } from 'connectkit';
+import { Button } from '@/components/ui/button';
 import {
   useAccount,
   useBalance,
-  useReadContracts,
-  useWaitForTransactionReceipt,
-  useWriteContract,
+  useWaitForTransactionReceipt
 } from 'wagmi';
 import SwapInput from '@/components/swap/SwapInput';
-import { formatUnits, parseEther } from 'viem';
-import { contracts } from '@/lib/wagmiConfig';
-import { WETH_ADDR } from '@/lib/onchain';
-import { useToast } from '../ui/use-toast';
+import { 
+  useWriteMineblastRouterAddLiquidityEth
+} from '../../generated'
+import { MineblastProjectData } from '@/lib/onchain';
+import { Loader2 } from "lucide-react"
+import { parseEther } from 'viem';
 
-const AddLiquidityPanel = () => {
+
+
+interface MineblastInputProps {
+  projectData: MineblastProjectData;
+  userETHBalance: number;
+  userTokenBalance: number;
+  afterAddLiquidity: () => void;
+}
+
+const AddLiquidityPanel = ({
+  projectData,
+  userETHBalance,
+  userTokenBalance,
+  afterAddLiquidity,
+}: MineblastInputProps) => {
   const { address } = useAccount();
-  const { data: ethBalanceData, refetch } = useBalance({
-    address,
-    query: {
-      enabled: !!address,
-    },
-  });
-
-  const formattedBalance = ethBalanceData
-    ? formatUnits(ethBalanceData!.value, ethBalanceData!.decimals)
-    : 0.0;
-
-  const [amount, setAmount] = useState('');
-  const setMaxAmount = () => {
-    formattedBalance && setAmount(formattedBalance);
-  };
+  const [tokenAmount, setTokenAmount] = useState(0);
 
   const {
-    data: depositHash,
-    writeContract: depositWriteContract,
-    isPending: isPendingDeposit,
-  } = useWriteContract();
+    data: addLiquidityHash,
+    writeContract: addLiquidityWriteContract,
+    isPending: isPendingLiquidityAdd,
+  } = useWriteMineblastRouterAddLiquidityEth();
 
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+  const addLiquidityTx =
     useWaitForTransactionReceipt({
-      hash: depositHash,
+      hash: addLiquidityHash,
     });
 
-  const depositEth = async () => {
-    if (!amount) {
+  const addLiquidity = async () => {
+    if (!tokenAmount || address === undefined) {
       return;
     }
+    
+    const value = parseEther(quote(tokenAmount, projectData.pairTokenBalance, projectData.pairETHBalance).toString());
+    const deadline = BigInt(Math.floor(Date.now() / 1000) + 60 * 20);
+    console.log(parseEther(tokenAmount.toString()));
+    console.log(value)
 
-    depositWriteContract({
-      abi: contracts.weth.abi,
-      address: WETH_ADDR,
-      functionName: 'deposit',
-      value: parseEther(amount),
-      args: [],
+    addLiquidityWriteContract({
+      value: value,
+      args: [projectData.tokenAddress, parseEther(tokenAmount.toString()), parseEther(tokenAmount.toString()), value, address, deadline],
     });
   };
 
-  const { toast } = useToast();
-
   useEffect(() => {
-    if (isConfirmed) {
-      toast({
-        title: 'Successfully get WETH',
-      });
-      refetch();
-      setAmount('');
+    if (addLiquidityTx.isSuccess) {
+      afterAddLiquidity();
     }
-  }, [isConfirmed, toast, refetch]);
+  }, [addLiquidityTx.isSuccess]);
+
+  const quote = (amountA: number, reserveA: number, reserveB: number): number => {
+    return amountA * reserveB / reserveA;
+  };
+
+  const getMaximumTokenAmount = (): number => {
+    return Math.min(userTokenBalance, quote(userETHBalance, projectData.pairETHBalance, projectData.pairTokenBalance));
+  }
+
+  const truncateNumber = (number: number): number => {
+    return Math.round( number * 1e4 ) / 1e4;
+  }
+
+  const addLiquidityLoading = addLiquidityTx.isLoading || isPendingLiquidityAdd;
 
   return (
     <Card className='pb-4'>
@@ -93,31 +100,28 @@ const AddLiquidityPanel = () => {
                   {address ? (
                     <p className="text-xs">
                       <span className="text-muted-foreground">Balance: </span>
-                      {formattedBalance} ETH
+                      {userTokenBalance} {projectData.tokenSymbol}
                     </p>
                   ) : null}
                 </div>
               </div>
-              <SwapInput maxValue={100000} onChange={(n:number) => {console.log(n)}}/>
+              <SwapInput maxValue={truncateNumber(getMaximumTokenAmount())} onChange={(n:number) => {setTokenAmount(n)}}/>
             </div >
             <div className='h-12 mt-8'>
               <div className="flex items-center justify-between">
                 <div className="flex items-center justify-between  w-full">
                   <label className="text-sm text-muted-foreground">
-                    ETH
+                    ETH amount required: {truncateNumber(quote(tokenAmount, projectData.pairTokenBalance, projectData.pairETHBalance))}
                   </label>
-                  {address ? (
-                    <p className="text-xs">
-                      <span className="text-muted-foreground">Balance: </span>
-                      {formattedBalance} ETH
-                    </p>
-                  ) : null}
                 </div>
               </div>
-              <SwapInput maxValue={100000} onChange={(n:number) => {console.log(n)}}/>
             </div>
           </div>
         </div>
+        <Button disabled={addLiquidityLoading} onClick={addLiquidity}> 
+        {addLiquidityLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        Add
+        </Button>
       </CardContent>
     </Card>
   );
