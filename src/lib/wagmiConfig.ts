@@ -1,4 +1,5 @@
 import { default as mineblastPairAbi } from '../../src/abi/swap/MineblastSwapPair.sol/MineblastSwapPair.json';
+import { default as mineblastPairFactoryAbi } from '../../src/abi/swap/MineblastSwapPairFactory.sol/MineblastSwapPairFactory.json';
 import { default as mineblastVaultAbi } from '../../src/abi/MineblastVault.sol/MineblastVault.json';
 import { default as mineblastFactoryAbi } from '../../src/abi/MineblastFactory.sol/MineblastFactory.json';
 import { default as mineblastRouterAbi } from '../../src/abi/swap/MineblastRouter.sol/MineblastRouter.json';
@@ -51,8 +52,8 @@ const typelessContracts = {
     address: '0xfe2A32f72b0b6D546E3D366209AAf1F7d0c62A48' as AddrString,
   },
   mineblastPairFactory: {
-    abi: [],
-    address: '0x40530936598eEb8a37EF7EC5fe8aA9e915c511bD' as `0x${string}`,
+    abi: mineblastPairFactoryAbi.abi as any,
+    address: '0xd28CA1399b460DbD75C51F041954a9718C206e64' as `0x${string}`,
   },
 };
 

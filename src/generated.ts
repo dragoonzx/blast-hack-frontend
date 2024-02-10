@@ -110,7 +110,189 @@ export const erc20Abi = [
 // mineblastFactory
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const mineblastFactoryAbi = [] as const
+export const mineblastFactoryAbi = [
+  {
+    type: 'constructor',
+    inputs: [
+      { name: '_swapPairFactory', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
+    name: 'OwnableInvalidOwner',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'OwnableUnauthorizedAccount',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'previousOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'newOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'OwnershipTransferred',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'vault',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'pair',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'token',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'VaultCreated',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    name: 'allVaults',
+    outputs: [
+      { name: 'vault', internalType: 'address', type: 'address' },
+      { name: 'pair', internalType: 'address', type: 'address' },
+      { name: 'token', internalType: 'address', type: 'address' },
+      { name: 'ownerShareBps', internalType: 'uint16', type: 'uint16' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'baseProtocolShareBps',
+    outputs: [{ name: '', internalType: 'uint16', type: 'uint16' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'supply', internalType: 'uint256', type: 'uint256' },
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'symbol', internalType: 'string', type: 'string' },
+      { name: 'duration', internalType: 'uint64', type: 'uint64' },
+      { name: 'ownerSupplyBps', internalType: 'uint16', type: 'uint16' },
+    ],
+    name: 'createVaultWithNewToken',
+    outputs: [
+      { name: 'vaultAddress', internalType: 'address', type: 'address' },
+      { name: 'pairAddress', internalType: 'address', type: 'address' },
+      { name: 'tokenAddress', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'maxElements', internalType: 'uint64', type: 'uint64' },
+      { name: 'offset', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'getAllVaults',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct MineblastFactory.VaultInfo[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'vault', internalType: 'address', type: 'address' },
+          { name: 'pair', internalType: 'address', type: 'address' },
+          { name: 'token', internalType: 'address', type: 'address' },
+          { name: 'ownerShareBps', internalType: 'uint16', type: 'uint16' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getAllVaultsLength',
+    outputs: [{ name: '', internalType: 'uint64', type: 'uint64' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'maxOwnerShareBps',
+    outputs: [{ name: '', internalType: 'uint16', type: 'uint16' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'protocolShareFromOwnerShareBps',
+    outputs: [{ name: '', internalType: 'uint16', type: 'uint16' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'renounceOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'swapPairFactory',
+    outputs: [
+      {
+        name: '',
+        internalType: 'contract IMineblastSwapPairFactory',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
+    name: 'transferOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'wethAddress',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+] as const
 
 export const mineblastFactoryAddress =
   '0x28f55fbB7540370446eAef394CB1d3F7921082f2' as const
@@ -1679,6 +1861,211 @@ export const useWatchErc20TransferEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
     abi: erc20Abi,
     eventName: 'Transfer',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link mineblastFactoryAbi}__
+ */
+export const useReadMineblastFactory = /*#__PURE__*/ createUseReadContract({
+  abi: mineblastFactoryAbi,
+  address: mineblastFactoryAddress,
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link mineblastFactoryAbi}__ and `functionName` set to `"allVaults"`
+ */
+export const useReadMineblastFactoryAllVaults =
+  /*#__PURE__*/ createUseReadContract({
+    abi: mineblastFactoryAbi,
+    address: mineblastFactoryAddress,
+    functionName: 'allVaults',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link mineblastFactoryAbi}__ and `functionName` set to `"baseProtocolShareBps"`
+ */
+export const useReadMineblastFactoryBaseProtocolShareBps =
+  /*#__PURE__*/ createUseReadContract({
+    abi: mineblastFactoryAbi,
+    address: mineblastFactoryAddress,
+    functionName: 'baseProtocolShareBps',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link mineblastFactoryAbi}__ and `functionName` set to `"getAllVaults"`
+ */
+export const useReadMineblastFactoryGetAllVaults =
+  /*#__PURE__*/ createUseReadContract({
+    abi: mineblastFactoryAbi,
+    address: mineblastFactoryAddress,
+    functionName: 'getAllVaults',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link mineblastFactoryAbi}__ and `functionName` set to `"getAllVaultsLength"`
+ */
+export const useReadMineblastFactoryGetAllVaultsLength =
+  /*#__PURE__*/ createUseReadContract({
+    abi: mineblastFactoryAbi,
+    address: mineblastFactoryAddress,
+    functionName: 'getAllVaultsLength',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link mineblastFactoryAbi}__ and `functionName` set to `"maxOwnerShareBps"`
+ */
+export const useReadMineblastFactoryMaxOwnerShareBps =
+  /*#__PURE__*/ createUseReadContract({
+    abi: mineblastFactoryAbi,
+    address: mineblastFactoryAddress,
+    functionName: 'maxOwnerShareBps',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link mineblastFactoryAbi}__ and `functionName` set to `"owner"`
+ */
+export const useReadMineblastFactoryOwner = /*#__PURE__*/ createUseReadContract(
+  {
+    abi: mineblastFactoryAbi,
+    address: mineblastFactoryAddress,
+    functionName: 'owner',
+  },
+)
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link mineblastFactoryAbi}__ and `functionName` set to `"protocolShareFromOwnerShareBps"`
+ */
+export const useReadMineblastFactoryProtocolShareFromOwnerShareBps =
+  /*#__PURE__*/ createUseReadContract({
+    abi: mineblastFactoryAbi,
+    address: mineblastFactoryAddress,
+    functionName: 'protocolShareFromOwnerShareBps',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link mineblastFactoryAbi}__ and `functionName` set to `"swapPairFactory"`
+ */
+export const useReadMineblastFactorySwapPairFactory =
+  /*#__PURE__*/ createUseReadContract({
+    abi: mineblastFactoryAbi,
+    address: mineblastFactoryAddress,
+    functionName: 'swapPairFactory',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link mineblastFactoryAbi}__ and `functionName` set to `"wethAddress"`
+ */
+export const useReadMineblastFactoryWethAddress =
+  /*#__PURE__*/ createUseReadContract({
+    abi: mineblastFactoryAbi,
+    address: mineblastFactoryAddress,
+    functionName: 'wethAddress',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link mineblastFactoryAbi}__
+ */
+export const useWriteMineblastFactory = /*#__PURE__*/ createUseWriteContract({
+  abi: mineblastFactoryAbi,
+  address: mineblastFactoryAddress,
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link mineblastFactoryAbi}__ and `functionName` set to `"createVaultWithNewToken"`
+ */
+export const useWriteMineblastFactoryCreateVaultWithNewToken =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: mineblastFactoryAbi,
+    address: mineblastFactoryAddress,
+    functionName: 'createVaultWithNewToken',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link mineblastFactoryAbi}__ and `functionName` set to `"renounceOwnership"`
+ */
+export const useWriteMineblastFactoryRenounceOwnership =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: mineblastFactoryAbi,
+    address: mineblastFactoryAddress,
+    functionName: 'renounceOwnership',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link mineblastFactoryAbi}__ and `functionName` set to `"transferOwnership"`
+ */
+export const useWriteMineblastFactoryTransferOwnership =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: mineblastFactoryAbi,
+    address: mineblastFactoryAddress,
+    functionName: 'transferOwnership',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link mineblastFactoryAbi}__
+ */
+export const useSimulateMineblastFactory =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: mineblastFactoryAbi,
+    address: mineblastFactoryAddress,
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link mineblastFactoryAbi}__ and `functionName` set to `"createVaultWithNewToken"`
+ */
+export const useSimulateMineblastFactoryCreateVaultWithNewToken =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: mineblastFactoryAbi,
+    address: mineblastFactoryAddress,
+    functionName: 'createVaultWithNewToken',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link mineblastFactoryAbi}__ and `functionName` set to `"renounceOwnership"`
+ */
+export const useSimulateMineblastFactoryRenounceOwnership =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: mineblastFactoryAbi,
+    address: mineblastFactoryAddress,
+    functionName: 'renounceOwnership',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link mineblastFactoryAbi}__ and `functionName` set to `"transferOwnership"`
+ */
+export const useSimulateMineblastFactoryTransferOwnership =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: mineblastFactoryAbi,
+    address: mineblastFactoryAddress,
+    functionName: 'transferOwnership',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link mineblastFactoryAbi}__
+ */
+export const useWatchMineblastFactoryEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: mineblastFactoryAbi,
+    address: mineblastFactoryAddress,
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link mineblastFactoryAbi}__ and `eventName` set to `"OwnershipTransferred"`
+ */
+export const useWatchMineblastFactoryOwnershipTransferredEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: mineblastFactoryAbi,
+    address: mineblastFactoryAddress,
+    eventName: 'OwnershipTransferred',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link mineblastFactoryAbi}__ and `eventName` set to `"VaultCreated"`
+ */
+export const useWatchMineblastFactoryVaultCreatedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: mineblastFactoryAbi,
+    address: mineblastFactoryAddress,
+    eventName: 'VaultCreated',
   })
 
 /**
