@@ -14,14 +14,26 @@ const NAV_MENU = [
   {
     title: 'Documentation',
     href: '/docs',
+    separator: false,
+    btn: false,
   },
   {
     title: 'Team',
     href: '/team',
+    separator: false,
+    btn: false,
   },
   {
     title: 'Github',
     href: '/github',
+    separator: true,
+    btn: false,
+  },
+  {
+    title: 'Create',
+    href: '/github',
+    separator: false,
+    btn: true,
   },
 ];
 
@@ -35,7 +47,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <title>Mineblast</title>
-      <body className="font-roboto">
+      <body className="font-roboto min-h-full flex-col bg-gray-900 text-gray-100 antialiased relative">
+        <div className="pointer-events-none absolute inset-0 flex justify-center">
+          <div className="hidden h-full w-full max-w-7xl grid-cols-3 gap-3.5 px-4 lg:grid">
+            <div className="border-x border-white/[0.035]"></div>
+            <div className="border-x border-white/[0.035]"></div>
+            <div className="border-x border-white/[0.035]"></div>
+          </div>
+        </div>
         <Web3Provider>
           <header className="max-w-[1740px] px-8 py-4 mx-auto">
             <div className="flex items-start justify-between">
@@ -135,9 +154,21 @@ export default function RootLayout({
                   {NAV_MENU.map((menu) => (
                     <li
                       key={menu.title}
-                      className="mr-8 hover:text-[#e96828] text-md"
+                      className={classNames(
+                        'px-4 py-2 hover:text-[#e96828] text-md',
+                        menu.separator ? 'border-r border-white/10' : ''
+                      )}
                     >
-                      <Link href={menu.href}>{menu.title}</Link>
+                      <Link
+                        href={menu.href}
+                        className={classNames(
+                          menu.btn
+                            ? 'flex items-center border px-4 py-2 rounded-md border-gray-600 bg-gray-800/25 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm'
+                            : ''
+                        )}
+                      >
+                        {menu.title}
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -155,7 +186,8 @@ export default function RootLayout({
                     return (
                       <button
                         onClick={show}
-                        className="flex items-center border rounded-md px-4 py-2 border-[#e96828] space-x-2 cta"
+                        // border-[#e96828]
+                        className="flex items-center border px-4 py-2 rounded-md border-gray-600 bg-gray-800/25 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm space-x-2"
                       >
                         {isConnected ? (
                           address ? (

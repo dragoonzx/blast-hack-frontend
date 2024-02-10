@@ -98,9 +98,10 @@
   * {
     @apply border-border;
   }
-  body {
-    @apply bg-[#fcfcf8] text-foreground;
-  }
+  /* body { */
+    /* @apply bg-[#fcfcf8] text-foreground; */
+    /* @apply bg-gray-900 text-gray-100 antialiased */
+  /* } */
 }
 
 
