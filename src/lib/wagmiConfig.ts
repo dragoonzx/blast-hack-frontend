@@ -53,7 +53,7 @@ const typelessContracts = {
   },
   mineblastPairFactory: {
     abi: mineblastPairFactoryAbi.abi as any,
-    address: '0xd28CA1399b460DbD75C51F041954a9718C206e64' as AddrString,
+    address: '0xd28CA1399b460DbD75C51F041954a9718C206e64' as `0x${string}`,
   },
 };
 
