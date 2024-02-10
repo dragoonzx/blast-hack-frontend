@@ -14,13 +14,14 @@ import {
   useReadContracts,
   useWaitForTransactionReceipt,
 } from 'wagmi';
-import { formatUnits } from 'viem';
-import { contracts } from '@/lib/wagmiConfig';
+import { formatUnits, maxUint256, parseEther, parseUnits } from 'viem';
+import { AddrString, contracts } from '@/lib/wagmiConfig';
 import {
   useReadMineblastRouterGetAmountOut,
   useWriteMineblastRouterSwapEthForExactTokens,
   useWriteMineblastRouterSwapExactTokensForEth,
 } from '@/generated';
+import { WETH_ADDR } from '@/lib/onchain';
 
 enum SWAP_STATE {
   'from_native',
@@ -43,7 +44,17 @@ type SwapState = {
   };
 };
 
-const BuySellSwap = () => {
+interface BuySellSwapProps {
+  pairETHBalance: bigint;
+  pairTokenBalance: bigint;
+  tokenAddr: AddrString | string;
+}
+
+const BuySellSwap = ({
+  pairETHBalance,
+  pairTokenBalance,
+  tokenAddr,
+}: BuySellSwapProps) => {
   const { address } = useAccount();
   const { data: ethBalanceData } = useBalance({
     address,
@@ -92,18 +103,34 @@ const BuySellSwap = () => {
     setSwapState(newState);
   };
 
-  // const { data: amountOutData } =  useReadMineblastRouterGetAmountOut({
-  //   args: [
-  //     amountIn,
-  //     reserveIn,
-  //     reserveOut
-  //   ]
-  // })
+  const { data: amountOutData } = useReadMineblastRouterGetAmountOut({
+    args: [
+      parseUnits(swapState.from.amount, 18),
+      swapState.state === SWAP_STATE.from_native
+        ? pairETHBalance
+        : pairTokenBalance,
+      swapState.state === SWAP_STATE.from_native
+        ? pairTokenBalance
+        : pairETHBalance,
+    ],
+  });
+
+  useEffect(() => {
+    setSwapState({
+      ...swapState,
+      to: {
+        ...swapState.to,
+        amount: !amountOutData ? '' : formatUnits(amountOutData, 18),
+      },
+    });
+  }, [amountOutData]);
 
   const {
     data: swapEthForExactTokensHash,
     writeContract: writeSwapEthForExactTokens,
     isPending: isWriteSwapEthPending,
+    isError,
+    error,
   } = useWriteMineblastRouterSwapEthForExactTokens();
 
   const { isSuccess: isSwapEthSuccess, isPending: isSwapEthPending } =
@@ -117,14 +144,13 @@ const BuySellSwap = () => {
     contracts: [
       {
         abi: contracts.erc20.abi,
-        // test mbti token
-        address: '0xf75b2FC80bEBF328Ce4e1766A9C68d2055f76273',
+        address: tokenAddr as AddrString,
         functionName: 'balanceOf',
         args: [address!],
       },
     ],
     query: {
-      enabled: !!address,
+      enabled: !!(address && tokenAddr),
     },
   });
   const fromBalanceData =
@@ -147,11 +173,31 @@ const BuySellSwap = () => {
           decimals: 18,
         };
   const handleSwap = () => {
-    // get amount out
-    // writeSwapEthForExactTokens({
-    //   args: []
-    // })
+    // get amount out +
+    // get approval status
+    // try to swap
+    //
+    if (!(amountOutData && address)) return;
+    if (swapState.state === SWAP_STATE.from_native) {
+      console.log([
+        amountOutData - (amountOutData * 100n) / 5000n,
+        [WETH_ADDR, tokenAddr as AddrString],
+        address,
+        maxUint256,
+      ]);
+      writeSwapEthForExactTokens({
+        args: [
+          amountOutData - (amountOutData * 100n) / 5000n,
+          [WETH_ADDR, tokenAddr as AddrString],
+          address,
+          maxUint256,
+        ],
+        value: parseEther(swapState.from.amount),
+      });
+    }
   };
+
+  console.log({ isError, error });
 
   return (
     <Card>
@@ -230,7 +276,7 @@ const BuySellSwap = () => {
           </div>
           <div className="flex flex-col space-y-1">
             <div className="flex items-center justify-between  w-full">
-              <label className="text-sm text-muted-foreground">From</label>
+              <label className="text-sm text-muted-foreground">To</label>
               {address ? (
                 <p className="text-xs">
                   <span className="text-muted-foreground">Balance: </span>

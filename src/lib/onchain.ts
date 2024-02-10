@@ -21,6 +21,8 @@ export interface MineblastProjectData {
   TVLInUSD: number;
   pairETHBalance: number;
   pairTokenBalance: number;
+  pairETHBalanceRaw: bigint;
+  pairTokenBalanceRaw: bigint;
 }
 
 export interface MineblastUserVaultData {
@@ -34,7 +36,7 @@ const convertToUSD = (eth: bigint, ethPrice: number): number => {
 };
 
 const truncate18Decimals = (number: bigint, decimals: number = 4): number => {
-  return Number(number / 10n ** BigInt(18-decimals)) / 10**decimals;
+  return Number(number / 10n ** BigInt(18 - decimals)) / 10 ** decimals;
 };
 
 export async function getAllVaults(): Promise<Project[]> {
@@ -91,7 +93,9 @@ export async function getProjectData(
     projectEndDate: new Date(Number(response[7]) * 1000),
     TVLInUSD: convertToUSD(BigInt(response[11]), ethPrice),
     pairETHBalance: truncate18Decimals(BigInt(response[4])),
+    pairETHBalanceRaw: response[4],
     pairTokenBalance: truncate18Decimals(BigInt(response[5])),
+    pairTokenBalanceRaw: response[5],
   };
 
   const userData: MineblastUserVaultData = {
@@ -99,6 +103,6 @@ export async function getProjectData(
     pending: truncate18Decimals(BigInt(response[13])),
     tokenBalance: truncate18Decimals(BigInt(response[14])),
   };
-  
+
   return { projectData, userData };
 }
