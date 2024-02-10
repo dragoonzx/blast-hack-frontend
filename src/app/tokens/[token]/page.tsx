@@ -3,6 +3,7 @@
 import React, { use, useEffect, useState } from 'react';
 import VaultInfo from '@/components/vault/VaultInfo';
 import VaultControlPanel from '@/components/vault/VaultControlPanel';
+import AddLiquidityPanel from '@/components/swap/AddLiquidityPanel';
 
 import BuySellSwap from '@/components/swap/BuySellSwap';
 import GetWETH from '@/components/swap/GetWETH';
@@ -30,7 +31,7 @@ const TokenPage = () => {
     projectOutputPerSecond: 0,
     projectEndDate: new Date(Number(10000000000)),
     TVLInUSD: 0,
-    liqudityInUSD: 0,
+    pairETHBalance: 0,
   });
 
   const [userVaultData, setUserVaultData] = useState<{
@@ -68,7 +69,7 @@ const TokenPage = () => {
   return (
     <div className="flex items-start justify-center w-full space-x-8">
       <div className="w-1/2 flex flex-col">
-        <VaultInfo projectData={vaultData} />
+        <VaultInfo projectData={vaultData} ETHPrice={ETHPrice}/>
         {address && 
           <VaultControlPanel
             projectData={vaultData}
@@ -84,7 +85,10 @@ const TokenPage = () => {
       <div className="min-w-[360px] space-y-4">
         <BuySellSwap />
         {address &&
-          <GetWETH />
+          <div className="space-y-4">
+            <GetWETH />
+            <AddLiquidityPanel/>
+          </div>
         }
       </div>
     </div>
