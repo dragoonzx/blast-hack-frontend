@@ -18,14 +18,15 @@ export interface MineblastProjectData {
   tokenPriceInUSD: number;
   projectOutputPerSecond: number;
   projectEndDate: Date;
-  //projectDurationInSeconds: number;
   TVLInUSD: number;
   pairETHBalance: number;
+  pairTokenBalance: number;
 }
 
 export interface MineblastUserVaultData {
   stakedETH: number;
   pending: number;
+  tokenBalance: number;
 }
 
 const convertToUSD = (eth: bigint, ethPrice: number): number => {
@@ -84,111 +85,20 @@ export async function getProjectData(
     vaultAddress: project.vault,
     tokenName: response[0],
     tokenSymbol: response[1],
-    tokenTotalSupply: truncate18Decimals(response[2]),
-    tokenPriceInUSD: convertToUSD(response[3], ethPrice),
-    projectOutputPerSecond: truncate18Decimals(response[5]),
-    projectEndDate: new Date(Number(response[6]) * 1000),
-    TVLInUSD: convertToUSD(response[11], ethPrice),
-    pairETHBalance: truncate18Decimals(response[4]),
+    tokenTotalSupply: truncate18Decimals(BigInt(response[2])),
+    tokenPriceInUSD: convertToUSD(BigInt(response[3]), ethPrice),
+    projectOutputPerSecond: truncate18Decimals(BigInt(response[6])),
+    projectEndDate: new Date(Number(response[7]) * 1000),
+    TVLInUSD: convertToUSD(BigInt(response[11]), ethPrice),
+    pairETHBalance: truncate18Decimals(BigInt(response[4])),
+    pairTokenBalance: truncate18Decimals(BigInt(response[5])),
   };
 
   const userData: MineblastUserVaultData = {
-    stakedETH: truncate18Decimals(response[12]),
-    pending: truncate18Decimals(response[13]),
+    stakedETH: truncate18Decimals(BigInt(response[12])),
+    pending: truncate18Decimals(BigInt(response[13])),
+    tokenBalance: truncate18Decimals(BigInt(response[14])),
   };
-
+  
   return { projectData, userData };
-}
-
-export async function getVaultData(
-  vault: Project,
-  ethPrice: number
-): Promise<MineblastProjectData> {
-  const pairContract = {
-    address: vault.pair,
-    abi: contracts.mineblastPair.abi,
-  };
-  const tokenContract = {
-    address: vault.token,
-    abi: contracts.erc20.abi,
-  };
-  const vaultContract = {
-    address: vault.vault,
-    abi: contracts.mineblastVault.abi,
-  };
-  const wethContract: { address: `0x${string}`; abi: any } = {
-    address: WETH_ADDR,
-    abi: contracts.weth.abi,
-  };
-
-  const response = await readContracts(config, {
-    contracts: [
-      {
-        ...pairContract,
-        functionName: 'getAveragePrice',
-        args: [BigInt('1000000000000000000'), 50],
-      },
-      { ...pairContract, functionName: 'getReserves', args: [] },
-      { ...vaultContract, functionName: 'outputPerSecond', args: [] },
-      { ...vaultContract, functionName: 'endDate', args: [] },
-      { ...tokenContract, functionName: 'totalSupply' },
-      { ...tokenContract, functionName: 'symbol' },
-      { ...tokenContract, functionName: 'name' },
-      { ...wethContract, functionName: 'balanceOf', args: [vault.vault] },
-      { ...vaultContract, functionName: 'duration', args: [] },
-    ],
-  });
-
-  const tokenName = response[6].result as string;
-  const tokenSymbol = response[5].result as string;
-  const tokenTotalSupply = response[4].result as bigint;
-  const tokenPriceInETH = response[0].result as bigint;
-  const projectOutputPerSecond = response[2].result as bigint;
-  const projectEndDate = response[3].result as bigint;
-  //const projectDuration = response[8].result as bigint;
-  const TVLInETH = response[7].result as bigint;
-  const pairETHBalance = (response[1].result as bigint[])[0];
-
-  const result = {
-    vaultAddress: vault.vault,
-    tokenName,
-    tokenSymbol,
-    tokenTotalSupply: truncate18Decimals(tokenTotalSupply),
-    tokenPriceInUSD: convertToUSD(tokenPriceInETH, ethPrice),
-    projectOutputPerSecond: truncate18Decimals(projectOutputPerSecond),
-    projectEndDate: new Date(Number(projectEndDate) * 1000),
-    //projectDurationInSeconds: Number(projectDuration),
-    TVLInUSD: convertToUSD(TVLInETH, ethPrice),
-    pairETHBalance: truncate18Decimals(pairETHBalance),
-  };
-  console.log(result);
-
-  return result;
-}
-
-export async function getUserVaultData(
-  vaultAddress: `0x${string}`,
-  userAddress: `0x${string}`
-): Promise<{ stakedETH: number; pending: number }> {
-  const vaultContract = {
-    address: vaultAddress,
-    abi: contracts.mineblastVault.abi,
-  };
-
-  const response = await readContracts(config, {
-    contracts: [
-      { ...vaultContract, functionName: 'userInfo', args: [0, userAddress] },
-      { ...vaultContract, functionName: 'getPending', args: [0, userAddress] },
-    ],
-  });
-
-  const staked = (response[0].result as bigint[])[0];
-  const pending = response[1].result as bigint;
-
-  const result = {
-    stakedETH: truncate18Decimals(staked),
-    pending: truncate18Decimals(pending),
-  };
-
-  return result;
 }

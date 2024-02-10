@@ -41,19 +41,19 @@ const typelessContracts = {
   mineblastVault: { abi: mineblastVaultAbi.abi as any },
   mineblastFactory: {
     abi: mineblastFactoryAbi.abi as any,
-    address: '0xDDC21B84Be02E76eF6A541A209CD9a40E02702cA' as AddrString,
+    address: '0x28f55fbB7540370446eAef394CB1d3F7921082f2' as AddrString,
   },
   mineblastRouter: {
     abi: mineblastRouterAbi.abi as any,
-    address: '0x1ea46f363456655D02b542b70741B1E785e1AB86' as AddrString,
+    address: '0xCfBD636d8f572981f04aC9F2A829e8B481B3CFca' as AddrString,
   },
   mineblastLibrary: {
     abi: mineblastLibraryAbi.abi as any,
-    address: '0x75c622ddA2E8eEc20724Be2A0A36Cc114Ef3FDeA' as AddrString,
+    address: '0xfe2A32f72b0b6D546E3D366209AAf1F7d0c62A48' as AddrString,
   },
   mineblastPairFactory: {
     abi: mineblastPairFactoryAbi.abi as any,
-    address: '0x40530936598eEb8a37EF7EC5fe8aA9e915c511bD' as AddrString,
+    address: '0xd28CA1399b460DbD75C51F041954a9718C206e64' as AddrString,
   },
 };
 
