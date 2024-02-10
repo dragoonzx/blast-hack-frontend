@@ -20,7 +20,7 @@ export interface MineblastProjectData {
   projectEndDate: Date;
   //projectDurationInSeconds: number;
   TVLInUSD: number;
-  liqudityInUSD: number;
+  pairETHBalance: number;
 }
 
 export interface MineblastUserVaultData {
@@ -32,8 +32,8 @@ const convertToUSD = (eth: bigint, ethPrice: number): number => {
   return Number((eth * BigInt(ethPrice)) / 10n ** 12n) / 1000000;
 };
 
-const truncate18To3Decimals = (number: bigint): number => {
-  return Number(number / 10n ** 15n) / 1000;
+const truncate18Decimals = (number: bigint, decimals: number = 4): number => {
+  return Number(number / 10n ** BigInt(18-decimals)) / 10**decimals;
 };
 
 export async function getAllVaults(): Promise<Project[]> {
@@ -84,17 +84,17 @@ export async function getProjectData(
     vaultAddress: project.vault,
     tokenName: response[0],
     tokenSymbol: response[1],
-    tokenTotalSupply: truncate18To3Decimals(response[2]),
+    tokenTotalSupply: truncate18Decimals(response[2]),
     tokenPriceInUSD: convertToUSD(response[3], ethPrice),
-    projectOutputPerSecond: truncate18To3Decimals(response[5]),
+    projectOutputPerSecond: truncate18Decimals(response[5]),
     projectEndDate: new Date(Number(response[6]) * 1000),
     TVLInUSD: convertToUSD(response[11], ethPrice),
-    liqudityInUSD: convertToUSD(response[4] * 2n, ethPrice),
+    pairETHBalance: truncate18Decimals(response[4]),
   };
 
   const userData: MineblastUserVaultData = {
-    stakedETH: truncate18To3Decimals(response[12]),
-    pending: truncate18To3Decimals(response[13]),
+    stakedETH: truncate18Decimals(response[12]),
+    pending: truncate18Decimals(response[13]),
   };
 
   return { projectData, userData };
@@ -147,19 +147,19 @@ export async function getVaultData(
   const projectEndDate = response[3].result as bigint;
   //const projectDuration = response[8].result as bigint;
   const TVLInETH = response[7].result as bigint;
-  const liqudityInETH = (response[1].result as bigint[])[0] * 2n;
+  const pairETHBalance = (response[1].result as bigint[])[0];
 
   const result = {
     vaultAddress: vault.vault,
     tokenName,
     tokenSymbol,
-    tokenTotalSupply: truncate18To3Decimals(tokenTotalSupply),
+    tokenTotalSupply: truncate18Decimals(tokenTotalSupply),
     tokenPriceInUSD: convertToUSD(tokenPriceInETH, ethPrice),
-    projectOutputPerSecond: truncate18To3Decimals(projectOutputPerSecond),
+    projectOutputPerSecond: truncate18Decimals(projectOutputPerSecond),
     projectEndDate: new Date(Number(projectEndDate) * 1000),
     //projectDurationInSeconds: Number(projectDuration),
     TVLInUSD: convertToUSD(TVLInETH, ethPrice),
-    liqudityInUSD: convertToUSD(liqudityInETH, ethPrice),
+    pairETHBalance: truncate18Decimals(pairETHBalance),
   };
   console.log(result);
 
@@ -186,8 +186,8 @@ export async function getUserVaultData(
   const pending = response[1].result as bigint;
 
   const result = {
-    stakedETH: truncate18To3Decimals(staked),
-    pending: truncate18To3Decimals(pending),
+    stakedETH: truncate18Decimals(staked),
+    pending: truncate18Decimals(pending),
   };
 
   return result;
