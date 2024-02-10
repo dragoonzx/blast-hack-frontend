@@ -3,7 +3,7 @@
 import React, { use, useEffect, useState } from 'react';
 import VaultInfo from '@/components/vault/VaultInfo';
 import VaultControlPanel from '@/components/vault/VaultControlPanel';
-import LiquidityPanel from '@/components/swap/LiquidityPanel';
+import AddLiquidityPanel from '@/components/swap/AddLiquidityPanel';
 
 import BuySellSwap from '@/components/swap/BuySellSwap';
 import GetWETH from '@/components/swap/GetWETH';
@@ -87,7 +87,7 @@ const TokenPage = () => {
         {address &&
           <div className="space-y-4">
             <GetWETH />
-            <LiquidityPanel/>
+            <AddLiquidityPanel/>
           </div>
         }
       </div>
