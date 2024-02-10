@@ -16,7 +16,7 @@ import {
 import { formatNumberCompact } from '@/lib/utils';
 import { Progress } from "@/components/ui/progress"
 
-const VaultInfo = (props: {projectData: MineblastProjectData}) => {
+const VaultInfo = (props: {projectData: MineblastProjectData, ETHPrice: number}) => {
 
   const timeLeft = Math.floor((props.projectData.projectEndDate.getTime() - new Date().getTime()) / 1000);
   const tokensLeft = props.projectData.projectOutputPerSecond * timeLeft;
@@ -85,7 +85,7 @@ const VaultInfo = (props: {projectData: MineblastProjectData}) => {
         </CardContent>
         <CardFooter >
         <div className="flex items-center w-full justify-between">
-            <p className='text-sm'>liqudity <br />${formatNumberCompact(props.projectData.liqudityInUSD)}</p>
+            <p className='text-sm'>liqudity <br />${formatNumberCompact(props.projectData.pairETHBalance * props.ETHPrice * 2)}</p>
             <p className='text-sm'>creator share <br />{10}%</p>
             <p className='text-sm'>time left <br /> {getTimeLeftFormatted()}</p>
         </div>

@@ -180,6 +180,7 @@ export const mineblastFactoryAbi = [
       { name: 'vault', internalType: 'address', type: 'address' },
       { name: 'pair', internalType: 'address', type: 'address' },
       { name: 'token', internalType: 'address', type: 'address' },
+      { name: 'ownerShareBps', internalType: 'uint16', type: 'uint16' },
     ],
     stateMutability: 'view',
   },
@@ -206,6 +207,35 @@ export const mineblastFactoryAbi = [
       { name: 'tokenAddress', internalType: 'address', type: 'address' },
     ],
     stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'maxElements', internalType: 'uint64', type: 'uint64' },
+      { name: 'offset', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'getAllVaults',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct MineblastFactory.VaultInfo[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'vault', internalType: 'address', type: 'address' },
+          { name: 'pair', internalType: 'address', type: 'address' },
+          { name: 'token', internalType: 'address', type: 'address' },
+          { name: 'ownerShareBps', internalType: 'uint16', type: 'uint16' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getAllVaultsLength',
+    outputs: [{ name: '', internalType: 'uint64', type: 'uint64' }],
+    stateMutability: 'view',
   },
   {
     type: 'function',
@@ -265,7 +295,7 @@ export const mineblastFactoryAbi = [
 ] as const
 
 export const mineblastFactoryAddress =
-  '0xC7E62A952AF4A0bCCc8A73446e6243B454F6835D' as const
+  '0x28f55fbB7540370446eAef394CB1d3F7921082f2' as const
 
 export const mineblastFactoryConfig = {
   address: mineblastFactoryAddress,
@@ -294,7 +324,7 @@ export const mineblastLibraryAbi = [
 ] as const
 
 export const mineblastLibraryAddress =
-  '0x079BF1922a2C849d3edd84396074C9936CA03587' as const
+  '0xfe2A32f72b0b6D546E3D366209AAf1F7d0c62A48' as const
 
 export const mineblastLibraryConfig = {
   address: mineblastLibraryAddress,
@@ -693,6 +723,20 @@ export const mineblastPairAbi = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// mineblastPairFactory
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const mineblastPairFactoryAbi = [] as const
+
+export const mineblastPairFactoryAddress =
+  '0x40530936598eEb8a37EF7EC5fe8aA9e915c511bD' as const
+
+export const mineblastPairFactoryConfig = {
+  address: mineblastPairFactoryAddress,
+  abi: mineblastPairFactoryAbi,
+} as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // mineblastRouter
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -948,7 +992,7 @@ export const mineblastRouterAbi = [
 ] as const
 
 export const mineblastRouterAddress =
-  '0x6f9FcE8f4AE3EF73a887570A1b4544AD52ecb6e7' as const
+  '0xCfBD636d8f572981f04aC9F2A829e8B481B3CFca' as const
 
 export const mineblastRouterConfig = {
   address: mineblastRouterAddress,
@@ -1209,6 +1253,15 @@ export const mineblastVaultAbi = [
   },
   {
     type: 'function',
+    inputs: [],
+    name: 'getUnlocked',
+    outputs: [
+      { name: 'unlockedAmount', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [
       { name: 'pid', internalType: 'uint256', type: 'uint256' },
       { name: 'to', internalType: 'address', type: 'address' },
@@ -1219,10 +1272,24 @@ export const mineblastVaultAbi = [
   },
   {
     type: 'function',
+    inputs: [],
+    name: 'initialSupply',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [{ name: 'supply', internalType: 'uint256', type: 'uint256' }],
     name: 'initialize',
     outputs: [],
     stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'lastOutputChangeDate',
+    outputs: [{ name: '', internalType: 'uint64', type: 'uint64' }],
+    stateMutability: 'view',
   },
   {
     type: 'function',
@@ -1273,6 +1340,13 @@ export const mineblastVaultAbi = [
   {
     type: 'function',
     inputs: [],
+    name: 'sentToLP',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
     name: 'swapPair',
     outputs: [
       { name: '', internalType: 'contract MineblastSwapPair', type: 'address' },
@@ -1292,6 +1366,13 @@ export const mineblastVaultAbi = [
     name: 'transferOwnership',
     outputs: [],
     stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'unlocked',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
     type: 'function',
@@ -1374,6 +1455,262 @@ export const mineblastVaultAbi = [
     type: 'function',
     inputs: [],
     name: 'yieldToLiquidity',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  { type: 'receive', stateMutability: 'payable' },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// weth
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const wethAbi = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'spender',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Approval',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Deposit',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Transfer',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Withdrawal',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'DOMAIN_SEPARATOR',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'address', type: 'address' },
+    ],
+    name: 'allowance',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'spender', internalType: 'address', type: 'address' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'approve',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '', internalType: 'address', type: 'address' }],
+    name: 'balanceOf',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: '_from', internalType: 'address', type: 'address' },
+      { name: '_amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'burn',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'recipient', internalType: 'address', type: 'address' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'claim',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '', internalType: 'address', type: 'address' }],
+    name: 'claimable',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '', internalType: 'enum YieldMode', type: 'uint8' }],
+    name: 'configure',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'decimals',
+    outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'deposit',
+    outputs: [],
+    stateMutability: 'payable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'getClaimableAmount',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: '_to', internalType: 'address', type: 'address' },
+      { name: '_amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'mint',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'name',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '', internalType: 'address', type: 'address' }],
+    name: 'nonces',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'owner', internalType: 'address', type: 'address' },
+      { name: 'spender', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'deadline', internalType: 'uint256', type: 'uint256' },
+      { name: 'v', internalType: 'uint8', type: 'uint8' },
+      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+      { name: 's', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'permit',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'account', internalType: 'address', type: 'address' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'setClaimable',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'symbol',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'totalSupply',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'transfer',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address' },
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'transferFrom',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'amount', internalType: 'uint256', type: 'uint256' }],
+    name: 'withdraw',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -1552,6 +1889,26 @@ export const useReadMineblastFactoryBaseProtocolShareBps =
     abi: mineblastFactoryAbi,
     address: mineblastFactoryAddress,
     functionName: 'baseProtocolShareBps',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link mineblastFactoryAbi}__ and `functionName` set to `"getAllVaults"`
+ */
+export const useReadMineblastFactoryGetAllVaults =
+  /*#__PURE__*/ createUseReadContract({
+    abi: mineblastFactoryAbi,
+    address: mineblastFactoryAddress,
+    functionName: 'getAllVaults',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link mineblastFactoryAbi}__ and `functionName` set to `"getAllVaultsLength"`
+ */
+export const useReadMineblastFactoryGetAllVaultsLength =
+  /*#__PURE__*/ createUseReadContract({
+    abi: mineblastFactoryAbi,
+    address: mineblastFactoryAddress,
+    functionName: 'getAllVaultsLength',
   })
 
 /**
@@ -2500,6 +2857,33 @@ export const useReadMineblastVaultGetPending =
   })
 
 /**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link mineblastVaultAbi}__ and `functionName` set to `"getUnlocked"`
+ */
+export const useReadMineblastVaultGetUnlocked =
+  /*#__PURE__*/ createUseReadContract({
+    abi: mineblastVaultAbi,
+    functionName: 'getUnlocked',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link mineblastVaultAbi}__ and `functionName` set to `"initialSupply"`
+ */
+export const useReadMineblastVaultInitialSupply =
+  /*#__PURE__*/ createUseReadContract({
+    abi: mineblastVaultAbi,
+    functionName: 'initialSupply',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link mineblastVaultAbi}__ and `functionName` set to `"lastOutputChangeDate"`
+ */
+export const useReadMineblastVaultLastOutputChangeDate =
+  /*#__PURE__*/ createUseReadContract({
+    abi: mineblastVaultAbi,
+    functionName: 'lastOutputChangeDate',
+  })
+
+/**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link mineblastVaultAbi}__ and `functionName` set to `"outputPerSecond"`
  */
 export const useReadMineblastVaultOutputPerSecond =
@@ -2535,6 +2919,15 @@ export const useReadMineblastVaultPoolLength =
   })
 
 /**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link mineblastVaultAbi}__ and `functionName` set to `"sentToLP"`
+ */
+export const useReadMineblastVaultSentToLp =
+  /*#__PURE__*/ createUseReadContract({
+    abi: mineblastVaultAbi,
+    functionName: 'sentToLP',
+  })
+
+/**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link mineblastVaultAbi}__ and `functionName` set to `"swapPair"`
  */
 export const useReadMineblastVaultSwapPair =
@@ -2550,6 +2943,15 @@ export const useReadMineblastVaultTotalAllocPoint =
   /*#__PURE__*/ createUseReadContract({
     abi: mineblastVaultAbi,
     functionName: 'totalAllocPoint',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link mineblastVaultAbi}__ and `functionName` set to `"unlocked"`
+ */
+export const useReadMineblastVaultUnlocked =
+  /*#__PURE__*/ createUseReadContract({
+    abi: mineblastVaultAbi,
+    functionName: 'unlocked',
   })
 
 /**
@@ -2901,4 +3303,324 @@ export const useWatchMineblastVaultWithdrawEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
     abi: mineblastVaultAbi,
     eventName: 'Withdraw',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link wethAbi}__
+ */
+export const useReadWeth = /*#__PURE__*/ createUseReadContract({ abi: wethAbi })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"DOMAIN_SEPARATOR"`
+ */
+export const useReadWethDomainSeparator = /*#__PURE__*/ createUseReadContract({
+  abi: wethAbi,
+  functionName: 'DOMAIN_SEPARATOR',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"allowance"`
+ */
+export const useReadWethAllowance = /*#__PURE__*/ createUseReadContract({
+  abi: wethAbi,
+  functionName: 'allowance',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"balanceOf"`
+ */
+export const useReadWethBalanceOf = /*#__PURE__*/ createUseReadContract({
+  abi: wethAbi,
+  functionName: 'balanceOf',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"claimable"`
+ */
+export const useReadWethClaimable = /*#__PURE__*/ createUseReadContract({
+  abi: wethAbi,
+  functionName: 'claimable',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"decimals"`
+ */
+export const useReadWethDecimals = /*#__PURE__*/ createUseReadContract({
+  abi: wethAbi,
+  functionName: 'decimals',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"getClaimableAmount"`
+ */
+export const useReadWethGetClaimableAmount =
+  /*#__PURE__*/ createUseReadContract({
+    abi: wethAbi,
+    functionName: 'getClaimableAmount',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"name"`
+ */
+export const useReadWethName = /*#__PURE__*/ createUseReadContract({
+  abi: wethAbi,
+  functionName: 'name',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"nonces"`
+ */
+export const useReadWethNonces = /*#__PURE__*/ createUseReadContract({
+  abi: wethAbi,
+  functionName: 'nonces',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"symbol"`
+ */
+export const useReadWethSymbol = /*#__PURE__*/ createUseReadContract({
+  abi: wethAbi,
+  functionName: 'symbol',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"totalSupply"`
+ */
+export const useReadWethTotalSupply = /*#__PURE__*/ createUseReadContract({
+  abi: wethAbi,
+  functionName: 'totalSupply',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link wethAbi}__
+ */
+export const useWriteWeth = /*#__PURE__*/ createUseWriteContract({
+  abi: wethAbi,
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"approve"`
+ */
+export const useWriteWethApprove = /*#__PURE__*/ createUseWriteContract({
+  abi: wethAbi,
+  functionName: 'approve',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"burn"`
+ */
+export const useWriteWethBurn = /*#__PURE__*/ createUseWriteContract({
+  abi: wethAbi,
+  functionName: 'burn',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"claim"`
+ */
+export const useWriteWethClaim = /*#__PURE__*/ createUseWriteContract({
+  abi: wethAbi,
+  functionName: 'claim',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"configure"`
+ */
+export const useWriteWethConfigure = /*#__PURE__*/ createUseWriteContract({
+  abi: wethAbi,
+  functionName: 'configure',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"deposit"`
+ */
+export const useWriteWethDeposit = /*#__PURE__*/ createUseWriteContract({
+  abi: wethAbi,
+  functionName: 'deposit',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"mint"`
+ */
+export const useWriteWethMint = /*#__PURE__*/ createUseWriteContract({
+  abi: wethAbi,
+  functionName: 'mint',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"permit"`
+ */
+export const useWriteWethPermit = /*#__PURE__*/ createUseWriteContract({
+  abi: wethAbi,
+  functionName: 'permit',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"setClaimable"`
+ */
+export const useWriteWethSetClaimable = /*#__PURE__*/ createUseWriteContract({
+  abi: wethAbi,
+  functionName: 'setClaimable',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"transfer"`
+ */
+export const useWriteWethTransfer = /*#__PURE__*/ createUseWriteContract({
+  abi: wethAbi,
+  functionName: 'transfer',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"transferFrom"`
+ */
+export const useWriteWethTransferFrom = /*#__PURE__*/ createUseWriteContract({
+  abi: wethAbi,
+  functionName: 'transferFrom',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"withdraw"`
+ */
+export const useWriteWethWithdraw = /*#__PURE__*/ createUseWriteContract({
+  abi: wethAbi,
+  functionName: 'withdraw',
+})
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link wethAbi}__
+ */
+export const useSimulateWeth = /*#__PURE__*/ createUseSimulateContract({
+  abi: wethAbi,
+})
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"approve"`
+ */
+export const useSimulateWethApprove = /*#__PURE__*/ createUseSimulateContract({
+  abi: wethAbi,
+  functionName: 'approve',
+})
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"burn"`
+ */
+export const useSimulateWethBurn = /*#__PURE__*/ createUseSimulateContract({
+  abi: wethAbi,
+  functionName: 'burn',
+})
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"claim"`
+ */
+export const useSimulateWethClaim = /*#__PURE__*/ createUseSimulateContract({
+  abi: wethAbi,
+  functionName: 'claim',
+})
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"configure"`
+ */
+export const useSimulateWethConfigure = /*#__PURE__*/ createUseSimulateContract(
+  { abi: wethAbi, functionName: 'configure' },
+)
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"deposit"`
+ */
+export const useSimulateWethDeposit = /*#__PURE__*/ createUseSimulateContract({
+  abi: wethAbi,
+  functionName: 'deposit',
+})
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"mint"`
+ */
+export const useSimulateWethMint = /*#__PURE__*/ createUseSimulateContract({
+  abi: wethAbi,
+  functionName: 'mint',
+})
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"permit"`
+ */
+export const useSimulateWethPermit = /*#__PURE__*/ createUseSimulateContract({
+  abi: wethAbi,
+  functionName: 'permit',
+})
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"setClaimable"`
+ */
+export const useSimulateWethSetClaimable =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: wethAbi,
+    functionName: 'setClaimable',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"transfer"`
+ */
+export const useSimulateWethTransfer = /*#__PURE__*/ createUseSimulateContract({
+  abi: wethAbi,
+  functionName: 'transfer',
+})
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"transferFrom"`
+ */
+export const useSimulateWethTransferFrom =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: wethAbi,
+    functionName: 'transferFrom',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link wethAbi}__ and `functionName` set to `"withdraw"`
+ */
+export const useSimulateWethWithdraw = /*#__PURE__*/ createUseSimulateContract({
+  abi: wethAbi,
+  functionName: 'withdraw',
+})
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link wethAbi}__
+ */
+export const useWatchWethEvent = /*#__PURE__*/ createUseWatchContractEvent({
+  abi: wethAbi,
+})
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link wethAbi}__ and `eventName` set to `"Approval"`
+ */
+export const useWatchWethApprovalEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: wethAbi,
+    eventName: 'Approval',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link wethAbi}__ and `eventName` set to `"Deposit"`
+ */
+export const useWatchWethDepositEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: wethAbi,
+    eventName: 'Deposit',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link wethAbi}__ and `eventName` set to `"Transfer"`
+ */
+export const useWatchWethTransferEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: wethAbi,
+    eventName: 'Transfer',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link wethAbi}__ and `eventName` set to `"Withdrawal"`
+ */
+export const useWatchWethWithdrawalEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: wethAbi,
+    eventName: 'Withdrawal',
   })
