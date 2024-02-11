@@ -102,7 +102,7 @@ const TokenPage = () => {
             <AddLiquidityPanel 
               projectData={vaultData}
               userTokenBalance={userVaultData.tokenBalance}
-              userETHBalance={userVaultData.stakedETH}
+              userETHBalance={truncate18Decimals(ETHbalance.data?.value ?? 0n)}
               afterAddLiquidity={updateVaultData}
             />
           </div>

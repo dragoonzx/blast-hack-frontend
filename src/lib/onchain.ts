@@ -12,10 +12,10 @@ interface Project {
 
 export interface MineblastProjectData {
   vaultAddress: `0x${string}`;
+  pairAddress: `0x${string}`;
+  tokenAddress: `0x${string}`;
   tokenName: string;
   tokenSymbol: string;
-  pairAddress?: string;
-  tokenAddress?: string;
   tokenTotalSupply: number;
   tokenPriceInUSD: number;
   projectOutputPerSecond: number;
@@ -85,6 +85,8 @@ export async function getProjectData(
 
   const projectData: MineblastProjectData = {
     vaultAddress: project.vault,
+    pairAddress: project.pair,
+    tokenAddress: project.token,
     tokenName: response[0],
     tokenSymbol: response[1],
     tokenTotalSupply: truncate18Decimals(BigInt(response[2])),
