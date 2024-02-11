@@ -86,12 +86,10 @@ const GetWETH = () => {
             <div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center justify-between  w-full">
-                  <label className="text-sm text-muted-foreground">
-                    Amount
-                  </label>
+                  <label className="text-sm text-gray-300">Amount</label>
                   {address ? (
                     <p className="text-xs">
-                      <span className="text-muted-foreground">Balance: </span>
+                      <span className="text-gray-300">Balance: </span>
                       {formattedBalance} ETH
                     </p>
                   ) : null}
@@ -99,7 +97,7 @@ const GetWETH = () => {
               </div>
               <div className="flex items-center justify-between mt-1">
                 <input
-                  className="h-12 flex items-center text-xl outline-none w-full pr-2 overflow-ellipsis"
+                  className="h-12 flex items-center text-xl outline-none w-full pr-2 bg-transparent overflow-ellipsis"
                   value={amount}
                   onChange={(e) =>
                     e.target.value.match(/^[0-9]*[.,]?[0-9]*$/) &&
@@ -114,14 +112,14 @@ const GetWETH = () => {
                 />
                 <button
                   onClick={setMaxAmount}
-                  className="bg-[#ececfe] rounded-md px-2 py-1 text-xs mr-2"
+                  className="bg-transparent border border-gray-600 hover:bg-gray-600/25 rounded-md px-2 py-1 text-xs mr-2"
                 >
                   MAX
                 </button>
                 <div className="space-x-2 flex">
                   <button
                     disabled={isPendingDeposit}
-                    className="border rounded-md p-2 flex items-center"
+                    className="border border-gray-600 hover:bg-gray-600/25 rounded-md p-2 flex items-center"
                     onClick={depositEth}
                   >
                     {isPendingDeposit || isConfirming ? (
