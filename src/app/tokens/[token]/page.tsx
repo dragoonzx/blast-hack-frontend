@@ -24,6 +24,8 @@ const TokenPage = () => {
 
   const [vaultData, setVaultData] = useState<MineblastProjectData>({
     vaultAddress: '0x0',
+    pairAddress: '0x0',
+    tokenAddress: '0x0',
     tokenName: '...',
     tokenSymbol: '...',
     tokenTotalSupply: 0,
@@ -32,12 +34,14 @@ const TokenPage = () => {
     projectEndDate: new Date(Number(10000000000)),
     TVLInUSD: 0,
     pairETHBalance: 0,
+    pairTokenBalance: 0
   });
 
   const [userVaultData, setUserVaultData] = useState<{
     stakedETH: number;
     pending: number;
-  }>({ stakedETH: 0, pending: 0 });
+    tokenBalance: number;
+  }>({ stakedETH: 0, pending: 0, tokenBalance: 0 });
 
   useEffect(() => {
     fetchProjectData();
@@ -66,6 +70,14 @@ const TokenPage = () => {
     fetchProjectData();
   };
 
+  const updateVaultData = () => {
+    fetchProjectData();
+  }
+
+  const truncate18Decimals = (number: bigint, decimals: number = 4): number => {
+    return Number(number / 10n ** BigInt(18-decimals)) / 10**decimals;
+  };
+
   return (
     <div className="flex items-start justify-center w-full space-x-8">
       <div className="w-1/2 flex flex-col">
@@ -87,7 +99,12 @@ const TokenPage = () => {
         {address &&
           <div className="space-y-4">
             <GetWETH />
-            <AddLiquidityPanel/>
+            <AddLiquidityPanel 
+              projectData={vaultData}
+              userTokenBalance={userVaultData.tokenBalance}
+              userETHBalance={truncate18Decimals(ETHbalance.data?.value ?? 0n)}
+              afterAddLiquidity={updateVaultData}
+            />
           </div>
         }
       </div>

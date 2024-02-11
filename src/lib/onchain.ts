@@ -12,6 +12,8 @@ interface Project {
 
 export interface MineblastProjectData {
   vaultAddress: `0x${string}`;
+  pairAddress: `0x${string}`;
+  tokenAddress: `0x${string}`;
   tokenName: string;
   tokenSymbol: string;
   tokenTotalSupply: number;
@@ -33,7 +35,7 @@ const convertToUSD = (eth: bigint, ethPrice: number): number => {
   return Number((eth * BigInt(ethPrice)) / 10n ** 12n) / 1000000;
 };
 
-const truncate18Decimals = (number: bigint, decimals: number = 4): number => {
+const truncate18Decimals = (number: bigint, decimals: number = 6): number => {
   return Number(number / 10n ** BigInt(18-decimals)) / 10**decimals;
 };
 
@@ -83,6 +85,8 @@ export async function getProjectData(
 
   const projectData: MineblastProjectData = {
     vaultAddress: project.vault,
+    pairAddress: project.pair,
+    tokenAddress: project.token,
     tokenName: response[0],
     tokenSymbol: response[1],
     tokenTotalSupply: truncate18Decimals(BigInt(response[2])),

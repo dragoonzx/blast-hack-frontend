@@ -5,12 +5,14 @@ interface MineblastInputProps {
   className?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean;
 }
 
 const MineblastInput = ({
   className,
   value,
   onChange,
+  disabled,
 }: MineblastInputProps) => {
   return (
     <input
@@ -26,6 +28,7 @@ const MineblastInput = ({
       placeholder="0.0"
       value={value}
       onChange={onChange}
+      disabled={disabled}
     />
   );
 };
