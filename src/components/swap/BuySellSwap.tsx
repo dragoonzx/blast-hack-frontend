@@ -150,7 +150,7 @@ const BuySellSwap = () => {
                 return (
                   <button
                     onClick={show}
-                    className="flex w-full items-center justify-center border rounded-md px-4 py-2 border-[#e96828] space-x-2 cta"
+                    className="flex w-full items-center justify-center border rounded-md px-4 py-2 border-[#f77334] space-x-2 cta"
                   >
                     {isConnected ? (
                       address ? (

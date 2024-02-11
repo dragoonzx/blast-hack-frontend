@@ -63,18 +63,18 @@ export default function RootLayout({
                   <Image
                     src="/logo.png"
                     alt="supablast"
-                    width="160"
-                    height="160"
+                    width="120"
+                    height="120"
                   />
                 </div>
               </a>
               <nav
                 aria-hidden="true"
                 className={classNames(
-                  'fixed transition-all z-20 font-sora',
+                  'fixed transition-all font-sora',
                   scrolled
-                    ? 'right-8 left-auto top-8 opacity-100'
-                    : '-right-4 top-8 opacity-0'
+                    ? 'right-8 left-auto top-8 opacity-100 z-20'
+                    : '-right-4 top-8 opacity-0 -z-10'
                 )}
               >
                 <div className="flex flex-col">
@@ -91,7 +91,7 @@ export default function RootLayout({
                       return (
                         <button
                           onClick={show}
-                          className="flex items-center border rounded-md px-4 py-2 border-[#e96828] space-x-2 cta"
+                          className="flex items-center border px-4 py-2 rounded-md border-gray-600 bg-gray-800/25 hover:bg-gray-600/25 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm space-x-2"
                         >
                           {isConnected ? (
                             address ? (
@@ -146,7 +146,7 @@ export default function RootLayout({
               </nav>
               <nav
                 className={classNames(
-                  'flex items-center font-sora pt-8 transition-opacity h-[74px]',
+                  'flex items-center font-sora pt-6 transition-opacity h-[74px]',
                   scrolled ? ' opacity-0' : 'opacity-100'
                 )}
               >
@@ -155,15 +155,16 @@ export default function RootLayout({
                     <li
                       key={menu.title}
                       className={classNames(
-                        'px-4 py-2 hover:text-[#e96828] text-md',
-                        menu.separator ? 'border-r border-white/10' : ''
+                        'px-4 py-2  text-md',
+                        menu.separator ? 'border-r border-white/10' : '',
+                        menu.btn ? '' : 'hover:text-[#f77334]'
                       )}
                     >
                       <Link
                         href={menu.href}
                         className={classNames(
                           menu.btn
-                            ? 'flex items-center border px-4 py-2 rounded-md border-gray-600 bg-gray-800/25 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm'
+                            ? 'flex items-center border px-4 py-2 rounded-md border-gray-600 bg-gray-800/25 hover:bg-gray-600/25 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm'
                             : ''
                         )}
                       >
@@ -186,8 +187,8 @@ export default function RootLayout({
                     return (
                       <button
                         onClick={show}
-                        // border-[#e96828]
-                        className="flex items-center border px-4 py-2 rounded-md border-gray-600 bg-gray-800/25 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm space-x-2"
+                        // border-[#f77334]
+                        className="flex items-center border px-4 py-2 rounded-md border-gray-600 bg-gray-800/25 hover:bg-gray-600/25 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm space-x-2"
                       >
                         {isConnected ? (
                           address ? (

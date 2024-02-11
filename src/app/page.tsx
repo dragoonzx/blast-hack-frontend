@@ -15,7 +15,7 @@ export default function Home() {
     <>
       <h1 className="font-sora text-7xl">
         Another level <br />
-        <label className="text-[#e96828]">Another yield</label>
+        <label className="text-[#f77334]">Another yield</label>
       </h1>
       <div className="px-4 py-2 border w-[320px] mt-4 block rounded-md border-gray-600 bg-gray-800/25 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm">
         <div>
@@ -85,13 +85,19 @@ export default function Home() {
         <h2 className="font-sora text-6xl">Favorite pairs</h2>
         <div className="flex items-center space-x-20 mt-6">
           <Link href="/tokens/xyz" scroll={false}>
-            <div className="border p-4">WETH x SHIB</div>
+            <div className="flex items-center border px-4 py-2 rounded-md border-gray-600 bg-gray-800/25 hover:bg-gray-600/25 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm">
+              WETH x SHIB
+            </div>
           </Link>
           <Link href="/tokens/xyz">
-            <div className="border p-4">WETH x SUK</div>
+            <div className="flex items-center border px-4 py-2 rounded-md border-gray-600 bg-gray-800/25 hover:bg-gray-600/25 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm">
+              WETH x SUK
+            </div>
           </Link>
           <Link href="/tokens/xyz" scroll={false}>
-            <div className="border p-4">WETH x HP</div>
+            <div className="flex items-center border px-4 py-2 rounded-md border-gray-600 bg-gray-800/25 hover:bg-gray-600/25 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm">
+              WETH x HP
+            </div>
           </Link>
         </div>
       </div>

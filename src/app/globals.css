@@ -104,14 +104,13 @@
   /* } */
 }
 
-
 .cta:focus {
   outline: none; 
 }
 
 .cta:hover {
    transition: 0.5s;
-   box-shadow: 10px 10px 0 #e96828;
+   box-shadow: 10px 10px 0 #f77334;
 }
 
 .cta span:nth-child(2) {
@@ -165,7 +164,7 @@ path.two {
        fill: #0c0a09;
    }
    50% {
-       fill: #e96828;
+       fill: #f77334;
    }
    100% {
        fill: #0c0a09;
