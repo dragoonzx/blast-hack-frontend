@@ -38,7 +38,7 @@ const AddLiquidityPanel = ({
 }: MineblastInputProps) => {
   const { address } = useAccount();
   const [tokenAmount, setTokenAmount] = useState(0);
-  const { data: allowance} = useReadErc20Allowance({address: projectData.tokenAddress, args: [address!, contracts.mineblastRouter.address!]});
+  const { data: allowance} = useReadErc20Allowance({address: projectData.tokenAddress!, args: [address!, contracts.mineblastRouter.address!]});
 
   const {
     data: addLiquidityHash,
@@ -66,9 +66,10 @@ const AddLiquidityPanel = ({
     }
     if (allowance === undefined || allowance < tokenAmount) {
       approveWriteContract({
-        address: projectData.tokenAddress,
+        address: projectData.tokenAddress!,
         args: [contracts.mineblastRouter.address!, maxUint256],
       });
+      console.log('Approving');
       return;
     }
 
@@ -84,7 +85,7 @@ const AddLiquidityPanel = ({
 
     addLiquidityWriteContract({
       value: value,
-      args: [projectData.tokenAddress, tokenAmountParsed, tokenAmountParsed*997n/1000n, value*997n/1000n, address, deadline],
+      args: [projectData.tokenAddress!, tokenAmountParsed, tokenAmountParsed*997n/1000n, value*997n/1000n, address, deadline],
     });
   };
 
@@ -120,7 +121,7 @@ const AddLiquidityPanel = ({
   const addLiquidityLoading = addLiquidityTx.isLoading || isPendingLiquidityAdd || isPendingApprove || approveTx.isLoading;
 
   return (
-    <Card className=''>
+    <Card>
       <CardHeader>
         <h3 className="font-semibold leading-none tracking-tight">Add Liquidity</h3>
       </CardHeader>
@@ -130,12 +131,12 @@ const AddLiquidityPanel = ({
             <div className='h-12'>
               <div className="flex items-center justify-between">
                 <div className="flex items-center justify-between  w-full">
-                  <label className="text-sm text-muted-foreground">
+                  <label className="text-sm text-text-gray-300">
                   {projectData.tokenSymbol}
                   </label>
                   {address ? (
                     <p className="text-xs">
-                      <span className="text-muted-foreground">Balance: </span>
+                      <span className="text-text-gray-300">Balance: </span>
                       {userTokenBalance} {projectData.tokenSymbol}
                     </p>
                   ) : null}
@@ -146,7 +147,7 @@ const AddLiquidityPanel = ({
             <div className='h-12 mt-8'>
               <div className="flex items-center justify-between">
                 <div className="flex items-center justify-between  w-full">
-                  <label className="text-sm text-muted-foreground">
+                  <label className="text-sm text-text-gray-300">
                     ETH amount required: {truncateNumber(quote(tokenAmount, projectData.pairTokenBalance, projectData.pairETHBalance))}
                   </label>
                 </div>
