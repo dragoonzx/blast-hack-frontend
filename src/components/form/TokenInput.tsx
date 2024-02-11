@@ -1,13 +1,14 @@
 import classNames from 'classnames';
 import React from 'react';
 import MineblastInput from './MineblastInput';
+import { NumericFormat } from 'react-number-format';
 import { truncate18Decimals } from '@/lib/utils';
 
 interface TokenInputProps {
   className?: string;
   value?: string;
   maxValue?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: string) => void;
 }
 
 const TokenInput = ({
@@ -19,7 +20,7 @@ const TokenInput = ({
 
     const setMaxAmount = () => {
         if (maxValue) {
-            onChange!({target: {value: maxValue.toString()} } as React.ChangeEvent<HTMLInputElement>);
+            onChange!(maxValue);
         }
     }
 
@@ -28,7 +29,10 @@ const TokenInput = ({
     <MineblastInput
         className={classNames(className)}
         value={value ? value.toString() : ''}
-        onChange={onChange}
+        onChange={(e) =>
+            e.target.value.match(/^[0-9]*[.,]?[0-9]*$/) &&
+            onChange!(e.target.value)
+        }
         disabled={false}
     />
     <button

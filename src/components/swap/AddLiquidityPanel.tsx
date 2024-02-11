@@ -10,7 +10,7 @@ import {
   useBalance,
   useWaitForTransactionReceipt
 } from 'wagmi';
-import SwapInput from '@/components/swap/SwapInput';
+import TokenInput from '../form/TokenInput';
 import { 
   useWriteMineblastRouterAddLiquidityEth,
   useWriteErc20Approve,
@@ -18,15 +18,16 @@ import {
 } from '../../generated'
 import { MineblastProjectData } from '@/lib/onchain';
 import { Loader2 } from "lucide-react"
-import { maxUint256, parseEther } from 'viem';
+import { formatEther, maxUint256, parseEther } from 'viem';
 import {contracts} from '@/lib/wagmiConfig';
+import {truncate18Decimals, bigMin} from '@/lib/utils';
 
 
 
 interface MineblastInputProps {
   projectData: MineblastProjectData;
-  userETHBalance: number;
-  userTokenBalance: number;
+  userETHBalance: bigint;
+  userTokenBalance: bigint;
   afterAddLiquidity: () => void;
 }
 
@@ -37,7 +38,7 @@ const AddLiquidityPanel = ({
   afterAddLiquidity,
 }: MineblastInputProps) => {
   const { address } = useAccount();
-  const [tokenAmount, setTokenAmount] = useState(0);
+  const [tokenAmount, setTokenAmount] = useState('');
   const { data: allowance} = useReadErc20Allowance({address: projectData.tokenAddress!, args: [address!, contracts.mineblastRouter.address!]});
 
   const {
@@ -64,7 +65,8 @@ const AddLiquidityPanel = ({
     if (!tokenAmount || address === undefined) {
       return;
     }
-    if (allowance === undefined || allowance < tokenAmount) {
+    const amount = parseEther(tokenAmount);
+    if (allowance === undefined || allowance < amount) {
       approveWriteContract({
         address: projectData.tokenAddress!,
         args: [contracts.mineblastRouter.address!, maxUint256],
@@ -72,20 +74,13 @@ const AddLiquidityPanel = ({
       console.log('Approving');
       return;
     }
-
     
-    const value = parseEther(quote(tokenAmount, projectData.pairTokenBalance, projectData.pairETHBalance).toString());
-    console.log(projectData.pairTokenBalance);
-    console.log(projectData.pairETHBalance);
-    console.log(tokenAmount);
-    console.log(value);
+    const value = quote(amount, projectData.pairTokenBalanceRaw, projectData.pairETHBalanceRaw);
     const deadline = BigInt(Math.floor(Date.now() / 1000) + 60 * 20);
-    const tokenAmountParsed = parseEther(tokenAmount.toString());
-    console.log(tokenAmountParsed);
 
     addLiquidityWriteContract({
       value: value,
-      args: [projectData.tokenAddress!, tokenAmountParsed, tokenAmountParsed*997n/1000n, value*997n/1000n, address, deadline],
+      args: [projectData.tokenAddress!, amount, amount*997n/1000n, value*997n/1000n, address, deadline],
     });
   };
 
@@ -106,12 +101,15 @@ const AddLiquidityPanel = ({
     }
   }, [approveTx.isSuccess]);
 
-  const quote = (amountA: number, reserveA: number, reserveB: number): number => {
+  const quote = (amountA: bigint, reserveA: bigint, reserveB: bigint): bigint => {
+    if(reserveA === 0n || reserveB === 0n){
+      return 0n;
+    }
     return amountA * reserveB / reserveA;
   };
 
-  const getMaximumTokenAmount = (): number => {
-    return Math.min(userTokenBalance, quote(userETHBalance, projectData.pairETHBalance, projectData.pairTokenBalance));
+  const getMaximumTokenAmount = (): bigint => {
+    return bigMin(userTokenBalance, quote(userETHBalance, projectData.pairETHBalanceRaw, projectData.pairTokenBalanceRaw));
   }
 
   const truncateNumber = (number: number): number => {
@@ -137,18 +135,18 @@ const AddLiquidityPanel = ({
                   {address ? (
                     <p className="text-xs">
                       <span className="text-text-gray-300">Balance: </span>
-                      {userTokenBalance} {projectData.tokenSymbol}
+                      {truncate18Decimals(userTokenBalance)} {projectData.tokenSymbol}
                     </p>
                   ) : null}
                 </div>
               </div>
-              <SwapInput maxValue={truncateNumber(getMaximumTokenAmount())} onChange={(n:number) => {setTokenAmount(n)}}/>
+              <TokenInput value={tokenAmount.toString()} maxValue={formatEther(getMaximumTokenAmount())} onChange={setTokenAmount}/>
             </div >
             <div className='h-12 mt-8'>
               <div className="flex items-center justify-between">
                 <div className="flex items-center justify-between  w-full">
                   <label className="text-sm text-text-gray-300">
-                    ETH amount required: {truncateNumber(quote(tokenAmount, projectData.pairTokenBalance, projectData.pairETHBalance))}
+                    ETH amount required: {truncate18Decimals(quote(parseEther(tokenAmount), projectData.pairTokenBalanceRaw, projectData.pairETHBalanceRaw))}
                   </label>
                 </div>
               </div>

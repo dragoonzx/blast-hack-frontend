@@ -15,6 +15,7 @@ import {
 } from '@/lib/onchain';
 import { useAccount, useBalance } from 'wagmi';
 import { AddrString } from '@/lib/wagmiConfig';
+import { parseEther } from 'viem';
 
 const TokenPage = () => {
   useEffect(() => {
@@ -35,8 +36,6 @@ const TokenPage = () => {
     projectOutputPerSecond: 0,
     projectEndDate: new Date(Number(10000000000)),
     TVLInUSD: 0,
-    pairETHBalance: 0,
-    pairTokenBalance: 0,
     pairETHBalanceRaw: 0n,
     pairTokenBalanceRaw: 0n,
   });
@@ -117,8 +116,8 @@ const TokenPage = () => {
             <GetWETH />
             <AddLiquidityPanel
               projectData={vaultData}
-              userTokenBalance={userVaultData.tokenBalance}
-              userETHBalance={truncate18Decimals(ETHbalance.data?.value ?? 0n)}
+              userTokenBalance={parseEther(userVaultData.tokenBalance.toString())}
+              userETHBalance={ETHbalance.data?.value ?? 0n}
               afterAddLiquidity={updateVaultData}
             />
             <RemoveLiquidityPanel

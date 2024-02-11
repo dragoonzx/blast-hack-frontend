@@ -28,9 +28,9 @@ interface RemoveLiquidityPanelProps {
   afterRemoveLiquidity: () => void;
 }
 
-const getTokensAmount = (lpTokenAmount: number, lpTokenSupply: number, tokenReserve: number, ethReserve: number): {ethAmount: number, tokenAmount: number} => {
-  const ethAmount = (lpTokenAmount / lpTokenSupply) * ethReserve;
-  const tokenAmount = (lpTokenAmount / lpTokenSupply) * tokenReserve;
+const getTokensAmount = (lpTokenAmount: bigint, lpTokenSupply: bigint, tokenReserve: bigint, ethReserve: bigint): {ethAmount: bigint, tokenAmount: bigint} => {
+  const ethAmount = lpTokenAmount * ethReserve / lpTokenSupply;
+  const tokenAmount = lpTokenAmount * tokenReserve / lpTokenSupply;
   return {ethAmount, tokenAmount};
 }
 
@@ -54,16 +54,16 @@ const RemoveLiquidityPanel = ({
   afterRemoveLiquidity,
 }: RemoveLiquidityPanelProps) => {
   const { address } = useAccount();
-  const [tokenAmount, setTokenAmount] = useState(0n);
-  const [outputTokens, setOutputTokens] = useState({ethAmount: 0, tokenAmount: 0});
+  const [tokenAmount, setTokenAmount] = useState('');
+  const [outputTokens, setOutputTokens] = useState({ethAmount: 0n, tokenAmount: 0n});
   //const { data: allowance} = useReadErc20Allowance({address: projectData.tokenAddress!, args: [address!, contracts.mineblastRouter.address!]});
 
   const { data: lpTokenBalance} = useReadErc20BalanceOf({address: projectData.pairAddress!, args: [address!]});
 
-  const onInputChanged = (ev: any) => {
+  const onInputChanged = (val: string) => {
     const lp = (lpTokenBalance ?? 0n);
-    setTokenAmount(parseEther(ev.target.value));
-    setOutputTokens(getTokensAmount(Number(ev.target.value), truncate18Decimals(lp), projectData.pairTokenBalance, projectData.pairETHBalance));
+    setTokenAmount(val);
+    setOutputTokens(getTokensAmount(parseEther(val), lp, projectData.pairTokenBalanceRaw, projectData.pairETHBalanceRaw));
   }
 
   return (
@@ -88,15 +88,15 @@ const RemoveLiquidityPanel = ({
                   ) : null}
                 </div>
               </div>
-              <TokenInput value={formatEther(tokenAmount)} maxValue={formatEther(lpTokenBalance??0n)} onChange={onInputChanged}/>
+              <TokenInput value={tokenAmount} maxValue={formatEther(lpTokenBalance??0n)} onChange={onInputChanged}/>
             </div >
             <div className='mt-8'>
               <div className="flex flex-col items-center justify-center w-full">
                 <label className="text-sm text-text-gray-300 mb-3">
                 🥵Output:
                 </label>
-                <div>{truncateNumber(outputTokens.ethAmount)} ETH</div>
-                <div>{truncateNumber(outputTokens.tokenAmount)} {projectData.tokenSymbol}</div>
+                <div>{truncate18Decimals(outputTokens.ethAmount)} ETH</div>
+                <div>{truncate18Decimals(outputTokens.tokenAmount)} {projectData.tokenSymbol}</div>
                 <Button className='mt-3' disabled={removeLoading} onClick={removeLiquidty}> 
                 {removeLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Remove

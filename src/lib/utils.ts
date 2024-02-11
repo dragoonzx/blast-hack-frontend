@@ -15,3 +15,7 @@ export function formatNumberCompact(number: number) {
 export const truncate18Decimals = (number: bigint, decimals: number = 4): number => {
   return Number(number / 10n ** BigInt(18 - decimals)) / 10 ** decimals;
 };
+
+export const bigMin = (a: bigint, b: bigint): bigint => {
+  return a < b ? a : b;
+}
