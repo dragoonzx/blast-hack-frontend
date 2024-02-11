@@ -13,6 +13,7 @@ import {
   MineblastProjectData,
 } from '@/lib/onchain';
 import { useAccount, useBalance } from 'wagmi';
+import { AddrString } from '@/lib/wagmiConfig';
 
 const TokenPage = () => {
   useEffect(() => {
@@ -34,7 +35,7 @@ const TokenPage = () => {
     projectEndDate: new Date(Number(10000000000)),
     TVLInUSD: 0,
     pairETHBalance: 0,
-    pairTokenBalance: 0
+    pairTokenBalance: 0,
   });
 
   const [userVaultData, setUserVaultData] = useState<{
@@ -47,11 +48,19 @@ const TokenPage = () => {
     fetchProjectData();
   }, [address]);
 
+  const [tokenAddr, setTokenAddr] = useState<AddrString | string>('');
+
   async function fetchProjectData() {
-    const userAddress = address ?? "0x0000000000000000000000000000000000000000"
+    const userAddress = address ?? '0x0000000000000000000000000000000000000000';
 
     const allVaults = await getAllVaults(); //temp, will be in props in the future
-    const projectData = await getProjectData(userAddress, allVaults[0], ETHPrice);
+    const projectData = await getProjectData(
+      userAddress,
+      allVaults[0],
+      ETHPrice
+    );
+    console.log({ allVaults });
+    setTokenAddr(allVaults[0].token);
     setVaultData(projectData.projectData);
     setUserVaultData(projectData.userData);
   }
@@ -72,17 +81,17 @@ const TokenPage = () => {
 
   const updateVaultData = () => {
     fetchProjectData();
-  }
+  };
 
   const truncate18Decimals = (number: bigint, decimals: number = 4): number => {
-    return Number(number / 10n ** BigInt(18-decimals)) / 10**decimals;
+    return Number(number / 10n ** BigInt(18 - decimals)) / 10 ** decimals;
   };
 
   return (
     <div className="flex items-start justify-center w-full space-x-8">
       <div className="w-1/2 flex flex-col">
-        <VaultInfo projectData={vaultData} ETHPrice={ETHPrice}/>
-        {address && 
+        <VaultInfo projectData={vaultData} ETHPrice={ETHPrice} />
+        {address && (
           <VaultControlPanel
             projectData={vaultData}
             claimableAmount={userVaultData.pending}
@@ -92,21 +101,25 @@ const TokenPage = () => {
             afterDeposit={onDeposit}
             afterWithdraw={onWithdraw}
           />
-        }
+        )}
       </div>
       <div className="min-w-[360px] space-y-4">
-        <BuySellSwap />
-        {address &&
+        <BuySellSwap
+          pairETHBalance={vaultData.pairETHBalanceRaw}
+          pairTokenBalance={vaultData.pairTokenBalanceRaw}
+          tokenAddr={tokenAddr}
+        />
+        {address && (
           <div className="space-y-4">
             <GetWETH />
-            <AddLiquidityPanel 
+            <AddLiquidityPanel
               projectData={vaultData}
               userTokenBalance={userVaultData.tokenBalance}
               userETHBalance={truncate18Decimals(ETHbalance.data?.value ?? 0n)}
               afterAddLiquidity={updateVaultData}
             />
           </div>
-        }
+        )}
       </div>
     </div>
   );

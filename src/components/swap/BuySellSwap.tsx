@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -8,11 +8,56 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { ConnectKitButton } from 'connectkit';
-import { useAccount, useBalance, useReadContracts } from 'wagmi';
-import { formatUnits } from 'viem';
-import { contracts } from '@/lib/wagmiConfig';
+import {
+  useAccount,
+  useBalance,
+  useReadContracts,
+  useWaitForTransactionReceipt,
+} from 'wagmi';
+import { waitForTransactionReceipt } from '@wagmi/core';
+import { formatUnits, maxUint256, parseEther, parseUnits } from 'viem';
+import { AddrString, config, contracts } from '@/lib/wagmiConfig';
+import {
+  useReadErc20Allowance,
+  useReadMineblastRouterGetAmountOut,
+  useWriteErc20Approve,
+  useWriteMineblastRouterSwapEthForExactTokens,
+  useWriteMineblastRouterSwapExactTokensForEth,
+} from '@/generated';
+import { WETH_ADDR, truncate18Decimals } from '@/lib/onchain';
 
-const BuySellSwap = () => {
+enum SWAP_STATE {
+  'from_native',
+  'to_native',
+}
+
+type SwapState = {
+  state: SWAP_STATE;
+  from: {
+    amount: string;
+    address: string;
+    symbol: string;
+    balance: bigint;
+  };
+  to: {
+    amount: string;
+    address: string;
+    symbol: string;
+    balance: bigint;
+  };
+};
+
+interface BuySellSwapProps {
+  pairETHBalance: bigint;
+  pairTokenBalance: bigint;
+  tokenAddr: AddrString | string;
+}
+
+const BuySellSwap = ({
+  pairETHBalance,
+  pairTokenBalance,
+  tokenAddr,
+}: BuySellSwapProps) => {
   const { address } = useAccount();
   const { data: ethBalanceData } = useBalance({
     address,
@@ -21,27 +66,183 @@ const BuySellSwap = () => {
     },
   });
 
-  const fromBalanceData = ethBalanceData;
+  const [swapState, setSwapState] = useState<SwapState>({
+    state: SWAP_STATE.from_native,
+    from: {
+      amount: '',
+      address: '',
+      symbol: 'ETH',
+      balance: BigInt(0),
+    },
+    to: {
+      amount: '',
+      address: '',
+      symbol: 'MIB',
+      balance: BigInt(0),
+    },
+  });
+
+  const handleFromToAmount = (value: string, type: 'from' | 'to') => {
+    setSwapState({
+      ...swapState,
+      [type]: {
+        ...swapState[type],
+        amount: value,
+      },
+    });
+  };
+
+  const swapFromToState = () => {
+    const { state, from, to } = swapState;
+
+    const newState: SwapState = {
+      state:
+        state === SWAP_STATE.from_native
+          ? SWAP_STATE.to_native
+          : SWAP_STATE.from_native,
+      from: to,
+      to: from,
+    };
+    setSwapState(newState);
+  };
+
+  const { data: amountOutData } = useReadMineblastRouterGetAmountOut({
+    args: [
+      parseUnits(swapState.from.amount, 18),
+      swapState.state === SWAP_STATE.from_native
+        ? pairETHBalance
+        : pairTokenBalance,
+      swapState.state === SWAP_STATE.from_native
+        ? pairTokenBalance
+        : pairETHBalance,
+    ],
+  });
+
+  useEffect(() => {
+    setSwapState({
+      ...swapState,
+      to: {
+        ...swapState.to,
+        amount: !amountOutData
+          ? ''
+          : Number(formatUnits(amountOutData, 18)).toFixed(6),
+      },
+    });
+  }, [amountOutData]);
+
+  const {
+    data: swapEthForExactTokensHash,
+    writeContract: writeSwapEthForExactTokens,
+    isPending: isWriteSwapEthPending,
+  } = useWriteMineblastRouterSwapEthForExactTokens();
+
+  const { isSuccess: isSwapEthSuccess, isLoading: isSwapEthPending } =
+    useWaitForTransactionReceipt({
+      hash: swapEthForExactTokensHash,
+      query: {
+        enabled: !!swapEthForExactTokensHash,
+      },
+    });
+
+  const {
+    data: swapTokensForEthHash,
+    writeContract: writeSwapTokensForEth,
+    isPending: isWriteSwapTokensForEthPending,
+  } = useWriteMineblastRouterSwapExactTokensForEth();
+
+  const { isSuccess: isSwapTokensSuccessfull, isLoading: isSwapTokensPending } =
+    useWaitForTransactionReceipt({
+      hash: swapTokensForEthHash,
+      query: {
+        enabled: !!swapTokensForEthHash,
+      },
+    });
+
   const { data: erc20BalanceWithDecimalsData } = useReadContracts({
     contracts: [
       {
         abi: contracts.erc20.abi,
-        // test mbti token
-        address: '0xf75b2FC80bEBF328Ce4e1766A9C68d2055f76273',
+        address: tokenAddr as AddrString,
         functionName: 'balanceOf',
         args: [address!],
       },
     ],
     query: {
+      enabled: !!(address && tokenAddr),
+    },
+  });
+  const fromBalanceData =
+    swapState.state === SWAP_STATE.from_native
+      ? ethBalanceData
+      : {
+          value: erc20BalanceWithDecimalsData
+            ? (erc20BalanceWithDecimalsData[0].result as bigint)
+            : BigInt(0),
+          decimals: 18,
+        };
+
+  const toBalanceData =
+    swapState.state === SWAP_STATE.to_native
+      ? ethBalanceData
+      : {
+          value: erc20BalanceWithDecimalsData
+            ? (erc20BalanceWithDecimalsData[0].result as bigint)
+            : BigInt(0),
+          decimals: 18,
+        };
+
+  const { data: allowance } = useReadErc20Allowance({
+    address: tokenAddr as AddrString,
+    args: [address!, contracts.mineblastRouter.address!],
+    query: {
       enabled: !!address,
     },
   });
-  const toBalanceData = erc20BalanceWithDecimalsData
-    ? {
-        value: erc20BalanceWithDecimalsData[0].result as bigint,
-        decimals: 18,
+  const { writeContractAsync: writeErc20Approve } = useWriteErc20Approve();
+
+  const handleSwap = async () => {
+    if (!(amountOutData && address)) return;
+    if (swapState.state === SWAP_STATE.from_native) {
+      writeSwapEthForExactTokens({
+        args: [
+          amountOutData - (amountOutData * 100n) / 5000n,
+          [WETH_ADDR, tokenAddr as AddrString],
+          address,
+          maxUint256,
+        ],
+        value: parseEther(swapState.from.amount),
+      });
+    } else if (swapState.state === SWAP_STATE.to_native) {
+      if (!allowance || allowance < parseEther(swapState.from.amount)) {
+        const approveHash = await writeErc20Approve({
+          address: tokenAddr as AddrString,
+          args: [contracts.mineblastRouter.address!, maxUint256],
+        });
+        await waitForTransactionReceipt(config, { hash: approveHash });
       }
-    : null;
+
+      writeSwapTokensForEth({
+        args: [
+          parseEther(swapState.from.amount),
+          amountOutData - (amountOutData * 100n) / 5000n,
+          [tokenAddr as AddrString, WETH_ADDR],
+          address,
+          maxUint256,
+        ],
+      });
+    }
+  };
+
+  const needApproval =
+    swapState.state === SWAP_STATE.to_native &&
+    allowance &&
+    allowance <= parseEther(swapState.from.amount);
+
+  const isSwapping =
+    isWriteSwapEthPending ||
+    isWriteSwapTokensForEthPending ||
+    isSwapTokensPending ||
+    isSwapEthPending;
 
   return (
     <Card>
@@ -59,83 +260,104 @@ const BuySellSwap = () => {
                 <p className="text-xs">
                   <span className="text-gray-300">Balance: </span>
                   {fromBalanceData
-                    ? formatUnits(
-                        fromBalanceData!.value,
-                        fromBalanceData!.decimals
-                      )
+                    ? Number(
+                        formatUnits(
+                          fromBalanceData!.value,
+                          fromBalanceData!.decimals
+                        )
+                      ).toFixed(6)
                     : 0.0}
                 </p>
               ) : null}
             </div>
             <div className="flex items-center justify-between">
               <input
-                className="h-12 flex items-center text-xl outline-none bg-transparent"
+                className="h-12 flex items-center text-xl outline-none bg-transparent w-full"
                 inputMode="decimal"
                 minLength={1}
                 maxLength={79}
                 type="text"
                 pattern="^[0-9]*[.,]?[0-9]*$"
                 placeholder="0.0"
+                value={swapState.from.amount}
+                onChange={(e) =>
+                  e.target.value.match(/^[0-9]*[.,]?[0-9]*$/) &&
+                  handleFromToAmount(e.target.value, 'from')
+                }
               />
-              <button className="bg-transparent border border-gray-600 hover:bg-gray-600/25 rounded-md px-2 py-1 text-xs mr-2">
-                MAX
-              </button>
-              <div className="border border-gray-600  rounded-md px-4 py-2 min-w-[100px] h-12 flex items-center justify-center">
-                WETH
+              <div className="flex items-center">
+                <button className="bg-transparent border border-gray-600 hover:bg-gray-600/25 rounded-md px-2 py-1 text-xs mr-2">
+                  MAX
+                </button>
+                <div className="border border-gray-600  rounded-md px-4 py-2 min-w-[100px] h-12 flex items-center justify-center">
+                  {swapState.from.symbol}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="flex items-center w-full space-x-2">
-            <div className="w-full bg-white/20 h-0.5" />
-            <button className="p-3 hover:bg-gray-600/70 rounded-md transition-colors">
-              <svg
-                width="16"
-                height="18"
-                viewBox="0 0 16 18"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                focusable="false"
-                className="fill-gray-300"
-                aria-hidden="true"
+            <div className="flex items-center w-full space-x-2">
+              <div className="w-full bg-white/20 h-0.5" />
+              <button
+                onClick={swapFromToState}
+                className="p-3 hover:bg-gray-600/70 rounded-md transition-colors"
               >
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M4.70711 1.29289L4 0.585785L3.29289 1.29289L0.292893 4.29289C-0.0976311 4.68342 -0.0976311 5.31658 0.292893 5.70711C0.683418 6.09763 1.31658 6.09763 1.70711 5.70711L3 4.41421L3 14C3 14.5523 3.44772 15 4 15C4.55229 15 5 14.5523 5 14L5 4.41421L6.29289 5.7071C6.68342 6.09763 7.31658 6.09763 7.70711 5.7071C8.09763 5.31658 8.09763 4.68341 7.70711 4.29289L4.70711 1.29289ZM11.2929 16.7071L12 17.4142L12.7071 16.7071L15.7071 13.7071C16.0976 13.3166 16.0976 12.6834 15.7071 12.2929C15.3166 11.9024 14.6834 11.9024 14.2929 12.2929L13 13.5858L13 4C13 3.44771 12.5523 3 12 3C11.4477 3 11 3.44771 11 4L11 13.5858L9.70711 12.2929C9.31658 11.9024 8.68342 11.9024 8.29289 12.2929C7.90237 12.6834 7.90237 13.3166 8.29289 13.7071L11.2929 16.7071Z"
-                  fill="current"
-                ></path>
-              </svg>
-            </button>
-            <div className="w-full bg-white/20 h-0.5" />
-          </div>
-          <div className="flex flex-col space-y-1">
-            <div className="flex items-center justify-between  w-full">
-              <label className="text-sm text-gray-300">From</label>
-              {address ? (
-                <p className="text-xs">
-                  <span className="text-gray-300">Balance: </span>
-                  {toBalanceData
-                    ? formatUnits(toBalanceData.value!, toBalanceData.decimals!)
-                    : 0.0}
-                </p>
-              ) : null}
+                <svg
+                  width="16"
+                  height="18"
+                  viewBox="0 0 16 18"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  focusable="false"
+                  className="fill-gray-300"
+                  aria-hidden="true"
+                >
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M4.70711 1.29289L4 0.585785L3.29289 1.29289L0.292893 4.29289C-0.0976311 4.68342 -0.0976311 5.31658 0.292893 5.70711C0.683418 6.09763 1.31658 6.09763 1.70711 5.70711L3 4.41421L3 14C3 14.5523 3.44772 15 4 15C4.55229 15 5 14.5523 5 14L5 4.41421L6.29289 5.7071C6.68342 6.09763 7.31658 6.09763 7.70711 5.7071C8.09763 5.31658 8.09763 4.68341 7.70711 4.29289L4.70711 1.29289ZM11.2929 16.7071L12 17.4142L12.7071 16.7071L15.7071 13.7071C16.0976 13.3166 16.0976 12.6834 15.7071 12.2929C15.3166 11.9024 14.6834 11.9024 14.2929 12.2929L13 13.5858L13 4C13 3.44771 12.5523 3 12 3C11.4477 3 11 3.44771 11 4L11 13.5858L9.70711 12.2929C9.31658 11.9024 8.68342 11.9024 8.29289 12.2929C7.90237 12.6834 7.90237 13.3166 8.29289 13.7071L11.2929 16.7071Z"
+                    fill="current"
+                  ></path>
+                </svg>
+              </button>
+              <div className="w-full bg-white/20 h-0.5" />
             </div>
-            <div className="flex items-center justify-between">
-              <input
-                className="h-12 flex items-center text-xl outline-none bg-transparent"
-                inputMode="decimal"
-                minLength={1}
-                maxLength={79}
-                type="text"
-                pattern="^[0-9]*[.,]?[0-9]*$"
-                placeholder="0.0"
-              />
-              <div className="border border-gray-600  rounded-md px-4 py-2 min-w-[100px] h-12 flex items-center justify-center">
-                MIB
+            <div className="flex flex-col space-y-1">
+              <div className="flex items-center justify-between  w-full">
+                <label className="text-sm text-gray-300">From</label>
+                {address ? (
+                  <p className="text-xs">
+                    <span className="text-gray-300">Balance: </span>
+                    {toBalanceData
+                      ? Number(
+                          formatUnits(
+                            toBalanceData.value!,
+                            toBalanceData.decimals!
+                          )
+                        ).toFixed(6)
+                      : 0.0}
+                  </p>
+                ) : null}
+              </div>
+              <div className="flex items-center justify-between">
+                <input
+                  className="h-12 flex items-center text-xl outline-none bg-transparent"
+                  inputMode="decimal"
+                  minLength={1}
+                  maxLength={79}
+                  type="text"
+                  pattern="^[0-9]*[.,]?[0-9]*$"
+                  placeholder="0.0"
+                  value={swapState.to.amount}
+                  onChange={(e) =>
+                    e.target.value.match(/^[0-9]*[.,]?[0-9]*$/) &&
+                    handleFromToAmount(e.target.value, 'to')
+                  }
+                />
+                <div className="border border-gray-600  rounded-md px-4 py-2 min-w-[100px] h-12 flex items-center justify-center">
+                  {swapState.to.symbol}
+                </div>
               </div>
             </div>
           </div>
-
           <div className="">
             <ConnectKitButton.Custom>
               {({
@@ -149,14 +371,42 @@ const BuySellSwap = () => {
               }) => {
                 return (
                   <button
-                    onClick={show}
-                    className="flex w-full items-center justify-center border border-gray-600  rounded-md px-4 py-2 space-x-2"
+                    onClick={isConnected ? handleSwap : show}
+                    className="flex w-full items-center justify-center rounded-md px-4 py-2 border border-gray-600  space-x-2"
                   >
+                    {isSwapping ? (
+                      <svg
+                        className="animate-spin h-5 w-5 mr-2"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          stroke-width="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                    ) : null}
                     {isConnected ? (
-                      address ? (
-                        `${address.slice(0, 6)}...${address.slice(-4)}`
+                      needApproval ? (
+                        isSwapping ? (
+                          'Approving & Swapping...'
+                        ) : (
+                          'Approve & Swap'
+                        )
+                      ) : isSwapping ? (
+                        'Swapping...'
                       ) : (
-                        'Something wrong'
+                        'Swap'
                       )
                     ) : (
                       <>
