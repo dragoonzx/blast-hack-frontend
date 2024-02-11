@@ -37,6 +37,8 @@ const TokenPage = () => {
     TVLInUSD: 0,
     pairETHBalance: 0,
     pairTokenBalance: 0,
+    pairETHBalanceRaw: 0n,
+    pairTokenBalanceRaw: 0n,
   });
 
   const [userVaultData, setUserVaultData] = useState<{
