@@ -54,10 +54,10 @@ const BuySellSwap = () => {
         <div className="space-y-4 font-sora">
           <div className="flex flex-col space-y-1">
             <div className="flex items-center justify-between  w-full">
-              <label className="text-sm text-muted-foreground">From</label>
+              <label className="text-sm text-gray-300">From</label>
               {address ? (
                 <p className="text-xs">
-                  <span className="text-muted-foreground">Balance: </span>
+                  <span className="text-gray-300">Balance: </span>
                   {fromBalanceData
                     ? formatUnits(
                         fromBalanceData!.value,
@@ -69,7 +69,7 @@ const BuySellSwap = () => {
             </div>
             <div className="flex items-center justify-between">
               <input
-                className="h-12 flex items-center text-xl outline-none"
+                className="h-12 flex items-center text-xl outline-none bg-transparent"
                 inputMode="decimal"
                 minLength={1}
                 maxLength={79}
@@ -77,17 +77,17 @@ const BuySellSwap = () => {
                 pattern="^[0-9]*[.,]?[0-9]*$"
                 placeholder="0.0"
               />
-              <button className="bg-[#ececfe] rounded-md px-2 py-1 text-xs mr-2">
+              <button className="bg-transparent border border-gray-600 hover:bg-gray-600/25 rounded-md px-2 py-1 text-xs mr-2">
                 MAX
               </button>
-              <div className="border rounded-md px-4 py-2 min-w-[100px] h-12 flex items-center justify-center">
+              <div className="border border-gray-600  rounded-md px-4 py-2 min-w-[100px] h-12 flex items-center justify-center">
                 WETH
               </div>
             </div>
           </div>
           <div className="flex items-center w-full space-x-2">
-            <div className="w-full bg-[#ececfe] h-0.5" />
-            <button className="p-3 hover:bg-[#ececfe] rounded-md transition-colors">
+            <div className="w-full bg-white/20 h-0.5" />
+            <button className="p-3 hover:bg-gray-600/70 rounded-md transition-colors">
               <svg
                 width="16"
                 height="18"
@@ -95,7 +95,7 @@ const BuySellSwap = () => {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 focusable="false"
-                className="fill-[#0c0a09]"
+                className="fill-gray-300"
                 aria-hidden="true"
               >
                 <path
@@ -106,14 +106,14 @@ const BuySellSwap = () => {
                 ></path>
               </svg>
             </button>
-            <div className="w-full bg-[#ececfe] h-0.5" />
+            <div className="w-full bg-white/20 h-0.5" />
           </div>
           <div className="flex flex-col space-y-1">
             <div className="flex items-center justify-between  w-full">
-              <label className="text-sm text-muted-foreground">From</label>
+              <label className="text-sm text-gray-300">From</label>
               {address ? (
                 <p className="text-xs">
-                  <span className="text-muted-foreground">Balance: </span>
+                  <span className="text-gray-300">Balance: </span>
                   {toBalanceData
                     ? formatUnits(toBalanceData.value!, toBalanceData.decimals!)
                     : 0.0}
@@ -122,7 +122,7 @@ const BuySellSwap = () => {
             </div>
             <div className="flex items-center justify-between">
               <input
-                className="h-12 flex items-center text-xl outline-none"
+                className="h-12 flex items-center text-xl outline-none bg-transparent"
                 inputMode="decimal"
                 minLength={1}
                 maxLength={79}
@@ -130,7 +130,7 @@ const BuySellSwap = () => {
                 pattern="^[0-9]*[.,]?[0-9]*$"
                 placeholder="0.0"
               />
-              <div className="border rounded-md px-4 py-2 min-w-[100px] h-12 flex items-center justify-center">
+              <div className="border border-gray-600  rounded-md px-4 py-2 min-w-[100px] h-12 flex items-center justify-center">
                 MIB
               </div>
             </div>
@@ -150,7 +150,7 @@ const BuySellSwap = () => {
                 return (
                   <button
                     onClick={show}
-                    className="flex w-full items-center justify-center border rounded-md px-4 py-2 border-[#e96828] space-x-2 cta"
+                    className="flex w-full items-center justify-center border border-gray-600  rounded-md px-4 py-2 space-x-2"
                   >
                     {isConnected ? (
                       address ? (
