@@ -7,6 +7,7 @@ import AddLiquidityPanel from '@/components/swap/AddLiquidityPanel';
 
 import BuySellSwap from '@/components/swap/BuySellSwap';
 import GetWETH from '@/components/swap/GetWETH';
+import RemoveLiquidityPanel from '@/components/swap/RemoveLiquidityPanel';
 import {
   getAllVaults,
   getProjectData,
@@ -104,6 +105,10 @@ const TokenPage = () => {
               userTokenBalance={userVaultData.tokenBalance}
               userETHBalance={truncate18Decimals(ETHbalance.data?.value ?? 0n)}
               afterAddLiquidity={updateVaultData}
+            />
+            <RemoveLiquidityPanel
+              projectData={vaultData}
+              afterRemoveLiquidity={updateVaultData}
             />
           </div>
         }
