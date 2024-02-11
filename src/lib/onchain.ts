@@ -37,7 +37,10 @@ const convertToUSD = (eth: bigint, ethPrice: number): number => {
   return Number((eth * BigInt(ethPrice)) / 10n ** 12n) / 1000000;
 };
 
-const truncate18Decimals = (number: bigint, decimals: number = 4): number => {
+export const truncate18Decimals = (
+  number: bigint,
+  decimals: number = 4
+): number => {
   return Number(number / 10n ** BigInt(18 - decimals)) / 10 ** decimals;
 };
 
