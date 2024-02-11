@@ -14,6 +14,8 @@ export interface MineblastProjectData {
   vaultAddress: `0x${string}`;
   tokenName: string;
   tokenSymbol: string;
+  pairAddress?: string;
+  tokenAddress?: string;
   tokenTotalSupply: number;
   tokenPriceInUSD: number;
   projectOutputPerSecond: number;
