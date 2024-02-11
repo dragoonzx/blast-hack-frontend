@@ -978,7 +978,7 @@ export const mineblastRouterAbi = [
 ] as const
 
 export const mineblastRouterAddress =
-  '0xCfBD636d8f572981f04aC9F2A829e8B481B3CFca' as const
+  '0x09f180Fe7e71CFDb27e8b42599a99bBf2F5d3299' as const
 
 export const mineblastRouterConfig = {
   address: mineblastRouterAddress,
