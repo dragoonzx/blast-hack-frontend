@@ -69,7 +69,7 @@ const VaultInfo = (props: {
         <Progress
           value={(tokensFreed / props.projectData.tokenTotalSupply) * 100}
         />
-        <div className="flex items-center justify-between text-gray-400">
+        <div className="flex items-center justify-between text-gray-200">
           <div suppressHydrationWarning>
             minted:{' '}
             <CountUp
