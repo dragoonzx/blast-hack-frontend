@@ -39,7 +39,7 @@ const AddLiquidityPanel = ({
 }: MineblastInputProps) => {
   const { address } = useAccount();
   const [tokenAmount, setTokenAmount] = useState('');
-  const { data: allowance} = useReadErc20Allowance({address: projectData.tokenAddress!, args: [address!, contracts.mineblastRouter.address!]});
+  const { data: allowance, refetch: allowanceRefetch} = useReadErc20Allowance({address: projectData.tokenAddress!, args: [address!, contracts.mineblastRouter.address!]});
 
   const {
     data: addLiquidityHash,
@@ -92,7 +92,7 @@ const AddLiquidityPanel = ({
 
   useEffect(() => {
     if(approveTx.isSuccess) {
-      addLiquidity();
+      allowanceRefetch().then(addLiquidity);
     }
   }, [approveTx.isSuccess]);
 
