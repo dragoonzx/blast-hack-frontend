@@ -141,19 +141,21 @@ const RemoveLiquidityPanel = ({
                   ) : null}
                 </div>
               </div>
+              <div className="flex items-center justify-between mt-1 h-12">
               <TokenInput value={tokenAmount} maxValue={formatEther(lpTokenBalance??0n)} onChange={onInputChanged}/>
-            </div >
-            <div className='mt-8'>
-              <div className="flex flex-col items-center justify-center w-full">
-                <label className="text-sm text-text-gray-300 mb-3">
-                🥵Output:
-                </label>
-                <div>{truncate18Decimals(outputTokens.ethAmount)} ETH</div>
-                <div>{truncate18Decimals(outputTokens.tokenAmount)} {projectData.tokenSymbol}</div>
-                <Button className='mt-3' disabled={removeLoading} onClick={removeLiquidity}> 
+              <Button className='ml-2' disabled={removeLoading} onClick={removeLiquidity}> 
                 {removeLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Remove
-                </Button>
+              </Button>
+              </div>
+            </div >
+            <div className='mt-8 flex justify-start'>
+              <label className="text-sm text-text-gray-300 mb-3">
+                Output:
+                </label>
+              <div className="flex flex-col ml-4 w-full">
+                <div>{truncate18Decimals(outputTokens.ethAmount).toFixed(4)} ETH</div>
+                <div>{truncate18Decimals(outputTokens.tokenAmount).toFixed(4)} {projectData.tokenSymbol}</div>
               </div>
             </div>
 

@@ -17,7 +17,7 @@ const MineblastInput = ({
   return (
     <input
       className={classNames(
-        'h-12 flex items-center text-xl outline-none w-full pr-2 bg-transparent overflow-ellipsis',
+        'h-12 flex items-center text-xl outline-none w-full pr-2 bg-transparent overflow-ellipsis font-sora',
         className
       )}
       inputMode="decimal"

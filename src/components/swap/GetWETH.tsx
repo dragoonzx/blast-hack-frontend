@@ -19,6 +19,8 @@ import { formatUnits, parseEther } from 'viem';
 import { contracts } from '@/lib/wagmiConfig';
 import { WETH_ADDR } from '@/lib/onchain';
 import { useToast } from '../ui/use-toast';
+import { Button } from '../ui/button';
+import TokenInput from '../form/TokenInput';
 
 const GetWETH = () => {
   const { address } = useAccount();
@@ -95,32 +97,17 @@ const GetWETH = () => {
                   ) : null}
                 </div>
               </div>
-              <div className="flex items-center justify-between mt-1">
-                <input
-                  className="h-12 flex items-center text-xl outline-none w-full pr-2 bg-transparent overflow-ellipsis"
+              <div className="flex items-center justify-between mt-1 h-12">
+                <TokenInput
                   value={amount}
-                  onChange={(e) =>
-                    e.target.value.match(/^[0-9]*[.,]?[0-9]*$/) &&
-                    setAmount(e.target.value)
-                  }
-                  inputMode="decimal"
-                  minLength={1}
-                  maxLength={79}
-                  type="text"
-                  pattern="^[0-9]*[.,]?[0-9]*$"
-                  placeholder="0.0"
+                  maxValue={formattedBalance === 0 ? '0' : formattedBalance}
+                  onChange={(e) =>setAmount(e)}
                 />
-                <button
-                  onClick={setMaxAmount}
-                  className="bg-transparent border border-gray-600 hover:bg-gray-600/25 rounded-md px-2 py-1 text-xs mr-2"
-                >
-                  MAX
-                </button>
                 <div className="space-x-2 flex">
-                  <button
+                  <Button
                     disabled={isPendingDeposit}
-                    className="border border-gray-600 hover:bg-gray-600/25 rounded-md p-2 flex items-center"
                     onClick={depositEth}
+                    className='ml-2'
                   >
                     {isPendingDeposit || isConfirming ? (
                       <svg
@@ -147,7 +134,7 @@ const GetWETH = () => {
                     {isPendingDeposit || isConfirming
                       ? 'Depositing...'
                       : 'Deposit'}
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>

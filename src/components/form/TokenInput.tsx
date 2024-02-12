@@ -37,7 +37,7 @@ const TokenInput = ({
     />
     <button
     onClick={setMaxAmount}
-    className="bg-transparent border border-gray-600 hover:bg-gray-600/25 rounded-md px-2 py-1 text-xs"
+    className="bg-transparent border border-gray-600 hover:bg-gray-600/25 rounded-md px-2 py-1 text-xs font-sora"
     >
     MAX
     </button>

@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from "lucide-react"
-import SwapInput from '@/components/swap/SwapInput';
+import TokenInput from '../form/TokenInput';
 import { formatNumberCompact } from '@/lib/utils';
 import {
   useAccount,
@@ -25,6 +25,7 @@ import {
   useWriteMineblastVaultWithdrawAndUnwrap,
   useWriteMineblastVaultHarvest
 } from '../../generated'
+import { parseEther } from 'viem';
 
 
 const VaultControlPanel = (props: {
@@ -33,8 +34,8 @@ const VaultControlPanel = (props: {
 }) => {
 
   const { address, isConnecting, isDisconnected } = useAccount();
-  const [depositAmount, setDepositAmount] = useState(0);
-  const [withdrawAmount, setWithdrawAmount] = useState(0);
+  const [depositAmount, setDepositAmount] = useState('');
+  const [withdrawAmount, setWithdrawAmount] = useState('');
   const ETHbalance = useBalance({address});
 
   
@@ -53,10 +54,11 @@ const VaultControlPanel = (props: {
     if (!depositAmount) {
       return;
     }
+    const amount = parseEther(depositAmount);
 
     depositWriteContract({
       address: props.projectData.vaultAddress,
-      value: BigInt(depositAmount * 100000) * (10n**13n),
+      value: amount,
       args: [],
     });
   };
@@ -76,8 +78,7 @@ const VaultControlPanel = (props: {
     if (!withdrawAmount || !address) {
       return;
     }
-
-    const amount = BigInt(withdrawAmount * 100000) * (10n**13n);
+    const amount = parseEther(withdrawAmount);
 
     withdrawWriteContract({
       address: props.projectData.vaultAddress,
@@ -158,20 +159,20 @@ const VaultControlPanel = (props: {
         <div className="flex flex-col items-center mb-4">
           <div className='mb-3'>ETH balance: {ethBalanceFormatted}</div>
           <div className='flex h-12'>
-            <Button className="drop-shadow-xl w-1/3 h-full" disabled={depositLoading} onClick={depositEth}>
+            <TokenInput maxValue={ethBalanceFormatted.toString()} onChange={(n:string) => {setDepositAmount(n)}}/>
+            <Button className="ml-2 w-32" disabled={depositLoading} onClick={depositEth}>
               {depositLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Deposit
             </Button>
-            <SwapInput maxValue={ethBalanceFormatted} onChange={(n:number) => {setDepositAmount(n)}}/>
           </div>
           {displayWithdraw && <div className='mb-3 mt-6'>ETH locked: {props.ethLocked}</div>}
           {displayWithdraw &&
             <div className='flex h-12'>
-              <Button className="drop-shadow-xl w-1/3 h-full" disabled={withdrawLoading} onClick={withdrawEth}>
+              <TokenInput maxValue={props.ethLocked.toString()} onChange={(n:string) => {setWithdrawAmount(n)}}/>
+              <Button className="ml-2 w-32" disabled={withdrawLoading} onClick={withdrawEth}>
                 {withdrawLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Withdraw
               </Button>
-              <SwapInput maxValue={props.ethLocked} onChange={(n:number) => {setWithdrawAmount(n)}}/>
             </div>
           }
         </div>
@@ -181,7 +182,7 @@ const VaultControlPanel = (props: {
             <div>
               {props.projectData.tokenSymbol} available: <CountUp decimals={2} start={props.claimableAmount} end={projectedBalanceInMonth} useEasing={false} duration={secondsInMonth}/>
             </div>
-            <Button className="w-1/3 select-none" disabled={claimLoading} onClick={claimToken}>
+            <Button className="w-1/3" disabled={claimLoading} onClick={claimToken}>
               {claimLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Claim
             </Button>

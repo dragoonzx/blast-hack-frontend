@@ -121,7 +121,7 @@ const AddLiquidityPanel = ({
       <CardContent>
         <div className="space-y-4 font-sora">
           <div className="flex flex-col">
-            <div className='h-12'>
+            <div className=''>
               <div className="flex items-center justify-between">
                 <div className="flex items-center justify-between  w-full">
                   <label className="text-sm text-text-gray-300">
@@ -135,23 +135,19 @@ const AddLiquidityPanel = ({
                   ) : null}
                 </div>
               </div>
+              <div className="flex items-center justify-between mt-1 h-12">
               <TokenInput value={tokenAmount.toString()} maxValue={formatEther(getMaximumTokenAmount())} onChange={setTokenAmount}/>
-            </div >
-            <div className='h-12 mt-8'>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center justify-between  w-full">
-                  <label className="text-sm text-text-gray-300">
-                    ETH amount required: {truncate18Decimals(quote(parseEther(tokenAmount), projectData.pairTokenBalanceRaw, projectData.pairETHBalanceRaw))}
-                  </label>
-                </div>
+              <Button disabled={addLiquidityLoading} onClick={addLiquidity} className='ml-2'> 
+              {addLiquidityLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Add
+              </Button>
               </div>
-            </div>
+            </div >
+            <label className="text-sm text-text-gray-300">
+              ETH amount required: {truncate18Decimals(quote(parseEther(tokenAmount), projectData.pairTokenBalanceRaw, projectData.pairETHBalanceRaw))}
+            </label>
           </div>
         </div>
-        <Button disabled={addLiquidityLoading} onClick={addLiquidity}> 
-        {addLiquidityLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        Add
-        </Button>
       </CardContent>
     </Card>
   );
