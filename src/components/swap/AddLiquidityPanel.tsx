@@ -85,11 +85,6 @@ const AddLiquidityPanel = ({
   };
 
   useEffect(() => {
-    if(liqError !== null)
-      console.log(liqError);
-  }, [liqError?.message]);
-
-  useEffect(() => {
     if (addLiquidityTx.isSuccess) {
       afterAddLiquidity();
     }
