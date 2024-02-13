@@ -31,7 +31,7 @@ const NAV_MENU = [
   },
   {
     title: 'Create',
-    href: '/github',
+    href: '/create',
     separator: false,
     btn: true,
   },
