@@ -23,10 +23,6 @@ const NewTokenForm = ({
     className,
     onChange
 }: VaultInfoProps) => {
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
-
 
   const [tokenName, setTokenName] = useState<string>('');
   const [tokenSymbol, setTokenSymbol] = useState<string>('');
