@@ -15,7 +15,7 @@ import NumericInput from '@/components/form/NumericInput';
 import { DatePickerWithPresets } from '@/components/form/DatePickerWithPresets';
 import NewTokenForm from '@/components/create/NewTokenForm';
 import VaultInfo from '@/components/vault/VaultInfo';
-import { Button } from 'react-day-picker';
+import { Button } from '@/components/ui/button';
 
 const CreatePage = () => {
   useEffect(() => {
@@ -44,9 +44,11 @@ const CreatePage = () => {
 
   return (
     <div className="flex items-start justify-center w-full space-x-8">
-      <div className="w-1/2 flex flex-col">
+      <div className="w-[435px] flex flex-col">
         <NewTokenForm onChange={(s) => {}}/>
-       
+        <div className="flex justify-end w-full">
+        <Button className="mt-4">Create</Button>
+        </div>
       </div>
     </div>
   );
