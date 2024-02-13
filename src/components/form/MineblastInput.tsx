@@ -4,8 +4,10 @@ import React from 'react';
 interface MineblastInputProps {
   className?: string;
   value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (s: string) => void;
   disabled?: boolean;
+  placeholder?: string;
+  type?: 'text' | 'decimal';
 }
 
 const MineblastInput = ({
@@ -13,6 +15,8 @@ const MineblastInput = ({
   value,
   onChange,
   disabled,
+  placeholder = '0.0',
+  type = 'decimal',
 }: MineblastInputProps) => {
   return (
     <input
@@ -20,14 +24,13 @@ const MineblastInput = ({
         'h-12 flex items-center text-xl outline-none w-full pr-2 bg-transparent overflow-ellipsis font-sora',
         className
       )}
-      inputMode="decimal"
+      inputMode={type}
       minLength={1}
       maxLength={79}
       type="text"
-      pattern="^[0-9]*[.,]?[0-9]*$"
-      placeholder="0.0"
+      placeholder={placeholder}
       value={value}
-      onChange={onChange}
+      onChange={(e) => onChange!(e.target.value)}
       disabled={disabled}
     />
   );

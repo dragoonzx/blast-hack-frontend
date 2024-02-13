@@ -29,9 +29,9 @@ const TokenInput = ({
     <MineblastInput
         className={classNames(className)}
         value={value ? value.toString() : ''}
-        onChange={(e) =>
-            e.target.value.match(/^[0-9]*[.,]?[0-9]*$/) &&
-            onChange!(e.target.value)
+        onChange={(s) =>
+            s.match(/^[0-9]*[.,]?[0-9]*$/) &&
+            onChange!(s)
         }
         disabled={false}
     />
