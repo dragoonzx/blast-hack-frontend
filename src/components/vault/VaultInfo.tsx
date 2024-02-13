@@ -14,25 +14,33 @@ import { MineblastProjectData } from '@/lib/onchain';
 import { formatNumberCompact } from '@/lib/utils';
 import { Progress } from '@/components/ui/progress';
 import { truncate18Decimals } from '@/lib/utils';
+import classNames from 'classnames';
 
-const VaultInfo = (props: {
+interface VaultInfoProps {
+  className?: string;
   projectData: MineblastProjectData;
   ETHPrice: number;
-}) => {
+}
+
+const VaultInfo = ({
+  className,
+  projectData,
+  ETHPrice,
+}: VaultInfoProps) => {
   const timeLeft = Math.floor(
-    (props.projectData.projectEndDate.getTime() - new Date().getTime()) / 1000
+    (projectData.projectEndDate.getTime() - new Date().getTime()) / 1000
   );
-  const tokensLeft = props.projectData.projectOutputPerSecond * timeLeft;
-  const tokensFreed = props.projectData.tokenTotalSupply - tokensLeft;
+  const tokensLeft = projectData.projectOutputPerSecond * timeLeft;
+  const tokensFreed = projectData.tokenTotalSupply - tokensLeft;
 
   const getAndFormatAPR = (): string => {
     let value = 0;
-    const tvl = props.projectData.TVLInUSD;
+    const tvl = projectData.TVLInUSD;
     if (tvl > 1) {
       value =
-        ((props.projectData.projectOutputPerSecond * 31536000) / tvl) *
+        ((projectData.projectOutputPerSecond * 31536000) / tvl) *
         100 *
-        props.projectData.tokenPriceInUSD;
+        projectData.tokenPriceInUSD;
     } else {
       value = 0;
     }
@@ -62,27 +70,30 @@ const VaultInfo = (props: {
   };
 
   return (
-    <Card className="min-w-[450px]">
+    <Card className={classNames(
+      'min-w-[450px]',
+      className
+    )}>
       <CardHeader>
         <CardTitle className="text-3xl">
-          {props.projectData.tokenName}
+          {projectData.tokenName}
         </CardTitle>
         <Progress
-          value={(tokensFreed / props.projectData.tokenTotalSupply) * 100}
+          value={(tokensFreed / projectData.tokenTotalSupply) * 100}
         />
         <div className="flex items-center justify-between text-gray-200">
           <div suppressHydrationWarning>
             minted:{' '}
             <CountUp
               start={tokensFreed}
-              end={props.projectData.tokenTotalSupply}
+              end={projectData.tokenTotalSupply}
               useEasing={false}
               duration={timeLeft}
             />
           </div>
           <p suppressHydrationWarning>
             supply:{' '}
-            {new Intl.NumberFormat().format(props.projectData.tokenTotalSupply)}
+            {new Intl.NumberFormat().format(projectData.tokenTotalSupply)}
           </p>
         </div>
         <div></div>
@@ -91,7 +102,7 @@ const VaultInfo = (props: {
         <div className="flex items-center justify-between">
           <div className="flex flex-col items-center justify-center flex-grow">
             <p className="text-3xl">
-              ${formatNumberCompact(props.projectData.TVLInUSD)}
+              ${formatNumberCompact(projectData.TVLInUSD)}
             </p>
             <p className="text-xl">TVL</p>
           </div>
@@ -107,7 +118,7 @@ const VaultInfo = (props: {
           <p className="text-sm">
             liquidity <br />$
             {formatNumberCompact(
-              truncate18Decimals(props.projectData.pairETHBalanceRaw) * props.ETHPrice * 2
+              truncate18Decimals(projectData.pairETHBalanceRaw) * ETHPrice * 2
             )}
           </p>
           <p className="text-sm">
