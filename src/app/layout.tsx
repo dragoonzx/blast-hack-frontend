@@ -56,16 +56,21 @@ export default function RootLayout({
           </div>
         </div>
         <Web3Provider>
-          <header className="max-w-[1740px] px-8 py-4 mx-auto">
-            <div className="flex items-start justify-between">
+          <header className="max-w-[1740px] px-24 py-4 mx-auto  bg-gray-950">
+            <div className="flex items-center justify-between">
               <a href="/">
-                <div className="flex items-center cursor-pointer">
+                <div className="flex flex-col items-center cursor-pointer">
                   <Image
                     src="/logo2.png"
                     alt="supablast"
-                    width="120"
-                    height="120"
+                    width="80"
+                    height="60"
                   />
+                  <div 
+                  className='rounded-full w-16 h-16 absolute -translate-y-[10px] 
+                  hover:scale-[2.5] transition-transform ease-in-out hover:bg-[#f77334] duration-500 '>
+                  </div>
+                  MINEBLAST
                 </div>
               </a>
               <nav
