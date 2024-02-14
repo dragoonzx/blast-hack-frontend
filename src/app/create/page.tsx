@@ -1,7 +1,7 @@
 'use client';
 
 import React, { use, useEffect, useState } from 'react';
-import { useAccount, useBalance } from 'wagmi';
+import { useAccount, useBalance, useWaitForTransactionReceipt } from 'wagmi';
 import { parseEther } from 'viem';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import MineblastInput from '@/components/form/MineblastInput';
@@ -13,9 +13,11 @@ import NameSymbolForm from '@/components/create/NameSymbolForm';
 import SupplyForm from '@/components/create/SupplyForm';
 import { CircularProgressbar, buildStyles  } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { Loader2 } from "lucide-react"
 import { 
   useWriteMineblastFactoryCreateVaultWithNewToken,
 } from '../../generated'
+
 
 const CreatePage = () => {
   useEffect(() => {
@@ -27,12 +29,43 @@ const CreatePage = () => {
   
   const [tokenName, setTokenName] = useState<string>('');
   const [tokenSymbol, setTokenSymbol] = useState<string>('');
-  const [totalSupply, setTotalSupply] = useState<number|undefined>(0);
-  const [ownerShare, setOwnerShare] = useState<number|undefined>(10);
+  const [totalSupply, setTotalSupply] = useState<number>(0);
+  const [ownerShare, setOwnerShare] = useState<number>(10);
   const [endDate, setEndDate] = useState<Date|undefined>();
-  
 
-  const buttonDisabled = tokenName === '' || tokenSymbol === '' || totalSupply === 0 || ownerShare === 0 || endDate === undefined;
+  const {
+    data: createHash,
+    writeContract: createWriteContract,
+    isPending: isPendingCreate,
+    error: liqError,
+  } = useWriteMineblastFactoryCreateVaultWithNewToken();
+
+  const createTx =
+    useWaitForTransactionReceipt({
+      hash: createHash,
+    });
+
+  const create = async () => {
+    if (notEnoughInfo) {
+      return;
+    }
+    const supply = BigInt(totalSupply) * 10n**18n;
+    const duration = BigInt(Math.floor((endDate?.getTime() ?? 0) / 1000) - Math.floor(Date.now() / 1000));
+
+    createWriteContract({
+      args: [supply, tokenName, tokenSymbol, duration, ownerShare*100],
+    });
+  };
+
+  useEffect(() => {
+    if (createTx.isSuccess) {
+      
+    }
+  }, [createTx.isSuccess]);
+
+  const notEnoughInfo = tokenName === '' || tokenSymbol === '' || totalSupply === 0 || endDate === undefined;
+  const createTxLoading = isPendingCreate || createTx.isLoading;
+  const buttonDisabled = createTxLoading || notEnoughInfo;
 
   return (
     <div className="flex items-start justify-center w-full space-x-8">
@@ -72,7 +105,13 @@ const CreatePage = () => {
           </CardContent>
       </Card>
       <div className="">
-      <Button disabled={buttonDisabled} className="absolute translate-x-[200px] translate-y-[150px] disabled:text-gray-600 disabled:hover:bg-gray-900">Create</Button>
+      <Button 
+      onClick={create} 
+      disabled={buttonDisabled} 
+      className="absolute translate-x-[200px] translate-y-[150px] disabled:text-gray-600 disabled:hover:bg-gray-900">
+        {createTxLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        Create
+      </Button>
       </div>
     
       </div>

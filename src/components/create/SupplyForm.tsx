@@ -8,10 +8,10 @@ import { Slider } from "@/components/ui/slider"
 
 interface NameSymbolFormProps {
     className?: string;
-    supplyValue: number|undefined;
-    creatorShareValue: number|undefined;
-    onSupplyChange: (s: number|undefined) => void;
-    onCreatorShareChange: (s: number|undefined) => void;
+    supplyValue: number;
+    creatorShareValue: number;
+    onSupplyChange: (s: number) => void;
+    onCreatorShareChange: (s: number) => void;
 }
 
 const SupplyForm = ({
@@ -35,7 +35,7 @@ const SupplyForm = ({
                 className=''
                 placeholder="100 000 000"
                 value={supplyValue}
-                onChange={onSupplyChange}
+                onChange={(v) => onSupplyChange(v??0)}
                 />
             </div>
           </div>
