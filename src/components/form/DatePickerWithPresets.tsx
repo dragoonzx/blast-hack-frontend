@@ -37,7 +37,7 @@ export function DatePickerWithPresets({
           variant={"ghost"}
           className={cn(
             "w-[280px] justify-start text-left font-normal font-sora",
-            !value && "text-muted-foreground"
+            !value && "text-gray-400"
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
