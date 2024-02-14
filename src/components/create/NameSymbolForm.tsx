@@ -21,7 +21,7 @@ const NameSymbolForm = ({
 }: NameSymbolFormProps) => {
 
   return (
-    <Card className='h-[200px] w-[400px]'>
+    <Card className='h-[200px] w-[400px] bg-gray-900'>
         <CardHeader>
             <h3 className="font-semibold leading-none tracking-tight">Create token & vault</h3>
         </CardHeader>

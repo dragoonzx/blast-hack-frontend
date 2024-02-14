@@ -11,6 +11,11 @@ import VaultInfo from '@/components/vault/VaultInfo';
 import { Button } from '@/components/ui/button';
 import NameSymbolForm from '@/components/create/NameSymbolForm';
 import SupplyForm from '@/components/create/SupplyForm';
+import { CircularProgressbar, buildStyles  } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+import { 
+  useWriteMineblastFactoryCreateVaultWithNewToken,
+} from '../../generated'
 
 const CreatePage = () => {
   useEffect(() => {
@@ -23,11 +28,28 @@ const CreatePage = () => {
   const [tokenName, setTokenName] = useState<string>('');
   const [tokenSymbol, setTokenSymbol] = useState<string>('');
   const [totalSupply, setTotalSupply] = useState<number|undefined>(0);
-  const [ownerShare, setOwnerShare] = useState<number|undefined>(0);
+  const [ownerShare, setOwnerShare] = useState<number|undefined>(10);
   const [endDate, setEndDate] = useState<Date|undefined>();
+  
+
+  const buttonDisabled = tokenName === '' || tokenSymbol === '' || totalSupply === 0 || ownerShare === 0 || endDate === undefined;
 
   return (
     <div className="flex items-start justify-center w-full space-x-8">
+      <p className='text-[240px] font-sora -z-50 text-gray-200 text-opacity-5 text-nowrap text-clip overflow-hidden select-none w-full absolute translate-y-[360px]'>{tokenName}</p>
+      <p className='text-[240px] font-sora -z-50 text-gray-200 text-opacity-5 text-nowrap text-clip overflow-hidden select-none w-full absolute -translate-x-[40px]'>{tokenSymbol}</p>
+      <div className=' -z-50 h-[400px] w-[400px] absolute translate-x-[300px] translate-y-[10px]'>
+        <CircularProgressbar 
+          styles={buildStyles({
+            rotation: 0.66,
+            pathColor: `rgba(229, 231, 235, 0.05)`,
+            trailColor: `rgba(0, 0, 0, 0)`,
+            backgroundColor: '#3e98c7',
+          })} 
+          strokeWidth={10}
+          value={((ownerShare??0)*2)} 
+          />
+      </div>
       <div className="w-[435px] flex flex-col">
         <NameSymbolForm
           nameValue={tokenName}
@@ -50,9 +72,9 @@ const CreatePage = () => {
           </CardContent>
       </Card>
       <div className="">
-      <Button className="absolute translate-x-[200px] translate-y-[150px]">Create</Button>
+      <Button disabled={buttonDisabled} className="absolute translate-x-[200px] translate-y-[150px] disabled:text-gray-600 disabled:hover:bg-gray-900">Create</Button>
       </div>
-
+    
       </div>
     </div>
   );
