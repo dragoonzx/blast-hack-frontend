@@ -61,7 +61,7 @@ export default function RootLayout({
               <a href="/">
                 <div className="flex items-center cursor-pointer">
                   <Image
-                    src="/logo.png"
+                    src="/logo2.png"
                     alt="supablast"
                     width="120"
                     height="120"
