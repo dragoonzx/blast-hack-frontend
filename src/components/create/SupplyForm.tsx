@@ -39,18 +39,9 @@ const SupplyForm = ({
                 />
             </div>
           </div>
-          <div className='flex flex-col'>
-            <label className='text-xs'>creator share %</label>
-            <div className='flex items-center'>
-                <NumericInput
-                placeholder="9.5"
-                value={creatorShareValue}
-                onChange={onCreatorShareChange}
-                />
-            </div>
-          </div>
+          <p className='text-base my-3'>creator share: {creatorShareValue?.toFixed(1)}%</p>
           <Slider
-            className='w-full'
+            className='w-full bg-gray-700'
             defaultValue={[10]} 
             step={0.5}
             max={50} 
