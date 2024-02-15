@@ -93,7 +93,8 @@ const TokenPage = ({ params }: { params: {token: string } }) => {
   };
 
   return (
-    <div className="flex items-start justify-center w-full space-x-8">
+    <div className='w-full flex justify-center'>
+    <div className="flex items-start justify-center w-full space-x-8 max-w-[1200px]">
       <div className="w-1/2 flex flex-col">
         <VaultInfo projectData={vaultData} ETHPrice={ETHPrice} />
         {address && (
@@ -130,6 +131,7 @@ const TokenPage = ({ params }: { params: {token: string } }) => {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 };

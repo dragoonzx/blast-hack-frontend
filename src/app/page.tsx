@@ -21,8 +21,9 @@ export default function Home() {
   }, []);
 
   return (
-    <>
-      <div className="mt-4">
+    <div className='flex justify-center'>
+    <div className='max-w-[1360px]'>
+      <div className="mt-4 ">
         <h2 className="font-sora text-6xl font-bold">
           Launch blast-native token in 1 minute
         </h2>
@@ -49,7 +50,7 @@ export default function Home() {
         </div>
       </div>
       <div className="mt-16">
-        <h2 className="font-sora text-6xl">Favorite pairs</h2>
+        <h2 className="font-sora text-6xl">Example projects</h2>
         <div className="flex items-center space-x-20 mt-6">
           <Link href="/tokens/xyz" scroll={false}>
             <div className="flex items-center border px-4 py-2 rounded-md border-gray-600 bg-gray-800/25 hover:bg-gray-600/25 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm">
@@ -116,6 +117,7 @@ export default function Home() {
           <Image src="/mine-footer.png" alt="" width={256} height={256} />
         </div>
       </footer>
-    </>
+    </div>
+    </div>
   );
 }

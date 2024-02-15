@@ -56,7 +56,7 @@ export default function RootLayout({
           </div>
         </div>
         <Web3Provider>
-          <header className="max-w-[1740px] px-24 py-4 mx-auto  bg-gray-950">
+          <header className="w-full px-24 py-4 mx-auto  bg-gray-950">
             <div className="flex items-center justify-between">
               <a href="/">
                 <div className="flex flex-col items-center cursor-pointer">
