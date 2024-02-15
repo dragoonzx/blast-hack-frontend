@@ -12,12 +12,13 @@ import {
   getAllVaults,
   getProjectData,
   MineblastProjectData,
+  getProjectByName
 } from '@/lib/onchain';
 import { useAccount, useBalance } from 'wagmi';
 import { AddrString } from '@/lib/wagmiConfig';
 import { parseEther } from 'viem';
 
-const TokenPage = () => {
+const TokenPage = ({ params }: { params: {token: string } }) => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
@@ -54,15 +55,17 @@ const TokenPage = () => {
 
   async function fetchProjectData() {
     const userAddress = address ?? '0x0000000000000000000000000000000000000000';
-
-    const allVaults = await getAllVaults(); //temp, will be in props in the future
+    const name = params.token;
+    
+    if(name === '' || name === undefined) return console.error('No name');
+    const project = await getProjectByName(name);
     const projectData = await getProjectData(
       userAddress,
-      allVaults[0],
+      project,
       ETHPrice
     );
-    console.log({ allVaults });
-    setTokenAddr(allVaults[0].token);
+
+    setTokenAddr(project.token);
     setVaultData(projectData.projectData);
     setUserVaultData(projectData.userData);
   }

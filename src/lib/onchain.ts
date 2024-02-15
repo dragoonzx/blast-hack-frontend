@@ -43,8 +43,6 @@ export const truncate18Decimals = (
 };
 
 export async function getAllVaults(): Promise<Project[]> {
-  const a = contracts.mineblastFactory.abi;
-
   if (contracts.mineblastFactory.address === undefined) {
     return [];
   }
@@ -65,6 +63,23 @@ export async function getAllVaults(): Promise<Project[]> {
   });
 
   return result;
+}
+
+export async function getProjectByName(name: string): Promise<Project>{
+  if (contracts.mineblastFactory.address === undefined) {
+    return {vault: "0x0", pair: "0x0", token: "0x0"};
+  }
+
+  const nameFormatted = name.replace(/_/g, ' ').toLowerCase();
+
+  const response = (await readContract(config, {
+    abi: contracts.mineblastFactory.abi,
+    address: contracts.mineblastFactory.address,
+    functionName: 'getVault',
+    args: [nameFormatted],
+  })) as Project;
+
+  return response;
 }
 
 export async function getProjectData(
