@@ -72,11 +72,22 @@ const config = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
+        'move-right': {
+          '0%': {
+            transform: 'translateX(0)'
+          },
+          '100%': {
+            transform: 'translateX(110%)'
+          },
+        }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
+      transitionDuration: {
+        'long': '100000ms',
+      }
     },
   },
   plugins: [require('tailwindcss-animate')],

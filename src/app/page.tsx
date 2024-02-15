@@ -3,6 +3,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Typewriter } from 'react-simple-typewriter';
+import { useEffect, useState } from 'react';
+import CountUp from 'react-countup';
 import {
   Accordion,
   AccordionContent,
@@ -11,75 +13,40 @@ import {
 } from '@/components/ui/accordion';
 
 export default function Home() {
+
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
+
   return (
     <>
-      <h1 className="font-sora text-7xl">
-        Another level <br />
-        <label className="text-[#f77334]">Another yield</label>
-      </h1>
-      <div className="px-4 py-2 border w-[320px] mt-4 block rounded-md border-gray-600 bg-gray-800/25 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm">
-        <div>
-          WETH x{' '}
-          <span>
-            <Typewriter
-              words={['SIB', 'XYZ', 'SHIB', 'SUK']}
-              loop={false}
-              cursor
-              cursorStyle="_"
-              typeSpeed={150}
-              deleteSpeed={150}
-              delaySpeed={1000}
-            />
-          </span>
-        </div>
-      </div>
-      <div className="mt-16">
+      <div className="mt-4">
         <h2 className="font-sora text-6xl font-bold">
-          Lock your ETH <br /> to mine BLAST ecosystem tokens
+          Launch blast-native token in 1 minute
         </h2>
-        <div className="flex items-center space-x-20 mt-6">
-          <div className="space-y-2">
-            <p className="font-roboto">Total Value Locked</p>
-            <h3 className=" font-digital text-5xl ">$ 1 000</h3>
+        <div className='text-xl mt-12 flex w-full justify-between'>
+          <div className='border-gray-300 border-b-2 border-r-2 rounded-3xl mr-12 p-6'>
+            <p className='text-[#f77334]'>Fair launch with the help of Yield Mining</p>
+            <p className='mt-2 text-base'>Users will mine tokens with their ETH yield. Their reward would be proportional to their ETH share</p>
           </div>
-          <div className="space-y-2">
-            <p className="font-roboto">Tokens</p>
-            <h3 className=" font-digital text-5xl">50</h3>
+          <div className=' border-gray-300 border-b-2 border-r-2 rounded-3xl mr-12 p-6'>
+            <p className='text-[#f77334]'>Additional liqudity</p>
+            <p className='mt-2 text-base'>Yield from users will be converted to unremovable liqudity for your token</p>
           </div>
-          <div className="space-y-2">
-            <p className="font-roboto">Users</p>
-            <h3 className=" font-digital text-5xl">20</h3>
+          <div className='border-gray-300 border-b-2 border-r-2 rounded-3xl p-6'>
+            <p className='text-[#f77334]'>Claimable gas refunds</p>
+            <p className='mt-2 text-base'>On top of configurable creator token share, you will always be eligible to gas rewards from your token activity</p>
           </div>
         </div>
       </div>
-      <div className="mt-16 max-w-[560px]">
-        <h2 className="font-sora text-6xl">Benefits for</h2>
-        <p className="text-xl mt-4">USERS:</p>
-        <ol className="space-y-1 mt-2 list-disc">
-          <li>
-            <b>Mine</b> tokens with your yield{' '}
-            <b>without risking your assets</b>
-          </li>
-          <li>
-            <b>NO honeypots, NO hidden premines</b>, all stats are transparent
-          </li>
-          <li>
-            Your yield is transformed into unremovable liqudity for the token.{' '}
-            <b>NO rug pulls</b> in the long run.
-          </li>
-        </ol>
-        <p className="text-xl mt-4">CREATORS:</p>
-        <ol className="space-y-1 mt-2 list-disc">
-          <li>
-            Easy, <b>no-code creation of tokens</b>
-          </li>
-          <li>
-            Configurable owner share + <b>earn gas fees</b> from token
-          </li>
-          <li>
-            Your token getting additional <b>unremovable liqudity</b>
-          </li>
-        </ol>
+      <div className='flex items-center mt-12 '>
+        <div className={'bg-gray-300 h-32 transition-all duration-long ease-linear' + (loaded?' grow-[2]':'')}></div>
+        <div className="font-sora text-7xl select-none">
+          Another level <br />
+          <label className="text-[#f77334]">Another yield</label>
+        </div>
       </div>
       <div className="mt-16">
         <h2 className="font-sora text-6xl">Favorite pairs</h2>
@@ -107,16 +74,15 @@ export default function Home() {
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1">
               <AccordionTrigger>
-                Can I withdraw my ETH at any time after depositing?
+                What happening with locked ETH?
               </AccordionTrigger>
               <AccordionContent>
-                Yes. You can claim your rewards and withdraw your ETH at any
-                time. No time locks.
+                Deposited ETH will lose its yield, but can be withdrawed back at any time
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
               <AccordionTrigger>
-                Does owner tokens have vest schedule?
+                Does creator tokens have vest schedule?
               </AccordionTrigger>
               <AccordionContent>
                 No, currently, owner tokens are unlocked immediately, but we
@@ -136,16 +102,16 @@ export default function Home() {
               <AccordionContent>
                 Token fees are paid to the token creator. Vault fees is used to
                 create more liquidity for the token. Helpers contracts fees
-                (like factories and router) is claimable by frontent owner.
+                (like factories and router) is claimable by frontend owner.
               </AccordionContent>
             </AccordionItem>
           </Accordion>
         </div>
       </div>
       <footer>
-        <div className=" fixed bottom-0 left-auto right-12">
+        <div className=" absolute bottom-0 left-auto right-12">
           <p className="font-digital flex justify-center">
-            {'>'} GIVE ME YOUR WETH
+            {'>'} HELLO
           </p>
           <Image src="/mine-footer.png" alt="" width={256} height={256} />
         </div>
