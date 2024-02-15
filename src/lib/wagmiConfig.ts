@@ -24,6 +24,7 @@ export const config = createConfig(
 
     // Required App Info
     appName: 'Your App Name',
+    ssr: true,
 
     // Optional App Info
     appDescription: 'MineBlast',
