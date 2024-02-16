@@ -176,23 +176,33 @@ const VaultControlPanel = ({
       </CardDescription>
       </CardHeader>
       <CardContent>
-      <div className="flex flex-col items-center mb-4">
-        <div className='mb-3'>ETH balance: {ethBalanceFormatted}</div>
-        <div className='flex h-12'>
-          <TokenInput value={depositAmount} maxValue={ethBalanceFormatted.toString()} onChange={setDepositAmount}/>
-          <Button className="ml-2 w-32" disabled={depositLoading} onClick={depositEth}>
-            {depositLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Deposit
-          </Button>
-        </div>
-        {displayWithdraw && <div className='mb-3 mt-6'>ETH locked: {ethLocked}</div>}
-        {displayWithdraw &&
-          <div className='flex h-12'>
-            <TokenInput value={withdrawAmount} maxValue={ethLocked.toString()} onChange={setWithdrawAmount}/>
-            <Button className="ml-2 w-32" disabled={withdrawLoading} onClick={withdrawEth}>
-              {withdrawLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Withdraw
+      <div className='flex flex-col items-center'>
+        <div className="flex flex-col items-center mb-4">
+          <div className='flex justify-between items-center w-full'>
+            <div className='text-sm'>ETH</div>
+            <p className='text-text-gray-300 text-xs'>Balance: {ethBalanceFormatted} ETH</p>
+          </div>
+          <div className='flex h-12 mt-2'>
+            <TokenInput value={depositAmount} maxValue={ethBalanceFormatted.toString()} onChange={setDepositAmount}/>
+            <Button className="ml-2 w-32" disabled={depositLoading} onClick={depositEth}>
+              {depositLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Deposit
             </Button>
+          </div>
+        </div>
+        {displayWithdraw &&
+          <div className='flex flex-col items-end mt-2'>
+            <div className='flex justify-between items-center w-full'>
+              <div className='text-sm'>ETH</div>
+              <p className='text-text-gray-300 text-xs'>Locked: {ethLocked} ETH</p>
+            </div>
+            <div className='flex h-12 mt-2'>
+              <TokenInput value={withdrawAmount} maxValue={ethLocked.toString()} onChange={setWithdrawAmount}/>
+              <Button className="ml-2 w-32" disabled={withdrawLoading} onClick={withdrawEth}>
+                {withdrawLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Withdraw
+              </Button>
+            </div>
           </div>
         }
       </div>
