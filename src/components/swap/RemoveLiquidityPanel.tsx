@@ -21,10 +21,12 @@ import { MineblastProjectData } from '@/lib/onchain';
 import { Loader2 } from "lucide-react"
 import { formatEther, maxUint256, parseEther } from 'viem';
 import {contracts} from '@/lib/wagmiConfig';
+import classNames from 'classnames';
 
 
 
 interface RemoveLiquidityPanelProps {
+  className?: string;
   projectData: MineblastProjectData;
   lpTokenBalance: bigint;
   afterRemoveLiquidity: () => void;
@@ -46,6 +48,7 @@ const truncate18Decimals = (number: bigint, decimals: number = 4): number => {
 };
 
 const RemoveLiquidityPanel = ({
+  className,
   projectData,
   lpTokenBalance,
   afterRemoveLiquidity,
@@ -120,7 +123,10 @@ const RemoveLiquidityPanel = ({
   const removeLoading = removeLiquidityTx.isLoading || isPendingLiquidityRemove || isPendingApprove || approveTx.isLoading;
 
   return (
-    <Card>
+    <Card className={classNames(
+      'min-w-[450px]',
+      className
+    )}>
       <CardHeader>
         <h3 className="font-semibold leading-none tracking-tight">Remove Liquidity</h3>
       </CardHeader>

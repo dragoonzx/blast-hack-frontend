@@ -96,6 +96,7 @@ const TokenPage = ({ params }: { params: {token: string } }) => {
         <VaultInfo projectData={projectData} ETHPrice={ETHPrice} />
         {address && (
           <VaultControlPanel
+            className='animate-[scaleIn_0.5s_ease-out] origin-top'
             projectData={projectData}
             claimableAmount={userVaultData.pending}
             ethLocked={userVaultData.stakedETH}
@@ -113,7 +114,7 @@ const TokenPage = ({ params }: { params: {token: string } }) => {
           tokenAddr={tokenAddr}
         />
         {address && (
-          <div className="space-y-4">
+          <div className="space-y-4 animate-[scaleIn_0.5s_ease-out] origin-top">
             <AddLiquidityPanel
               projectData={projectData}
               userTokenBalance={parseEther(userVaultData.tokenBalance.toString())}
@@ -122,6 +123,7 @@ const TokenPage = ({ params }: { params: {token: string } }) => {
             />
             {(lpTokenBalance??0n) > 0n && 
               <RemoveLiquidityPanel
+                className='animate-[scaleIn_0.5s_ease-out] origin-top'
                 projectData={projectData}
                 lpTokenBalance={lpTokenBalance??0n}
                 afterRemoveLiquidity={updateVaultData}
