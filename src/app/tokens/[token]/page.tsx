@@ -17,6 +17,7 @@ import {
 import { useAccount, useBalance } from 'wagmi';
 import { AddrString } from '@/lib/wagmiConfig';
 import { parseEther } from 'viem';
+import { useReadErc20BalanceOf } from '@/generated';
 
 const TokenPage = ({ params }: { params: {token: string } }) => {
   useEffect(() => {
@@ -26,7 +27,7 @@ const TokenPage = ({ params }: { params: {token: string } }) => {
   const { address, isConnecting, isDisconnected } = useAccount();
   const ETHbalance = useBalance({ address });
 
-  const [vaultData, setVaultData] = useState<MineblastProjectData>({
+  const [projectData, setProjectData] = useState<MineblastProjectData>({
     vaultAddress: '0x0',
     pairAddress: '0x0',
     tokenAddress: '0x0',
@@ -40,6 +41,9 @@ const TokenPage = ({ params }: { params: {token: string } }) => {
     pairETHBalanceRaw: 0n,
     pairTokenBalanceRaw: 0n,
   });
+
+  
+  const { data: lpTokenBalance, refetch: lpRefetch} = useReadErc20BalanceOf({address: projectData.pairAddress!, args: [address!]});
 
   const [userVaultData, setUserVaultData] = useState<{
     stakedETH: number;
@@ -59,34 +63,27 @@ const TokenPage = ({ params }: { params: {token: string } }) => {
     
     if(name === '' || name === undefined) return console.error('No name');
     const project = await getProjectByName(name);
-    const projectData = await getProjectData(
+    const data = await getProjectData(
       userAddress,
       project,
       ETHPrice
     );
 
     setTokenAddr(project.token);
-    setVaultData(projectData.projectData);
-    setUserVaultData(projectData.userData);
+    setProjectData(data.projectData);
+    setUserVaultData(data.userData);
   }
 
   const ETHPrice = 2300;
 
-  const onClaim = () => {
-    fetchProjectData();
-  };
-
-  const onDeposit = () => {
-    fetchProjectData();
-  };
-
-  const onWithdraw = () => {
-    fetchProjectData();
-  };
-
   const updateVaultData = () => {
     fetchProjectData();
   };
+
+  const afterAddLiquidity = () => {
+    fetchProjectData();
+    lpRefetch();
+  }
 
   const truncate18Decimals = (number: bigint, decimals: number = 4): number => {
     return Number(number / 10n ** BigInt(18 - decimals)) / 10 ** decimals;
@@ -96,38 +93,40 @@ const TokenPage = ({ params }: { params: {token: string } }) => {
     <div className='w-full flex justify-center'>
     <div className="flex items-start justify-center w-full space-x-8 max-w-[1200px]">
       <div className="w-1/2 flex flex-col">
-        <VaultInfo projectData={vaultData} ETHPrice={ETHPrice} />
+        <VaultInfo projectData={projectData} ETHPrice={ETHPrice} />
         {address && (
           <VaultControlPanel
-            projectData={vaultData}
+            projectData={projectData}
             claimableAmount={userVaultData.pending}
             ethLocked={userVaultData.stakedETH}
             ethPrice={ETHPrice}
-            afterClaim={onClaim}
-            afterDeposit={onDeposit}
-            afterWithdraw={onWithdraw}
+            afterClaim={updateVaultData}
+            afterDeposit={updateVaultData}
+            afterWithdraw={updateVaultData}
           />
         )}
       </div>
       <div className="min-w-[360px] space-y-4">
         <BuySellSwap
-          pairETHBalance={vaultData.pairETHBalanceRaw}
-          pairTokenBalance={vaultData.pairTokenBalanceRaw}
+          pairETHBalance={projectData.pairETHBalanceRaw}
+          pairTokenBalance={projectData.pairTokenBalanceRaw}
           tokenAddr={tokenAddr}
         />
         {address && (
           <div className="space-y-4">
-            <GetWETH />
             <AddLiquidityPanel
-              projectData={vaultData}
+              projectData={projectData}
               userTokenBalance={parseEther(userVaultData.tokenBalance.toString())}
               userETHBalance={ETHbalance.data?.value ?? 0n}
               afterAddLiquidity={updateVaultData}
             />
-            <RemoveLiquidityPanel
-              projectData={vaultData}
-              afterRemoveLiquidity={updateVaultData}
-            />
+            {(lpTokenBalance??0n) > 0n && 
+              <RemoveLiquidityPanel
+                projectData={projectData}
+                lpTokenBalance={lpTokenBalance??0n}
+                afterRemoveLiquidity={updateVaultData}
+              />
+            }
           </div>
         )}
       </div>

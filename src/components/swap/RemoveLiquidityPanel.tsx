@@ -26,6 +26,7 @@ import {contracts} from '@/lib/wagmiConfig';
 
 interface RemoveLiquidityPanelProps {
   projectData: MineblastProjectData;
+  lpTokenBalance: bigint;
   afterRemoveLiquidity: () => void;
 }
 
@@ -46,13 +47,13 @@ const truncate18Decimals = (number: bigint, decimals: number = 4): number => {
 
 const RemoveLiquidityPanel = ({
   projectData,
+  lpTokenBalance,
   afterRemoveLiquidity,
 }: RemoveLiquidityPanelProps) => {
   const { address } = useAccount();
   const [tokenAmount, setTokenAmount] = useState('');
   const [outputTokens, setOutputTokens] = useState({ethAmount: 0n, tokenAmount: 0n});
 
-  const { data: lpTokenBalance, refetch: balanceRefetch} = useReadErc20BalanceOf({address: projectData.pairAddress!, args: [address!]});
   const { data: allowance, refetch: allowanceRefetch} = useReadErc20Allowance({address: projectData.pairAddress!, args: [address!, contracts.mineblastRouter.address!]});
 
   const {
@@ -100,8 +101,7 @@ const RemoveLiquidityPanel = ({
 
   useEffect(() => {
     if (removeLiquidityTx.isSuccess) {
-      afterRemoveLiquidity()
-      balanceRefetch();
+      afterRemoveLiquidity();
     }
   }, [removeLiquidityTx.isSuccess]);
 
