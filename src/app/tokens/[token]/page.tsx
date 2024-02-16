@@ -18,6 +18,7 @@ import { useAccount, useBalance } from 'wagmi';
 import { AddrString } from '@/lib/wagmiConfig';
 import { parseEther } from 'viem';
 import { useReadErc20BalanceOf } from '@/generated';
+import Vault404 from '@/components/vault/Vault404';
 
 const TokenPage = ({ params }: { params: {token: string } }) => {
   useEffect(() => {
@@ -25,6 +26,7 @@ const TokenPage = ({ params }: { params: {token: string } }) => {
   }, []);
 
   const { address, isConnecting, isDisconnected } = useAccount();
+  const [notFound, setNotFound] = useState(false);
   const ETHbalance = useBalance({ address });
 
   const [projectData, setProjectData] = useState<MineblastProjectData>({
@@ -63,6 +65,12 @@ const TokenPage = ({ params }: { params: {token: string } }) => {
     
     if(name === '' || name === undefined) return console.error('No name');
     const project = await getProjectByName(name);
+
+    if(project.vault === '0x0000000000000000000000000000000000000000') {
+      setNotFound(true);
+      return;
+    }
+
     const data = await getProjectData(
       userAddress,
       project,
@@ -91,48 +99,52 @@ const TokenPage = ({ params }: { params: {token: string } }) => {
 
   return (
     <div className='w-full flex justify-center'>
-    <div className="flex items-start justify-center w-full space-x-8 max-w-[1200px]">
-      <div className="w-1/2 flex flex-col">
-        <VaultInfo projectData={projectData} ETHPrice={ETHPrice} />
-        {address && (
-          <VaultControlPanel
-            className='animate-[scaleIn_0.5s_ease-out] origin-top'
-            projectData={projectData}
-            claimableAmount={userVaultData.pending}
-            ethLocked={userVaultData.stakedETH}
-            ethPrice={ETHPrice}
-            afterClaim={updateVaultData}
-            afterDeposit={updateVaultData}
-            afterWithdraw={updateVaultData}
-          />
-        )}
-      </div>
-      <div className="min-w-[360px] space-y-4">
-        <BuySellSwap
-          pairETHBalance={projectData.pairETHBalanceRaw}
-          pairTokenBalance={projectData.pairTokenBalanceRaw}
-          tokenAddr={tokenAddr}
-        />
-        {address && (
-          <div className="space-y-4 animate-[scaleIn_0.5s_ease-out] origin-top">
-            <AddLiquidityPanel
+      {notFound? 
+      <Vault404 className='animate-[scaleIn_0.5s_ease-out] origin-top transition-all'></Vault404>
+      :
+      <div className="flex items-start justify-center w-full space-x-8 max-w-[1200px]">
+        <div className="w-1/2 flex flex-col">
+          <VaultInfo projectData={projectData} ETHPrice={ETHPrice} />
+          {address && (
+            <VaultControlPanel
+              className='animate-[scaleIn_0.5s_ease-out] origin-top transition-all'
               projectData={projectData}
-              userTokenBalance={parseEther(userVaultData.tokenBalance.toString())}
-              userETHBalance={ETHbalance.data?.value ?? 0n}
-              afterAddLiquidity={updateVaultData}
+              claimableAmount={userVaultData.pending}
+              ethLocked={userVaultData.stakedETH}
+              ethPrice={ETHPrice}
+              afterClaim={updateVaultData}
+              afterDeposit={updateVaultData}
+              afterWithdraw={updateVaultData}
             />
-            {(lpTokenBalance??0n) > 0n && 
-              <RemoveLiquidityPanel
-                className='animate-[scaleIn_0.5s_ease-out] origin-top'
+          )}
+        </div>
+        <div className="min-w-[360px] space-y-4">
+          <BuySellSwap
+            pairETHBalance={projectData.pairETHBalanceRaw}
+            pairTokenBalance={projectData.pairTokenBalanceRaw}
+            tokenAddr={tokenAddr}
+          />
+          {address && (
+            <div className="space-y-4 animate-[scaleIn_0.5s_ease-out] origin-top">
+              <AddLiquidityPanel
                 projectData={projectData}
-                lpTokenBalance={lpTokenBalance??0n}
-                afterRemoveLiquidity={updateVaultData}
+                userTokenBalance={parseEther(userVaultData.tokenBalance.toString())}
+                userETHBalance={ETHbalance.data?.value ?? 0n}
+                afterAddLiquidity={updateVaultData}
               />
-            }
-          </div>
-        )}
+              {(lpTokenBalance??0n) > 0n && 
+                <RemoveLiquidityPanel
+                  className='animate-[scaleIn_0.5s_ease-out] origin-top'
+                  projectData={projectData}
+                  lpTokenBalance={lpTokenBalance??0n}
+                  afterRemoveLiquidity={updateVaultData}
+                />
+              }
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+      }
     </div>
   );
 };
