@@ -320,7 +320,7 @@ export const mineblastFactoryAbi = [
 ] as const
 
 export const mineblastFactoryAddress =
-  '0x337F188f937541Db27213cddb6c6645Eb1eE3e5d' as const
+  '0x9DEb9D1324eF50bB5c07B26E22970e766090E492' as const
 
 export const mineblastFactoryConfig = {
   address: mineblastFactoryAddress,
@@ -974,7 +974,7 @@ export const mineblastRouterAbi = [
 ] as const
 
 export const mineblastRouterAddress =
-  '0xef83EA7d0DFe4ED7eB9b9c2CE5ae057Af2B2CE78' as const
+  '0x0589a817e3061E4bEE63D0f512dE89c24cbDC295' as const
 
 export const mineblastRouterConfig = {
   address: mineblastRouterAddress,
