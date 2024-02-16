@@ -33,6 +33,7 @@ const TokenPage = ({ params }: { params: {token: string } }) => {
     vaultAddress: '0x0',
     pairAddress: '0x0',
     tokenAddress: '0x0',
+    ownerShareBps: 0,
     tokenName: '...',
     tokenSymbol: '...',
     tokenTotalSupply: 0,

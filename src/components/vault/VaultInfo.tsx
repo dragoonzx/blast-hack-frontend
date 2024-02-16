@@ -123,7 +123,7 @@ const VaultInfo = ({
           </p>
           <p className="text-sm">
             creator share <br />
-            {10}%
+            {(projectData.ownerShareBps/100).toFixed(2)}%
           </p>
           <p className="text-sm">
             time left <br /> {getTimeLeftFormatted()}

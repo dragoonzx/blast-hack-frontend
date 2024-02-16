@@ -5,6 +5,7 @@ import { formatUnits, formatEther } from 'viem';
 export const WETH_ADDR = '0x4200000000000000000000000000000000000023';
 
 interface Project {
+  ownerShareBps: number
   vault: `0x${string}`;
   pair: `0x${string}`;
   token: `0x${string}`;
@@ -14,6 +15,7 @@ export interface MineblastProjectData {
   vaultAddress: `0x${string}`;
   pairAddress: `0x${string}`;
   tokenAddress: `0x${string}`;
+  ownerShareBps: number;
   tokenName: string;
   tokenSymbol: string;
   tokenTotalSupply: number;
@@ -54,19 +56,21 @@ export async function getAllVaults(): Promise<Project[]> {
     address: contracts.mineblastFactory.address,
     functionName: 'allVaults',
     args: [0],
-  })) as [`0x${string}`, `0x${string}`, `0x${string}`];
+  })) as [`0x${string}`, `0x${string}`, `0x${string}`, number];
 
   result.push({
     vault: response[0],
     pair: response[1],
     token: response[2],
+    ownerShareBps: response[3],
   });
 
   return result;
 }
 
 export function formatNameForOnchain(name: string): string {
-  const replaced = name.replace(/_/g, ' ').trim();
+  const linkForm = formatNameForLink(name);
+  const replaced = linkForm.replace(/_/g, ' ').trim();
   return replaced.charAt(0).toUpperCase() + replaced.slice(1);
 }
 
@@ -76,7 +80,7 @@ export function formatNameForLink(name: string): string {
 
 export async function getProjectByName(name: string): Promise<Project>{
   if (contracts.mineblastFactory.address === undefined) {
-    return {vault: "0x0", pair: "0x0", token: "0x0"};
+    return {vault: "0x0", pair: "0x0", token: "0x0", ownerShareBps: 0};
   }
 
   const response = (await readContract(config, {
@@ -112,6 +116,7 @@ export async function getProjectData(
     vaultAddress: project.vault,
     pairAddress: project.pair,
     tokenAddress: project.token,
+    ownerShareBps: project.ownerShareBps,
     tokenName: response[0],
     tokenSymbol: response[1],
     tokenTotalSupply: truncate18Decimals(BigInt(response[2])),
