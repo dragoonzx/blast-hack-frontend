@@ -54,17 +54,17 @@ export default function Home() {
         <div className="flex items-center space-x-20 mt-6">
           <Link href="/tokens/xyz" scroll={false}>
             <div className="flex items-center border px-4 py-2 rounded-md border-gray-600 bg-gray-800/25 hover:bg-gray-600/25 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm">
-              WETH x SHIB
+              Test token
             </div>
           </Link>
           <Link href="/tokens/xyz">
             <div className="flex items-center border px-4 py-2 rounded-md border-gray-600 bg-gray-800/25 hover:bg-gray-600/25 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm">
-              WETH x SUK
+              Some token
             </div>
           </Link>
           <Link href="/tokens/xyz" scroll={false}>
             <div className="flex items-center border px-4 py-2 rounded-md border-gray-600 bg-gray-800/25 hover:bg-gray-600/25 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm">
-              WETH x HP
+              Token 404
             </div>
           </Link>
         </div>
