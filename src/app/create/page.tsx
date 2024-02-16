@@ -30,7 +30,7 @@ const CreatePage = () => {
   const [tokenName, setTokenName] = useState<string>('');
   const [tokenSymbol, setTokenSymbol] = useState<string>('');
   const [totalSupply, setTotalSupply] = useState<number>(0);
-  const [ownerShare, setOwnerShare] = useState<number>(10);
+  const [ownerShare, setOwnerShare] = useState<number>(2);
   const [endDate, setEndDate] = useState<Date|undefined>();
 
   const {
@@ -69,46 +69,53 @@ const CreatePage = () => {
 
   return (
     <div className="flex items-start justify-center w-full space-x-8">
-      <p className='text-[240px] font-sora -z-50 text-gray-200 text-opacity-5 text-nowrap text-clip overflow-hidden select-none w-full absolute translate-y-[360px]'>{tokenName}</p>
-      <p className='text-[240px] font-sora -z-50 text-gray-200 text-opacity-5 text-nowrap text-clip overflow-hidden select-none w-full absolute -translate-x-[40px]'>{tokenSymbol}</p>
-      <div className=' -z-50 h-[400px] w-[400px] absolute translate-x-[300px] translate-y-[10px]'>
-        <CircularProgressbar 
-          styles={buildStyles({
-            rotation: 0.66,
-            pathColor: `rgba(229, 231, 235, 0.05)`,
-            trailColor: `rgba(0, 0, 0, 0)`,
-            backgroundColor: '#3e98c7',
-          })} 
-          strokeWidth={10}
-          value={((ownerShare??0)*2)} 
-          />
-      </div>
-      <div className="w-[435px] flex flex-col">
+      <p className='text-[240px] font-sora -z-50 text-white text-opacity-[0.02] text-nowrap text-clip overflow-hidden select-none w-full absolute translate-y-[360px]'>{tokenName}</p>
+      <p className='text-[280px] font-sora -z-50 text-white text-opacity-[0.02] text-nowrap text-clip overflow-hidden select-none w-full absolute -translate-x-[40px]'>{tokenSymbol}</p>
+      <div className="w-[435px] flex flex-col items-center">
         <NameSymbolForm
           nameValue={tokenName}
           symbolValue={tokenSymbol}
           onNameChange={setTokenName}
           onSymbolChange={setTokenSymbol}
         />
-        <SupplyForm
-          supplyValue={totalSupply}
-          creatorShareValue={ownerShare}
-          onSupplyChange={setTotalSupply}
-          onCreatorShareChange={setOwnerShare}
-        />
-      <Card className='h-[110px] w-[400px] absolute -translate-x-[220px] translate-y-[220px] bg-gray-900'>
-          <CardContent>
-            <div className='mt-3'>
-            <label className='text-xs'>end date</label>
-            <DatePickerWithPresets value={endDate} onChange={setEndDate}/>
+        {(tokenName.length>0 && tokenSymbol.length>0) && 
+          <div className='mt-6 animate-[scaleIn_0.5s_ease-out] origin-top'>
+            <SupplyForm
+              supplyValue={totalSupply}
+              creatorShareValue={ownerShare}
+              onSupplyChange={setTotalSupply}
+              onCreatorShareChange={setOwnerShare}
+              defaultValue={ownerShare}
+            />
+            <div className=' -z-50 h-[300px] w-[300px] absolute translate-x-[300px] -translate-y-[350px] opacity-30'>
+              <CircularProgressbar 
+                styles={buildStyles({
+                  rotation: 0.66,
+                  pathColor: `rgba(229, 231, 235, 0.05)`,
+                  trailColor: `rgba(0, 0, 0, 0)`,
+                  backgroundColor: '#3e98c7',
+                })} 
+                strokeWidth={10}
+                value={((ownerShare??0)*2)} 
+                />
             </div>
-          </CardContent>
-      </Card>
+          </div>
+        }
+        {totalSupply>0 &&
+        <Card className='h-[110px] w-[400px] bg-gray-900 mt-6 animate-[scaleIn_0.5s_ease-out] origin-top'>
+            <CardContent>
+              <div className='mt-3'>
+              <label className='text-xs'>end date</label>
+              <DatePickerWithPresets value={endDate} onChange={setEndDate}/>
+              </div>
+            </CardContent>
+        </Card>
+        }
       <div className="">
       <Button 
       onClick={create} 
       disabled={buttonDisabled} 
-      className="absolute translate-x-[200px] translate-y-[150px] disabled:text-gray-600 disabled:hover:bg-gray-900">
+      className="disabled:text-gray-600 disabled:border-gray-600 disabled:hover:bg-gray-900 mt-6 border-[#f77334] text-[#f77334]">
         {createTxLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         Create
       </Button>

@@ -4,12 +4,14 @@ import React, { use, useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import NumericInput from '@/components/form/NumericInput';
 import { Slider } from "@/components/ui/slider"
+import classNames from 'classnames';
 
 
 interface NameSymbolFormProps {
     className?: string;
     supplyValue: number;
     creatorShareValue: number;
+    defaultValue?: number;
     onSupplyChange: (s: number) => void;
     onCreatorShareChange: (s: number) => void;
 }
@@ -18,12 +20,16 @@ const SupplyForm = ({
     className,
     supplyValue,
     creatorShareValue,
+    defaultValue,
     onSupplyChange,
     onCreatorShareChange
 }: NameSymbolFormProps) => {
 
   return (
-    <Card className='h-[200px] w-[400px] absolute translate-x-[200px] translate-y-[130px] bg-gray-900'>
+    <Card className={classNames(
+        'h-[200px] w-[400px] bg-gray-900',
+        className
+    )}>
     <CardHeader>
     </CardHeader>
     <CardContent>
@@ -42,7 +48,7 @@ const SupplyForm = ({
           <p className='text-base my-3'>creator share: {creatorShareValue?.toFixed(1)}%</p>
           <Slider
             className='w-full bg-gray-700'
-            defaultValue={[10]} 
+            defaultValue={[defaultValue??2]} 
             step={0.5}
             max={50} 
             onValueChange={(v) => {onCreatorShareChange(v[0])}}

@@ -77,8 +77,21 @@ const config = {
             transform: 'translateX(0)'
           },
           '100%': {
-            transform: 'translateX(110%)'
+            transform: 'translateX(100%)'
           },
+        },
+        scaleIn:{
+          '0%': {
+            transform: 'scaleY(0)',
+            opacity: '0'
+          },
+          '50%': {
+            opacity: '0.3'
+          },
+          '100%': {
+            transform: 'scaleY(1)',
+            opacity: '1'
+          }
         }
       },
       animation: {

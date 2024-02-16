@@ -3,6 +3,7 @@
 import React, { use, useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import MineblastInput from '@/components/form/MineblastInput';
+import classNames from 'classnames';
 
 interface NameSymbolFormProps {
     className?: string;
@@ -21,7 +22,10 @@ const NameSymbolForm = ({
 }: NameSymbolFormProps) => {
 
   return (
-    <Card className='h-[200px] w-[400px] bg-gray-900'>
+    <Card className={classNames(
+        'h-[200px] w-[400px] bg-gray-900',
+        className
+    )}>
         <CardHeader>
             <h3 className="font-semibold leading-none tracking-tight">Create token & vault</h3>
         </CardHeader>
