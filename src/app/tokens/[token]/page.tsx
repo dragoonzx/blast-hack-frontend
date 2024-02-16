@@ -94,6 +94,10 @@ const TokenPage = ({ params }: { params: {token: string } }) => {
     lpRefetch();
   }
 
+  const afterDeposit = () => {
+    fetchProjectData();
+  }
+
   const truncate18Decimals = (number: bigint, decimals: number = 4): number => {
     return Number(number / 10n ** BigInt(18 - decimals)) / 10 ** decimals;
   };
@@ -110,7 +114,7 @@ const TokenPage = ({ params }: { params: {token: string } }) => {
             <VaultControlPanel
               className='animate-[scaleIn_0.5s_ease-out] origin-top transition-all'
               projectData={projectData}
-              claimableAmount={userVaultData.pending}
+              claimableAmount={userVaultData.stakedETH > 0 ? 0.001:0 + userVaultData.pending}
               ethLocked={userVaultData.stakedETH}
               ethPrice={ETHPrice}
               afterClaim={updateVaultData}
@@ -131,7 +135,7 @@ const TokenPage = ({ params }: { params: {token: string } }) => {
                 projectData={projectData}
                 userTokenBalance={parseEther(userVaultData.tokenBalance.toString())}
                 userETHBalance={ETHbalance.data?.value ?? 0n}
-                afterAddLiquidity={updateVaultData}
+                afterAddLiquidity={afterAddLiquidity}
               />
               {(lpTokenBalance??0n) > 0n && 
                 <RemoveLiquidityPanel
