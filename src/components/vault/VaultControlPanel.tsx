@@ -179,7 +179,7 @@ const VaultControlPanel = ({
       <div className="flex flex-col items-center mb-4">
         <div className='mb-3'>ETH balance: {ethBalanceFormatted}</div>
         <div className='flex h-12'>
-          <TokenInput maxValue={ethBalanceFormatted.toString()} onChange={(n:string) => {setDepositAmount(n)}}/>
+          <TokenInput value={depositAmount} maxValue={ethBalanceFormatted.toString()} onChange={setDepositAmount}/>
           <Button className="ml-2 w-32" disabled={depositLoading} onClick={depositEth}>
             {depositLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Deposit
@@ -188,7 +188,7 @@ const VaultControlPanel = ({
         {displayWithdraw && <div className='mb-3 mt-6'>ETH locked: {ethLocked}</div>}
         {displayWithdraw &&
           <div className='flex h-12'>
-            <TokenInput maxValue={ethLocked.toString()} onChange={(n:string) => {setWithdrawAmount(n)}}/>
+            <TokenInput value={withdrawAmount} maxValue={ethLocked.toString()} onChange={setWithdrawAmount}/>
             <Button className="ml-2 w-32" disabled={withdrawLoading} onClick={withdrawEth}>
               {withdrawLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Withdraw
