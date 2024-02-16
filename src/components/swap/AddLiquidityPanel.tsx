@@ -22,8 +22,6 @@ import { formatEther, maxUint256, parseEther } from 'viem';
 import {contracts} from '@/lib/wagmiConfig';
 import {truncate18Decimals, bigMin} from '@/lib/utils';
 
-
-
 interface MineblastInputProps {
   projectData: MineblastProjectData;
   userETHBalance: bigint;
@@ -98,14 +96,20 @@ const AddLiquidityPanel = ({
 
   const quote = (amountA: bigint, reserveA: bigint, reserveB: bigint): bigint => {
     if(reserveA === 0n || reserveB === 0n){
-      return 0n;
+      return 10n**16n;
     }
     return amountA * reserveB / reserveA;
   };
 
   const getMaximumTokenAmount = (): bigint => {
-    return bigMin(userTokenBalance, quote(userETHBalance, projectData.pairETHBalanceRaw, projectData.pairTokenBalanceRaw));
+    if(projectData.pairETHBalanceRaw === 0n || projectData.pairTokenBalanceRaw === 0n){
+      return userTokenBalance;
+    }
+
+    const result = bigMin(userTokenBalance, quote(userETHBalance, projectData.pairETHBalanceRaw, projectData.pairTokenBalanceRaw));
+    return result;
   }
+
 
   const truncateNumber = (number: number): number => {
     return Math.round( number * 1e4 ) / 1e4;
