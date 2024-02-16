@@ -102,7 +102,7 @@ const TokenPage = ({ params }: { params: {token: string } }) => {
       {notFound? 
       <Vault404 className='animate-[scaleIn_0.5s_ease-out] origin-top transition-all'></Vault404>
       :
-      <div className="flex items-start justify-center w-full space-x-8 max-w-[1200px]">
+      <div className="flex items-start justify-center w-full space-x-8 max-w-[1000px]">
         <div className="w-1/2 flex flex-col">
           <VaultInfo projectData={projectData} ETHPrice={ETHPrice} />
           {address && (
