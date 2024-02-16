@@ -4,10 +4,7 @@ import React, { use, useEffect, useState } from 'react';
 import { useAccount, useBalance, useWaitForTransactionReceipt } from 'wagmi';
 import { parseEther } from 'viem';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import MineblastInput from '@/components/form/MineblastInput';
-import NumericInput from '@/components/form/NumericInput';
 import { DatePickerWithPresets } from '@/components/form/DatePickerWithPresets';
-import VaultInfo from '@/components/vault/VaultInfo';
 import { Button } from '@/components/ui/button';
 import NameSymbolForm from '@/components/create/NameSymbolForm';
 import SupplyForm from '@/components/create/SupplyForm';
@@ -17,6 +14,8 @@ import { Loader2 } from "lucide-react"
 import { 
   useWriteMineblastFactoryCreateVaultWithNewToken,
 } from '../../generated'
+import { useRouter } from 'next/navigation'
+import { formatNameForLink, formatNameForOnchain } from '@/lib/onchain';
 
 
 const CreatePage = () => {
@@ -32,6 +31,8 @@ const CreatePage = () => {
   const [totalSupply, setTotalSupply] = useState<number>(0);
   const [ownerShare, setOwnerShare] = useState<number>(2);
   const [endDate, setEndDate] = useState<Date|undefined>();
+
+  const [finalName, setFinalName] = useState<string>('');
 
   const {
     data: createHash,
@@ -51,15 +52,19 @@ const CreatePage = () => {
     }
     const supply = BigInt(totalSupply) * 10n**18n;
     const duration = BigInt(Math.floor((endDate?.getTime() ?? 0) / 1000) - Math.floor(Date.now() / 1000));
+    const name = formatNameForOnchain(tokenName);
+    setFinalName(name);
 
     createWriteContract({
-      args: [supply, tokenName, tokenSymbol, duration, ownerShare*100],
+      args: [supply, name, tokenSymbol, duration, ownerShare*100],
     });
   };
 
+  const router = useRouter()
+
   useEffect(() => {
     if (createTx.isSuccess) {
-      
+      router.replace(`/tokens/${formatNameForLink(finalName)}`)
     }
   }, [createTx.isSuccess]);
 

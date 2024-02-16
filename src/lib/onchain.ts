@@ -65,18 +65,25 @@ export async function getAllVaults(): Promise<Project[]> {
   return result;
 }
 
+export function formatNameForOnchain(name: string): string {
+  const replaced = name.replace(/_/g, ' ').trim();
+  return replaced.charAt(0).toUpperCase() + replaced.slice(1);
+}
+
+export function formatNameForLink(name: string): string {
+  return name.replace(/ /g, '_').toLowerCase();
+}
+
 export async function getProjectByName(name: string): Promise<Project>{
   if (contracts.mineblastFactory.address === undefined) {
     return {vault: "0x0", pair: "0x0", token: "0x0"};
   }
 
-  const nameFormatted = name.replace(/_/g, ' ').toLowerCase();
-
   const response = (await readContract(config, {
     abi: contracts.mineblastFactory.abi,
     address: contracts.mineblastFactory.address,
     functionName: 'getVault',
-    args: [nameFormatted],
+    args: [formatNameForOnchain(name)],
   })) as Project;
 
   return response;
