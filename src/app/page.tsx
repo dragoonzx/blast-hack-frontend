@@ -62,6 +62,9 @@ export default function Home() {
               </div>
             </Link>
           )}
+          <Link href={"/create"} scroll={false}>
+            <div className="border px-4 py-2 w-48 items-center rounded-md border-gray-600 bg-[#f77334] hover:bg-orange-600 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm">Create your own {">"}</div>
+          </Link>
         </div>
       </div>
       <div className="mt-16">
