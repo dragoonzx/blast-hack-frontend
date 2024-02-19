@@ -109,10 +109,10 @@ const TokenPage = ({ params }: { params: {token: string } }) => {
       :
       <div className="flex items-start justify-center w-full space-x-8 max-w-[1000px]">
         <div className="w-1/2 flex flex-col">
-          <VaultInfo projectData={projectData} ETHPrice={ETHPrice} />
+          <VaultInfo projectData={projectData} ETHPrice={ETHPrice} className='bg-gray-950' />
           {address && (
             <VaultControlPanel
-              className='animate-[scaleIn_0.5s_ease-out] origin-top transition-all'
+              className='animate-[scaleIn_0.5s_ease-out] origin-top transition-all bg-gray-950'
               projectData={projectData}
               claimableAmount={userVaultData.stakedETH > 0 ? 0.001:0 + userVaultData.pending}
               ethLocked={userVaultData.stakedETH}
@@ -123,7 +123,7 @@ const TokenPage = ({ params }: { params: {token: string } }) => {
             />
           )}
         </div>
-        <div className="min-w-[360px] space-y-4">
+        <div className="min-w-[360px] space-y-4 ">
           <BuySellSwap
             pairETHBalance={projectData.pairETHBalanceRaw}
             pairTokenBalance={projectData.pairTokenBalanceRaw}
@@ -139,7 +139,7 @@ const TokenPage = ({ params }: { params: {token: string } }) => {
               />
               {(lpTokenBalance??0n) > 0n && 
                 <RemoveLiquidityPanel
-                  className='animate-[scaleIn_0.5s_ease-out] origin-top'
+                  className='animate-[scaleIn_0.5s_ease-out] origin-top bg-gray-950'
                   projectData={projectData}
                   lpTokenBalance={lpTokenBalance??0n}
                   afterRemoveLiquidity={updateVaultData}

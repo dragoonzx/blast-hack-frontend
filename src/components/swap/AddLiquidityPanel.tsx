@@ -115,10 +115,14 @@ const AddLiquidityPanel = ({
     return Math.round( number * 1e4 ) / 1e4;
   }
 
+  const getETHRequired = (): number => {
+    return truncate18Decimals(quote(parseEther(tokenAmount), projectData.pairTokenBalanceRaw, projectData.pairETHBalanceRaw))
+  };
+
   const addLiquidityLoading = addLiquidityTx.isLoading || isPendingLiquidityAdd || isPendingApprove || approveTx.isLoading;
 
   return (
-    <Card>
+    <Card className='bg-gray-950'>
       <CardHeader>
         <h3 className="font-semibold leading-none tracking-tight">Add Liquidity</h3>
       </CardHeader>
@@ -147,8 +151,11 @@ const AddLiquidityPanel = ({
               </Button>
               </div>
             </div >
-            <label className="text-sm text-text-gray-300">
-              ETH amount required: {truncate18Decimals(quote(parseEther(tokenAmount), projectData.pairTokenBalanceRaw, projectData.pairETHBalanceRaw))}
+            <label className="text-sm text-text-gray-300 flex">
+              ETH amount required:
+              <div className={'ml-2 ' + ((getETHRequired() > 0)?" text-[#f77334]":"")}>
+                {getETHRequired()}
+              </div>
             </label>
           </div>
         </div>

@@ -23,16 +23,13 @@ const NameSymbolForm = ({
 
   return (
     <Card className={classNames(
-        'h-[200px] w-[400px] bg-gray-900',
+        'h-[160px] w-[400px] bg-gray-900 py-4',
         className
     )}>
-        <CardHeader>
-            <h3 className="font-semibold leading-none tracking-tight">Create token & vault</h3>
-        </CardHeader>
         <CardContent>
         <div className="font-sora">
             <div className='flex flex-col'>
-            <label className='text-xs'>token name</label>
+            <label className='text-xs'>name</label>
             <div className='flex items-center'>
                 <MineblastInput
                 className=''
