@@ -31,10 +31,7 @@ const SupplyForm = ({
         className
     )}>
     <CardHeader>
-    </CardHeader>
-    <CardContent>
-      <div className="font-sora">
-          <div className='flex flex-col'>
+    <div className='flex flex-col'>
             <label className='text-xs'>total supply</label>
             <div className='flex items-center'>
                 <NumericInput
@@ -44,7 +41,10 @@ const SupplyForm = ({
                 onChange={(v) => onSupplyChange(v??0)}
                 />
             </div>
-          </div>
+      </div>
+    </CardHeader>
+    <CardContent>
+      <div className="font-sora">
           <p className='text-base my-3'>creator share: {creatorShareValue?.toFixed(1)}%</p>
           <Slider
             className='w-full bg-gray-700'
