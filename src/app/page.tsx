@@ -11,6 +11,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { formatNameForLink } from '@/lib/onchain';
+
+const examples = ["Test token", "Some token", "Token 404"];
 
 export default function Home() {
 
@@ -52,21 +55,13 @@ export default function Home() {
       <div className="mt-16">
         <h2 className="font-sora text-6xl">Example projects</h2>
         <div className="flex items-center space-x-20 mt-6">
-          <Link href="/tokens/xyz" scroll={false}>
-            <div className="flex items-center border px-4 py-2 rounded-md border-gray-600 bg-gray-800/25 hover:bg-gray-600/25 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm">
-              Test token
-            </div>
-          </Link>
-          <Link href="/tokens/xyz">
-            <div className="flex items-center border px-4 py-2 rounded-md border-gray-600 bg-gray-800/25 hover:bg-gray-600/25 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm">
-              Some token
-            </div>
-          </Link>
-          <Link href="/tokens/xyz" scroll={false}>
-            <div className="flex items-center border px-4 py-2 rounded-md border-gray-600 bg-gray-800/25 hover:bg-gray-600/25 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm">
-              Token 404
-            </div>
-          </Link>
+          {examples.map((example) => 
+            <Link href={"/tokens/" + formatNameForLink(example)} scroll={false}>
+              <div className="flex items-center border px-4 py-2 rounded-md border-gray-600 bg-gray-800/25 hover:bg-gray-600/25 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm">
+                {example}
+              </div>
+            </Link>
+          )}
         </div>
       </div>
       <div className="mt-16">

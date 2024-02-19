@@ -248,7 +248,7 @@ const BuySellSwap = ({
     <Card>
       <CardHeader>
         <h3 className="font-semibold leading-none tracking-tight">
-          Swap panel
+          Swap
         </h3>
       </CardHeader>
       <CardContent>
