@@ -31,15 +31,15 @@ export default function Home() {
           Launch blast-native token in 1 minute
         </h2>
         <div className='text-xl mt-12 flex w-full justify-between'>
-          <div className='border-gray-300 border-b-2 border-r-2 rounded-3xl mr-12 p-6'>
+          <div className='border-gray-300  border-r-2 rounded-3xl mr-12 p-6  hover:border-r-4 transition-all'>
             <p className='text-[#f77334]'>Fair launch with the help of Yield Mining</p>
             <p className='mt-2 text-base'>Users will mine tokens with their ETH yield. Their reward would be proportional to their ETH share</p>
           </div>
-          <div className=' border-gray-300 border-b-2 border-r-2 rounded-3xl mr-12 p-6'>
+          <div className=' border-gray-300 border-r-2 border-l-2 rounded-3xl mr-12 p-6 hover:border-r-4 hover:border-l-4 transition-all'>
             <p className='text-[#f77334]'>Additional liqudity</p>
             <p className='mt-2 text-base'>Yield from users will be converted to unremovable liqudity for your token</p>
           </div>
-          <div className='border-gray-300 border-b-2 border-r-2 rounded-3xl p-6'>
+          <div className='border-gray-300 border-l-2 rounded-3xl p-6 hover:border-r-0 hover:border-l-4 transition-all'>
             <p className='text-[#f77334]'>Claimable gas refunds</p>
             <p className='mt-2 text-base'>On top of configurable creator token share, you will always be eligible to gas rewards from your token activity</p>
           </div>
