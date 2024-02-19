@@ -1,7 +1,7 @@
 'use client';
 
 import React, { use, useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import NumericInput from '@/components/form/NumericInput';
 import { Slider } from "@/components/ui/slider"
 import classNames from 'classnames';
@@ -27,11 +27,12 @@ const SupplyForm = ({
 
   return (
     <Card className={classNames(
-        'h-[200px] w-[400px] bg-gray-900',
+        'h-[160px] w-[400px] bg-gray-900 pt-4',
         className
     )}>
-    <CardHeader>
-    <div className='flex flex-col'>
+    <CardContent>
+      <div className="font-sora">
+          <div className='flex flex-col'>
             <label className='text-xs'>total supply</label>
             <div className='flex items-center'>
                 <NumericInput
@@ -41,10 +42,7 @@ const SupplyForm = ({
                 onChange={(v) => onSupplyChange(v??0)}
                 />
             </div>
-      </div>
-    </CardHeader>
-    <CardContent>
-      <div className="font-sora">
+          </div>
           <p className='text-base my-3'>creator share: {creatorShareValue?.toFixed(1)}%</p>
           <Slider
             className='w-full bg-gray-700'

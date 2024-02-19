@@ -76,7 +76,8 @@ const CreatePage = () => {
     <div className="flex items-start justify-center w-full space-x-8">
       <p className='text-[240px] font-sora -z-50 text-white text-opacity-[0.02] text-nowrap text-clip overflow-hidden select-none w-full absolute translate-y-[360px]'>{tokenName}</p>
       <p className='text-[280px] font-sora -z-50 text-white text-opacity-[0.02] text-nowrap text-clip overflow-hidden select-none w-full absolute -translate-x-[40px]'>{tokenSymbol}</p>
-      <div className="w-[435px] flex flex-col items-center">
+      <div className="w-[435px] flex flex-col items-center bg-gray-950 py-4 transition-all">
+        <h3 className='mb-2 font-semibold'>Create token & vault</h3>
         <NameSymbolForm
           nameValue={tokenName}
           symbolValue={tokenSymbol}

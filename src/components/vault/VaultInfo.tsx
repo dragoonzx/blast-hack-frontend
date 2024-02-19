@@ -75,7 +75,7 @@ const VaultInfo = ({
       className
     )}>
       <CardHeader>
-        <CardTitle className="text-3xl">
+        <CardTitle className="text-3xl text-[#f77334]">
           {projectData.tokenName}
         </CardTitle>
         <Progress

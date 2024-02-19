@@ -245,7 +245,7 @@ const BuySellSwap = ({
     isSwapEthPending;
 
   return (
-    <Card>
+    <Card className='bg-gray-950'>
       <CardHeader>
         <h3 className="font-semibold leading-none tracking-tight">
           Swap

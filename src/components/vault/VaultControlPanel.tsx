@@ -210,7 +210,7 @@ const VaultControlPanel = ({
       {displayClaim && 
         <CardFooter className='flex flex-col'>
           <div>
-            {projectData.tokenSymbol} available: <CountUp decimals={2} start={claimableAmount} end={projectedBalanceInMonth} useEasing={false} duration={secondsInMonth}/>
+            {projectData.tokenSymbol} available: <CountUp className='text-[#f77334]' decimals={2} start={claimableAmount} end={projectedBalanceInMonth} useEasing={false} duration={secondsInMonth}/>
           </div>
           <Button className="w-1/3" disabled={claimLoading} onClick={claimToken}>
             {claimLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
