@@ -12,28 +12,18 @@ import { Toaster } from '@/components/ui/toaster';
 
 const NAV_MENU = [
   {
-    title: 'Documentation',
-    href: '/docs',
-    separator: false,
-    btn: false,
-  },
-  {
-    title: 'Team',
-    href: '/team',
-    separator: false,
-    btn: false,
-  },
-  {
     title: 'Github',
-    href: '/github',
+    href: 'https://github.com/Tointer/mineblast-contracts',
     separator: true,
     btn: false,
+    newPage: true,
   },
   {
     title: 'Create',
     href: '/create',
     separator: false,
     btn: true,
+    newPage: false,
   },
 ];
 
@@ -138,6 +128,7 @@ export default function RootLayout({
                             ? 'flex items-center border px-4 py-2 rounded-md border-gray-600 bg-gray-800/25 hover:bg-gray-600/25 focus-visible:border-gray-300 focus-visible:outline-none focus-visible:ring-0 sm:text-sm'
                             : ''
                         )}
+                        target={menu.newPage ? '_blank' : ''}
                       >
                         {menu.title}
                       </Link>
